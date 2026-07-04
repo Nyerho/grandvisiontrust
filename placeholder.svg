@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Not Found - GrandVisionTrust Bank</title>
+	<style>
+		body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #e2e8f0; }
+		#notfound { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+		.notfound { max-width: 520px; text-align: center; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); border-radius: 16px; padding: 28px; }
+		.notfound-404 h1 { margin: 0 0 8px; font-size: 64px; line-height: 1; color: #fff; }
+		h2 { margin: 0 0 18px; font-size: 16px; font-weight: 600; color: #cbd5e1; }
+		.home-btn { display: inline-block; padding: 10px 14px; border-radius: 12px; background: #0284c7; color: #fff; text-decoration: none; font-weight: 700; }
+	</style>
+</head>
+
+<body>
+	<div id="notfound">
+		<div class="notfound-bg"></div>
+		<div class="notfound">
+			<div class="notfound-404">
+				<h1> 404 </h1>
+			</div>
+			<h2>We could not find the page you were looking for.</h2>
+			<a href="dashboard.html" class="home-btn">Go Back</a>
+		</div>
+	</div>
+</body>
+</html>

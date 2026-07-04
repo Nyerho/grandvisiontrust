@@ -1,0 +1,1 @@
+chrome-extension://oboonakemofpalcgghocfoadofidjkkk/content/observer-helper.js

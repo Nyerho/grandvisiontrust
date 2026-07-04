@@ -1,0 +1,568 @@
+<html lang="en" x-data="{ darkMode: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)" :class="{ 'dark': darkMode }">
+<head>
+    <title>Grant Applications - GrandVisionTrust Bank</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="apple-mobile-web-app-title" content="GrandVisionTrust Bank">
+    <meta name="application-name" content="GrandVisionTrust Bank">
+    <meta name="description" content="Apply for grants as an individual or a company.">
+    <link rel="shortcut icon" href="storage/app/public/photos/UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+
+    <script>
+        const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
+    <script src="assets/tailwindcss.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        background: '#f8fafc',
+                        foreground: '#1e293b',
+                    },
+                },
+            },
+        };
+    </script>
+    <script defer src="assets/alpine.min.js"></script>
+</head>
+<body class="bg-background text-foreground">
+    <div class="min-h-screen flex">
+        <aside class="hidden lg:flex w-72 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200/50 dark:border-gray-700/50 flex-col">
+            <div class="p-6 border-b border-gray-200/50 dark:border-gray-700/50">
+                <a href="dashboard.html" class="inline-flex">
+                    <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-12 w-auto">
+                </a>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-6 overflow-y-auto">
+                <div class="mb-8">
+                    <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Main</h3>
+                    <div class="space-y-2">
+                        <a href="dashboard.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-house text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Dashboard</span>
+                        </a>
+                        <a href="dashboard-transactions.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-chart-line text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Transactions</span>
+                        </a>
+                        <a href="dashboard-cards.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-credit-card text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Cards</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Transfers</h3>
+                    <div class="space-y-2">
+                        <a href="dashboard-local-transfer.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-paper-plane text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Local Transfer</span>
+                        </a>
+                        <a href="dashboard-international-transfer.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-globe text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">International</span>
+                        </a>
+                        <a href="dashboard-deposit.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-plus text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Deposit</span>
+                        </a>
+                        <a href="dashboard-currency-swap.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-arrows-rotate text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Currency Swap</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Services</h3>
+                    <div class="space-y-2">
+                        <a href="loans-credit.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-landmark text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Loans</span>
+                        </a>
+                        <a href="tax-refund.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-receipt text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Tax Refund</span>
+                        </a>
+                        <a href="dashboard-grants.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-white/20 transition-colors">
+                                <i class="fa-solid fa-hand-holding-dollar text-white transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Grants</span>
+                            <div class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Account</h3>
+                    <div class="space-y-2">
+                        <a href="dashboard-settings.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-gear text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Settings</span>
+                        </a>
+                        <a href="dashboard-support.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-headset text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Support</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <div class="flex-1 flex flex-col min-w-0">
+            <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 px-4 lg:px-6 py-4" x-data="{ meName: '', async init() { try { const r = await fetch('/api/me'); if (!r.ok) return; const d = await r.json().catch(() => ({})); this.meName = typeof d?.fullName === 'string' && d.fullName.trim() ? d.fullName.trim().split(' ')[0] : ''; } catch (e) {} } }" x-init="init()">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">Welcome back<span x-show="meName" x-text="`, ${meName}`"></span></div>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">Grant Applications</h1>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)" class="w-11 h-11 bg-gray-50 hover:bg-primary-50 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-2xl flex items-center justify-center transition-colors group">
+                            <i x-show="!darkMode" class="fa-solid fa-moon text-gray-600 group-hover:text-primary-600 dark:text-gray-300 transition-colors"></i>
+                            <i x-show="darkMode" class="fa-solid fa-sun text-yellow-500 group-hover:text-yellow-400 transition-colors"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="flex-1 p-4 lg:p-6">
+                <div class="max-w-6xl mx-auto space-y-6" x-data="{ step: 'choose', loading: false, error: '', successId: '', applicantType: '', program: '', requestedAmount: '', email: '', phone: '', notes: '', declarationsOk: false, fullName: '', dob: '', ssnLast4: '', i_address1: '', i_address2: '', i_city: '', i_state: '', i_postalCode: '', i_country: 'United States', i_useOfFunds: '', i_timeline: '', i_payoutMethod: '', companyName: '', ein: '', registrationNumber: '', establishedDate: '', industry: '', website: '', contactName: '', contactTitle: '', employees: '', annualRevenue: '', c_address1: '', c_address2: '', c_city: '', c_state: '', c_postalCode: '', c_country: 'United States', c_useOfFunds: '', mission: '', resetMessages() { this.error = ''; this.successId = ''; }, toChoose() { this.step = 'choose'; this.resetMessages(); }, toIndividual() { this.step = 'individual'; this.applicantType = 'individual'; this.resetMessages(); }, toCompany() { this.step = 'company'; this.applicantType = 'company'; this.resetMessages(); }, async submitIndividual() { try { this.resetMessages(); this.loading = true; const payload = { applicantType: 'individual', program: this.program, requestedAmount: Number(this.requestedAmount), fullName: this.fullName, dob: this.dob, ssnLast4: this.ssnLast4, email: this.email, phone: this.phone, address1: this.i_address1, address2: this.i_address2, city: this.i_city, state: this.i_state, postalCode: this.i_postalCode, country: this.i_country, useOfFunds: this.i_useOfFunds, timeline: this.i_timeline, payoutMethod: this.i_payoutMethod, notes: this.notes, declarationsOk: this.declarationsOk }; const res = await fetch('/api/grants/apply', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const data = await res.json().catch(() => ({})); this.loading = false; if (!res.ok) { this.error = 'Please review the form and try again.'; return; } this.successId = String(data?.applicationId || '').trim(); this.step = 'success'; } catch (e) { this.loading = false; this.error = 'Please review the form and try again.'; } }, async submitCompany() { try { this.resetMessages(); this.loading = true; const payload = { applicantType: 'company', program: this.program, requestedAmount: Number(this.requestedAmount), companyName: this.companyName, ein: this.ein, registrationNumber: this.registrationNumber, establishedDate: this.establishedDate, industry: this.industry, website: this.website, contactName: this.contactName, contactTitle: this.contactTitle, email: this.email, phone: this.phone, employees: Number(this.employees), annualRevenue: this.annualRevenue, address1: this.c_address1, address2: this.c_address2, city: this.c_city, state: this.c_state, postalCode: this.c_postalCode, country: this.c_country, useOfFunds: this.c_useOfFunds, mission: this.mission, notes: this.notes, declarationsOk: this.declarationsOk }; const res = await fetch('/api/grants/apply', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const data = await res.json().catch(() => ({})); this.loading = false; if (!res.ok) { this.error = 'Please review the form and try again.'; return; } this.successId = String(data?.applicationId || '').trim(); this.step = 'success'; } catch (e) { this.loading = false; this.error = 'Please review the form and try again.'; } } }">
+                    <section class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700" x-show="step === 'choose'">
+                        <div class="text-xl font-extrabold text-gray-900 dark:text-white">Grant Applications</div>
+                        <div class="mt-4 rounded-3xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30 p-6 lg:p-8">
+                            <div class="text-center">
+                                <div class="text-lg lg:text-xl font-extrabold text-gray-900 dark:text-white">Select Application Type</div>
+                                <div class="mt-2 text-sm text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                                    Please select the type of application you would like to submit. Different documentation is required for individual and company applications.
+                                </div>
+                            </div>
+
+                            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+                                    <div class="flex items-center justify-center">
+                                        <div class="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+                                            <i class="fa-solid fa-user text-primary-700 dark:text-primary-300"></i>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 text-center">
+                                        <div class="text-lg font-extrabold text-gray-900 dark:text-white">Apply as Individual</div>
+                                        <div class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                                            For individual applicants seeking funding for programs, equipment, research or community outreach.
+                                        </div>
+                                    </div>
+                                    <button type="button" @click="toIndividual()" class="mt-6 w-full px-5 py-3 rounded-2xl bg-gradient-to-r from-primary-500 to-primary-600 text-white text-sm font-extrabold hover:from-primary-600 hover:to-primary-700 transition-all">
+                                        Continue
+                                    </button>
+                                </div>
+
+                                <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+                                    <div class="flex items-center justify-center">
+                                        <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-900/40 flex items-center justify-center">
+                                            <i class="fa-solid fa-building text-gray-700 dark:text-gray-200"></i>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 text-center">
+                                        <div class="text-lg font-extrabold text-gray-900 dark:text-white">Apply as Company</div>
+                                        <div class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                                            For registered organizations with an EIN, established history and defined mission.
+                                        </div>
+                                    </div>
+                                    <button type="button" @click="toCompany()" class="mt-6 w-full px-5 py-3 rounded-2xl bg-gradient-to-r from-slate-600 to-slate-800 text-white text-sm font-extrabold hover:from-slate-700 hover:to-slate-900 transition-all">
+                                        Continue
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700" x-show="step === 'individual'">
+                        <div class="flex items-center justify-between gap-4">
+                            <div>
+                                <div class="text-lg font-extrabold text-gray-900 dark:text-white">Individual Grant Application</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Complete the form below to submit your request.</div>
+                            </div>
+                            <button type="button" @click="toChoose()" class="px-4 py-2 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm font-extrabold">
+                                Back
+                            </button>
+                        </div>
+
+                        <form class="mt-5 space-y-6" @submit.prevent="submitIndividual()">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Full Name</label>
+                                    <input type="text" x-model="fullName" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Your legal name">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Date of Birth</label>
+                                    <input type="date" x-model="dob" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Email</label>
+                                    <input type="email" x-model="email" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="name@example.com">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Phone</label>
+                                    <input type="tel" x-model="phone" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="+1 (555) 555-5555">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">SSN (Last 4)</label>
+                                    <input type="text" x-model="ssnLast4" inputmode="numeric" pattern="\\d{4}" maxlength="4" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="1234">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Grant Program</label>
+                                    <select x-model="program" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                                        <option value="" disabled>Select program</option>
+                                        <option value="education_support">Education Support</option>
+                                        <option value="housing_assistance">Housing Assistance</option>
+                                        <option value="research_equipment">Research &amp; Equipment</option>
+                                        <option value="community_outreach">Community Outreach</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Address Line 1</label>
+                                    <input type="text" x-model="i_address1" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Street address">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Address Line 2</label>
+                                    <input type="text" x-model="i_address2" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Apt, suite, unit (optional)">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">City</label>
+                                    <input type="text" x-model="i_city" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="City">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">State / Province</label>
+                                    <input type="text" x-model="i_state" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="State">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Postal Code</label>
+                                    <input type="text" x-model="i_postalCode" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="ZIP / Postal">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Country</label>
+                                    <input type="text" x-model="i_country" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Country">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Requested Amount (USD)</label>
+                                    <input type="number" x-model="requestedAmount" min="1" step="0.01" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="0.00">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Timeline</label>
+                                    <select x-model="i_timeline" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                                        <option value="" disabled>Select timeline</option>
+                                        <option value="immediate">Immediate (0–30 days)</option>
+                                        <option value="short_term">Short term (1–3 months)</option>
+                                        <option value="medium_term">Medium term (3–6 months)</option>
+                                        <option value="long_term">Long term (6+ months)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Payout Method</label>
+                                    <select x-model="i_payoutMethod" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                                        <option value="" disabled>Select payout</option>
+                                        <option value="bank_deposit">Bank Deposit</option>
+                                        <option value="check">Check</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Use of Funds</label>
+                                    <input type="text" x-model="i_useOfFunds" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="e.g. tuition, medical, equipment">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Additional Notes</label>
+                                <textarea x-model="notes" rows="4" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Explain your need and how the funds will be used"></textarea>
+                            </div>
+
+                            <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30 p-4">
+                                <div class="font-extrabold text-gray-900 dark:text-white">Required documents</div>
+                                <div class="mt-3 grid sm:grid-cols-2 gap-2 text-sm text-gray-700 dark:text-gray-200">
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" required class="w-4 h-4 rounded border-gray-300 dark:border-gray-700">
+                                        Government-issued ID
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" required class="w-4 h-4 rounded border-gray-300 dark:border-gray-700">
+                                        Proof of address
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" required class="w-4 h-4 rounded border-gray-300 dark:border-gray-700">
+                                        Proof of income/bank statement
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" required class="w-4 h-4 rounded border-gray-300 dark:border-gray-700">
+                                        Program-specific documentation
+                                    </label>
+                                </div>
+                            </div>
+
+                            <label class="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-200">
+                                <input type="checkbox" x-model="declarationsOk" required class="mt-1 w-4 h-4 rounded border-gray-300 dark:border-gray-700">
+                                <span>I confirm the information provided is accurate and I authorize verification of identity and eligibility where required.</span>
+                            </label>
+
+                            <div x-show="error" class="rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-800 dark:text-red-200" x-text="error"></div>
+
+                            <div class="flex items-center justify-end">
+                                <button type="submit" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-primary-500 to-primary-600 text-white text-sm font-extrabold hover:from-primary-600 hover:to-primary-700 transition-all">
+                                    <span x-show="!loading">Submit Application</span>
+                                    <span x-show="loading">Submitting…</span>
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700" x-show="step === 'company'">
+                        <div class="flex items-center justify-between gap-4">
+                            <div>
+                                <div class="text-lg font-extrabold text-gray-900 dark:text-white">Company Grant Application</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Complete the form below to submit your organization request.</div>
+                            </div>
+                            <button type="button" @click="toChoose()" class="px-4 py-2 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm font-extrabold">
+                                Back
+                            </button>
+                        </div>
+
+                        <form class="mt-5 space-y-6" @submit.prevent="submitCompany()">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Company Legal Name</label>
+                                    <input type="text" x-model="companyName" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Legal name">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">EIN</label>
+                                    <input type="text" x-model="ein" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="XX-XXXXXXX">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Registration Number</label>
+                                    <input type="text" x-model="registrationNumber" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="State registration">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Established Date</label>
+                                    <input type="date" x-model="establishedDate" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Industry</label>
+                                    <input type="text" x-model="industry" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Industry">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Website</label>
+                                    <input type="url" x-model="website" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="https://">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Primary Contact Name</label>
+                                    <input type="text" x-model="contactName" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Contact person">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Primary Contact Title</label>
+                                    <input type="text" x-model="contactTitle" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Role / title">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Email</label>
+                                    <input type="email" x-model="email" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="company@example.com">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Phone</label>
+                                    <input type="tel" x-model="phone" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="+1 (555) 555-5555">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Employees</label>
+                                    <input type="number" x-model="employees" min="0" step="1" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="0">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Annual Revenue</label>
+                                    <select x-model="annualRevenue" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                                        <option value="" disabled>Select range</option>
+                                        <option value="under_100k">Under $100k</option>
+                                        <option value="100k_500k">$100k–$500k</option>
+                                        <option value="500k_2m">$500k–$2m</option>
+                                        <option value="2m_10m">$2m–$10m</option>
+                                        <option value="over_10m">Over $10m</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Grant Program</label>
+                                    <select x-model="program" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                                        <option value="" disabled>Select program</option>
+                                        <option value="small_business_relief">Small Business Relief</option>
+                                        <option value="community_development">Community Development</option>
+                                        <option value="innovation_research">Innovation &amp; Research</option>
+                                        <option value="equipment_upgrade">Equipment Upgrade</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Requested Amount (USD)</label>
+                                    <input type="number" x-model="requestedAmount" min="1" step="0.01" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="0.00">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Business Address Line 1</label>
+                                    <input type="text" x-model="c_address1" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Street address">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Business Address Line 2</label>
+                                    <input type="text" x-model="c_address2" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Suite (optional)">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">City</label>
+                                    <input type="text" x-model="c_city" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="City">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">State / Province</label>
+                                    <input type="text" x-model="c_state" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="State">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Postal Code</label>
+                                    <input type="text" x-model="c_postalCode" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="ZIP / Postal">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Country</label>
+                                    <input type="text" x-model="c_country" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Country">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Use of Funds</label>
+                                    <input type="text" x-model="c_useOfFunds" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="e.g. payroll, equipment, rent">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Organization Mission</label>
+                                    <input type="text" x-model="mission" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Short mission statement">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Additional Notes</label>
+                                <textarea x-model="notes" rows="4" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Provide any supporting context"></textarea>
+                            </div>
+
+                            <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30 p-4">
+                                <div class="font-extrabold text-gray-900 dark:text-white">Required documents</div>
+                                <div class="mt-3 grid sm:grid-cols-2 gap-2 text-sm text-gray-700 dark:text-gray-200">
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" required class="w-4 h-4 rounded border-gray-300 dark:border-gray-700">
+                                        Certificate of incorporation / registration
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" required class="w-4 h-4 rounded border-gray-300 dark:border-gray-700">
+                                        EIN confirmation letter
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" required class="w-4 h-4 rounded border-gray-300 dark:border-gray-700">
+                                        Recent bank statements
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" required class="w-4 h-4 rounded border-gray-300 dark:border-gray-700">
+                                        Operational history / mission summary
+                                    </label>
+                                </div>
+                            </div>
+
+                            <label class="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-200">
+                                <input type="checkbox" x-model="declarationsOk" required class="mt-1 w-4 h-4 rounded border-gray-300 dark:border-gray-700">
+                                <span>I confirm the information provided is accurate and I authorize verification of organization details and eligibility where required.</span>
+                            </label>
+
+                            <div x-show="error" class="rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-800 dark:text-red-200" x-text="error"></div>
+
+                            <div class="flex items-center justify-end">
+                                <button type="submit" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-primary-500 to-primary-600 text-white text-sm font-extrabold hover:from-primary-600 hover:to-primary-700 transition-all">
+                                    <span x-show="!loading">Submit Application</span>
+                                    <span x-show="loading">Submitting…</span>
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700" x-show="step === 'success'">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-green-100 dark:bg-green-900/25 flex items-center justify-center">
+                                <i class="fa-solid fa-circle-check text-green-700 dark:text-green-300"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="text-lg font-extrabold text-gray-900 dark:text-white">Application submitted</div>
+                                <div class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                                    Your request has been received for processing.
+                                </div>
+                                <div class="mt-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30 px-4 py-3 text-sm">
+                                    <span class="font-extrabold text-gray-900 dark:text-white">Reference:</span>
+                                    <span class="ml-2 text-gray-700 dark:text-gray-200" x-text="successId"></span>
+                                </div>
+                                <div class="mt-5 flex flex-col sm:flex-row gap-3">
+                                    <button type="button" @click="toChoose()" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-primary-500 to-primary-600 text-white text-sm font-extrabold hover:from-primary-600 hover:to-primary-700 transition-all">
+                                        Submit another
+                                    </button>
+                                    <a href="dashboard-transactions.html" class="px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm font-extrabold text-center">
+                                        View transactions
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

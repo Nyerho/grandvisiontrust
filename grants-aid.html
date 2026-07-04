@@ -1,0 +1,334 @@
+<html lang="en" x-data="{ darkMode: false, mobileMenuOpen: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)" :class="{ 'dark': darkMode }">
+
+<head>
+    <title>Grants &amp; Aid - GrandVisionTrust Bank</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="apple-mobile-web-app-title" content="GrandVisionTrust Bank">
+    <meta name="application-name" content="GrandVisionTrust Bank">
+    <meta name="description" content="Example grants and aid programs with eligibility steps and a demo application form.">
+    <link rel="shortcut icon" href="storage/app/public/photos/UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png">
+
+    <script>
+        const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
+    <script src="assets/tailwindcss.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="assets/alpine.min.js"></script>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #6b7280;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+</head>
+
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <nav class="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200/70 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="h-16 flex items-center justify-between">
+                <a href="index.html" class="flex items-center gap-3">
+                    <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-9 w-auto">
+                    <span class="hidden sm:block font-extrabold text-gray-900 dark:text-white">GrandVisionTrust Bank</span>
+                </a>
+
+                <div class="hidden lg:flex items-center gap-1">
+                    <a href="index.html" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Home</a>
+                    <a href="dashboard.html" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Dashboard</a>
+                    <div class="relative group">
+                        <button class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold flex items-center gap-2">
+                            Services
+                            <span class="text-xs opacity-70">▾</span>
+                        </button>
+                        <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <div class="p-2">
+                                <a href="personal-banking.html" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Personal Banking</a>
+                                <a href="business-banking.html" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Business Banking</a>
+                                <a href="loans-credit.html" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Loans &amp; Credit</a>
+                                <a href="cards.html" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Cards</a>
+                                <a href="grants-aid.html" class="block px-4 py-2.5 rounded-xl bg-primary-50 dark:bg-primary-900/20 text-primary-800 dark:text-primary-200 font-semibold">Grants &amp; Aid</a>
+                                <a href="tax-refund.html" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Tax Refund</a>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="index.html#contact" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Contact</a>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)" class="p-2.5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs font-bold" aria-label="Toggle dark mode">
+                        <span x-show="!darkMode">Dark</span>
+                        <span x-show="darkMode">Light</span>
+                    </button>
+                    <a href="login.html" class="hidden sm:inline-flex items-center justify-center px-4 py-2.5 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">
+                        Online Banking
+                    </a>
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="lg:hidden p-2.5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs font-bold" aria-label="Open menu">
+                        <span x-show="!mobileMenuOpen">Menu</span>
+                        <span x-show="mobileMenuOpen">Close</span>
+                    </button>
+                </div>
+            </div>
+
+            <div x-show="mobileMenuOpen" x-transition class="lg:hidden pb-4">
+                <div class="grid gap-2">
+                    <a href="index.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Home</a>
+                    <a href="dashboard.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Dashboard</a>
+                    <a href="personal-banking.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Personal Banking</a>
+                    <a href="business-banking.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Business Banking</a>
+                    <a href="loans-credit.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Loans &amp; Credit</a>
+                    <a href="cards.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Cards</a>
+                    <a href="grants-aid.html" class="px-4 py-3 rounded-2xl bg-primary-50 dark:bg-primary-900/20 text-primary-800 dark:text-primary-200 transition-colors font-semibold">Grants &amp; Aid</a>
+                    <a href="tax-refund.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Tax Refund</a>
+                    <a href="index.html#contact" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Contact</a>
+                    <a href="login.html" class="px-4 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-center transition-colors">Online Banking</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-gradient-to-br from-primary-700 via-gray-900 to-primary-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-sm font-semibold">
+                    Grants &amp; Aid
+                </div>
+                <h1 class="mt-4 text-3xl lg:text-5xl font-extrabold">Support programs built for real life</h1>
+                <p class="mt-4 text-white/80 text-lg leading-relaxed">
+                    Explore programs, eligibility steps, and required documents.
+                </p>
+                <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                    <a href="#programs" class="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-white text-primary-800 font-extrabold hover:bg-white/90 transition-colors">
+                        View programs
+                    </a>
+                    <a href="#apply" class="inline-flex items-center justify-center px-6 py-3 rounded-2xl border border-white/30 bg-white/10 hover:bg-white/15 text-white font-extrabold transition-colors">
+                        Apply
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12 space-y-10">
+        <section id="programs" class="scroll-mt-24">
+            <div class="flex items-end justify-between gap-6 flex-col md:flex-row">
+                <div class="max-w-2xl">
+                    <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white">Programs</h2>
+                    <p class="mt-2 text-gray-600 dark:text-gray-300">
+                        Availability and eligibility vary by location.
+                    </p>
+                </div>
+                <a href="#documents" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 font-extrabold transition-colors">
+                    Document checklist
+                </a>
+            </div>
+
+            <div class="mt-6 grid md:grid-cols-3 gap-5">
+                <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6">
+                    <div class="text-sm font-bold text-primary-700 dark:text-primary-300">Housing assistance</div>
+                    <div class="mt-2 text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                        Rent relief, utility support, and documentation checklist.
+                    </div>
+                    <div class="mt-4 text-xs text-gray-600 dark:text-gray-300">
+                        Typical documents: lease agreement, recent bill, proof of income.
+                    </div>
+                </div>
+                <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6">
+                    <div class="text-sm font-bold text-primary-700 dark:text-primary-300">Small business relief</div>
+                    <div class="mt-2 text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                        Support for short-term expenses and recovery planning resources.
+                    </div>
+                    <div class="mt-4 text-xs text-gray-600 dark:text-gray-300">
+                        Typical documents: registration, bank statements, payroll summary.
+                    </div>
+                </div>
+                <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6">
+                    <div class="text-sm font-bold text-primary-700 dark:text-primary-300">Education support</div>
+                    <div class="mt-2 text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                        Tuition and training resources with required documentation steps.
+                    </div>
+                    <div class="mt-4 text-xs text-gray-600 dark:text-gray-300">
+                        Typical documents: enrollment letter, ID, proof of residence.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="documents" class="scroll-mt-24">
+            <div class="rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-6 lg:p-8">
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2">
+                        <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white">Eligibility &amp; document checklist</h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300 leading-relaxed">
+                            A simple checklist that mirrors how most programs collect information. Use Online Banking for verification-driven workflows.
+                        </p>
+                        <div class="mt-5 grid sm:grid-cols-2 gap-4">
+                            <div class="rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-5">
+                                <div class="font-extrabold text-gray-900 dark:text-white">Identity</div>
+                                <div class="mt-1 text-sm text-gray-600 dark:text-gray-300">Government ID and proof of address.</div>
+                            </div>
+                            <div class="rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-5">
+                                <div class="font-extrabold text-gray-900 dark:text-white">Income</div>
+                                <div class="mt-1 text-sm text-gray-600 dark:text-gray-300">Recent payslips or bank statements.</div>
+                            </div>
+                            <div class="rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-5">
+                                <div class="font-extrabold text-gray-900 dark:text-white">Need statement</div>
+                                <div class="mt-1 text-sm text-gray-600 dark:text-gray-300">Brief explanation of the request purpose.</div>
+                            </div>
+                            <div class="rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-5">
+                                <div class="font-extrabold text-gray-900 dark:text-white">Program-specific</div>
+                                <div class="mt-1 text-sm text-gray-600 dark:text-gray-300">Lease, bill, registration, or enrollment evidence.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-6">
+                        <div class="font-extrabold text-gray-900 dark:text-white">Related services</div>
+                        <div class="mt-4 space-y-3 text-sm">
+                            <a href="business-banking.html" class="block rounded-2xl border border-gray-200 dark:border-gray-800 p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <div class="font-semibold text-gray-900 dark:text-white">Business banking</div>
+                                <div class="text-gray-600 dark:text-gray-300">Cash management and onboarding steps.</div>
+                            </a>
+                            <a href="loans-credit.html" class="block rounded-2xl border border-gray-200 dark:border-gray-800 p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <div class="font-semibold text-gray-900 dark:text-white">Loans &amp; credit</div>
+                                <div class="text-gray-600 dark:text-gray-300">Compare options and apply.</div>
+                            </a>
+                            <a href="tax-refund.html" class="block rounded-2xl border border-gray-200 dark:border-gray-800 p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <div class="font-semibold text-gray-900 dark:text-white">Tax refund</div>
+                                <div class="text-gray-600 dark:text-gray-300">Track refund status steps.</div>
+                            </a>
+                        </div>
+                        <a href="#apply" class="mt-5 inline-flex items-center justify-center w-full px-4 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">
+                            Start application
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="apply" class="scroll-mt-24">
+            <div class="flex items-end justify-between gap-6 flex-col md:flex-row">
+                <div class="max-w-2xl">
+                    <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white">Application</h2>
+                    <p class="mt-2 text-gray-600 dark:text-gray-300">
+                        Submit your details and continue in Online Banking.
+                    </p>
+                </div>
+                <a href="index.html#contact" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 font-extrabold transition-colors">
+                    Talk to a specialist
+                </a>
+            </div>
+
+            <form x-data="{ submitting: false, async submit(e) { try { this.submitting = true; const fd = new FormData(e.target); const program = String(fd.get('program') || ''); const requestedAmount = String(fd.get('requestedAmount') || ''); const fullName = String(fd.get('fullName') || ''); const email = String(fd.get('email') || ''); const notes = String(fd.get('notes') || ''); const res = await fetch('/api/applications/grants-aid', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ program, requestedAmount, fullName, email, notes }) }); if (!res.ok) { throw new Error('submit_failed'); } window.location.href = 'login.html'; } catch (err) { this.submitting = false; alert('Unable to submit right now. Please try again.'); } } }" @submit.prevent="submit($event)" class="mt-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 lg:p-8">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Program</label>
+                        <select name="program" class="w-full rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <option>Housing assistance</option>
+                            <option>Small business relief</option>
+                            <option>Education support</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Requested amount</label>
+                        <input name="requestedAmount" type="text" inputmode="decimal" placeholder="e.g. 2,500.00" class="w-full rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Full name</label>
+                        <input name="fullName" type="text" placeholder="Your name" class="w-full rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                        <input name="email" type="email" placeholder="you@example.com" class="w-full rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Reason / notes</label>
+                        <textarea name="notes" rows="4" placeholder="Explain the request purpose and timing (optional)" class="w-full rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"></textarea>
+                    </div>
+                </div>
+                <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                    <button type="submit" class="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">
+                        <span x-show="!submitting">Continue in Online Banking</span>
+                        <span x-show="submitting">Submitting…</span>
+                    </button>
+                    <a href="loans-credit.html" class="inline-flex items-center justify-center px-6 py-3 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 font-extrabold transition-colors">
+                        Explore loans &amp; credit
+                    </a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    © GrandVisionTrust Bank. All rights reserved.
+                </div>
+                <div class="flex flex-wrap gap-3 text-sm">
+                    <a href="index.html#services" class="font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Services</a>
+                    <a href="dashboard.html" class="font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Dashboard</a>
+                    <a href="index.html#contact" class="font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

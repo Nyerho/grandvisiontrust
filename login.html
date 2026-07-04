@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ darkMode: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)" :class="{ 'dark': darkMode }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - GrandVisionTrust Bank</title>
+    <meta name="description" content="Secure login to GrandVisionTrust Bank online banking.">
+    <link rel="shortcut icon" href="storage/app/public/photos/UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png">
+
+    <script>
+        const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
+    <script src="assets/tailwindcss.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            DEFAULT: '#0ea5e9',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            foreground: '#ffffff',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            DEFAULT: '#64748b',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1f2937',
+                            900: '#0f172a',
+                            foreground: '#0f172a',
+                        },
+                        accent: {
+                            50: '#fdf2f8',
+                            100: '#fce7f3',
+                            200: '#fbcfe8',
+                            300: '#f9a8d4',
+                            400: '#f472b6',
+                            DEFAULT: '#ec4899',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            700: '#be185d',
+                            800: '#9d174d',
+                            900: '#831843',
+                            foreground: '#ffffff',
+                        },
+                        background: '#f8fafc',
+                        foreground: '#1e293b',
+                        card: {
+                            DEFAULT: '#ffffff',
+                            foreground: '#1e293b',
+                        },
+                        muted: {
+                            DEFAULT: '#f1f5f9',
+                            foreground: '#64748b',
+                        },
+                        border: '#e2e8f0',
+                        input: '#e2e8f0',
+                        ring: '#0ea5e9',
+                    },
+                    borderRadius: {
+                        lg: '0.75rem',
+                        xl: '0.75rem',
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    },
+                }
+            }
+        }
+    </script>
+    <script defer src="assets/alpine.min.js"></script>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-900 dark:text-slate-100">
+    <div class="min-h-screen flex items-center justify-center px-4 py-10">
+        <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="hidden lg:flex flex-col justify-between rounded-3xl overflow-hidden bg-gradient-to-br from-primary-600 via-primary-700 to-indigo-700 text-white p-10 shadow-2xl shadow-primary-900/20">
+                <div class="flex items-center gap-3">
+                    <div class="h-12 w-12 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center">
+                        <a href="index.html" class="inline-flex">
+                            <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-8 w-auto">
+                        </a>
+                    </div>
+                    <div>
+                        <div class="text-xl font-extrabold leading-tight">GrandVisionTrust Bank</div>
+                        <div class="text-white/80 text-sm">Online Banking</div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="text-3xl font-black leading-tight">Secure access to your accounts</div>
+                    <div class="text-white/85 leading-relaxed">
+                        Sign in to view balances, manage transfers, and monitor activity.
+                    </div>
+                    <div class="flex items-center gap-3 text-sm text-white/90">
+                        <span class="inline-flex h-2 w-2 rounded-full bg-emerald-300"></span>
+                        Encrypted sessions and secure sign-in
+                    </div>
+                </div>
+
+                <a href="index.html" class="inline-flex items-center gap-2 text-white/90 hover:text-white font-semibold">
+                    <span class="text-xl">←</span>
+                    Back to Home
+                </a>
+            </div>
+
+            <div class="rounded-3xl bg-white/90 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/70 dark:border-slate-700 shadow-2xl shadow-slate-900/10 p-6 sm:p-10">
+                <div class="flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <a href="index.html" class="inline-flex">
+                            <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-10 w-auto">
+                        </a>
+                        <div>
+                            <div class="text-lg font-extrabold">Sign in</div>
+                            <div class="text-sm text-slate-500 dark:text-slate-300">Use your online banking details</div>
+                        </div>
+                    </div>
+
+                    <button type="button" @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)" class="px-3 py-2 rounded-xl text-sm font-semibold border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                        <span x-show="!darkMode">Dark</span>
+                        <span x-show="darkMode">Light</span>
+                    </button>
+                </div>
+
+                <div class="mt-6" x-data="{ step: 'password', loading: false, pinLoading: false, error: '', email: '', registered: new URLSearchParams(window.location.search).get('registered') === '1', async submitPassword(e) { try { this.error = ''; this.loading = true; const fd = new FormData(e.target); const email = String(fd.get('email') || '').trim(); const password = String(fd.get('password') || ''); this.email = email; const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) }); const data = await res.json().catch(() => ({})); if (!res.ok) { throw new Error('login_failed'); } if (data?.next !== 'pin') { try { await fetch('/api/auth/logout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }); } catch (err) {} this.loading = false; this.error = 'This account does not have a PIN set. Please register again or contact support.'; return; } this.loading = false; this.step = 'pin'; } catch (err) { this.loading = false; this.error = 'Login failed. Please check your details and try again.'; } }, async submitPin(e) { try { this.error = ''; this.pinLoading = true; const fd = new FormData(e.target); const pin = String(fd.get('pin') || '').trim(); const res = await fetch('/api/auth/verify-pin', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pin }) }); const data = await res.json().catch(() => ({})); if (!res.ok) { if (data?.error === 'pin_not_set') { throw new Error('pin_not_set'); } throw new Error('pin_failed'); } window.location.href = 'dashboard.html'; } catch (err) { this.pinLoading = false; this.error = String(err?.message) === 'pin_not_set' ? 'This account does not have a PIN set. Please register again or contact support.' : 'Incorrect PIN. Please try again.'; } }, async backToPassword() { try { await fetch('/api/auth/logout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }); } catch (err) {} this.step = 'password'; this.pinLoading = false; this.loading = false; } }">
+                    <div x-show="registered" class="mb-5 rounded-2xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 px-4 py-3 text-sm text-green-800 dark:text-green-200">
+                        Registration completed. Please sign in to continue.
+                    </div>
+                    <div x-show="error" class="mb-5 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-800 dark:text-red-200" x-text="error"></div>
+
+                    <form x-show="step === 'password'" class="space-y-5" @submit.prevent="submitPassword($event)">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Email address</label>
+                            <input name="email" type="email" required autocomplete="email" placeholder="you@example.com" class="mt-2 w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/50">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Password</label>
+                            <input name="password" type="password" required autocomplete="current-password" placeholder="••••••••" class="mt-2 w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/50">
+                        </div>
+
+                        <div class="flex items-center justify-between gap-3">
+                            <label class="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                                <input type="checkbox" class="rounded border-slate-300 dark:border-slate-600 text-primary-600 focus:ring-primary-200 dark:focus:ring-primary-900/50">
+                                Remember me
+                            </label>
+                            <a href="#forgot-password" class="text-sm font-semibold text-primary-700 dark:text-primary-300 hover:underline">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="w-full rounded-2xl bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white font-extrabold py-3.5 shadow-lg shadow-primary-600/20 transition-all">
+                            <span x-show="!loading">Continue</span>
+                            <span x-show="loading">Signing in…</span>
+                        </button>
+
+                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Next, you will confirm your 4-digit PIN before accessing the dashboard.
+                        </div>
+                    </form>
+
+                    <form x-show="step === 'pin'" class="space-y-5" @submit.prevent="submitPin($event)">
+                        <div>
+                            <div class="text-base font-extrabold text-slate-900 dark:text-white">Enter your 4-digit PIN</div>
+                            <div class="text-sm text-slate-600 dark:text-slate-300 mt-1">For extra security, confirm your PIN to continue.</div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-200">PIN</label>
+                            <input name="pin" type="password" inputmode="numeric" pattern="\\d{4}" maxlength="4" autocomplete="off" required placeholder="••••" class="mt-2 w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/50">
+                        </div>
+
+                        <div class="flex items-center justify-between gap-3">
+                            <button type="button" @click="backToPassword()" class="text-sm font-semibold text-slate-700 dark:text-slate-200 hover:underline">Back</button>
+                            <span class="text-sm text-slate-500 dark:text-slate-400" x-text="email"></span>
+                        </div>
+
+                        <button type="submit" class="w-full rounded-2xl bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white font-extrabold py-3.5 shadow-lg shadow-primary-600/20 transition-all">
+                            <span x-show="!pinLoading">Verify &amp; Sign in</span>
+                            <span x-show="pinLoading">Verifying…</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div id="forgot-password" class="mt-8 rounded-3xl border border-slate-200/70 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/40 p-6">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <div class="text-base font-extrabold text-slate-900 dark:text-white">Reset your password</div>
+                            <div class="text-sm text-slate-600 dark:text-slate-300 mt-1">Enter your email and we will send reset instructions.</div>
+                        </div>
+                        <a href="#" class="text-sm font-semibold text-primary-700 dark:text-primary-300 hover:underline">Back to login</a>
+                    </div>
+
+                    <form x-data="{ sent: false }" @submit.prevent="sent = true" class="mt-5 space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Email address</label>
+                            <input type="email" required autocomplete="email" placeholder="you@example.com" class="mt-2 w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/50">
+                        </div>
+
+                        <button type="submit" class="w-full rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold py-3.5 shadow-lg shadow-primary-600/20 transition-all">
+                            Send reset link
+                        </button>
+
+                        <div x-show="sent" class="rounded-2xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 px-4 py-3 text-sm text-green-800 dark:text-green-200">
+                            If the email exists, password reset instructions will be sent shortly.
+                        </div>
+                    </form>
+                </div>
+
+                <div class="mt-8 lg:hidden">
+                    <a href="index.html" class="inline-flex items-center gap-2 text-slate-700 dark:text-slate-200 font-semibold">
+                        <span class="text-xl">←</span>
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

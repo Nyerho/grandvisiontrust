@@ -1,0 +1,452 @@
+<html lang="en" x-data="{ darkMode: false, mobileMenuOpen: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)" :class="{ 'dark': darkMode }">
+
+<head>
+    <title>Services - GrandVisionTrust Bank</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="apple-mobile-web-app-title" content="GrandVisionTrust Bank">
+    <meta name="application-name" content="GrandVisionTrust Bank">
+    <meta name="description" content="Explore GrandVisionTrust Bank services: personal banking, business banking, loans, cards, grants, and tax refund support.">
+    <link rel="shortcut icon" href="storage/app/public/photos/UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+
+    <script>
+        const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
+    <script src="assets/tailwindcss.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="assets/alpine.min.js"></script>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #6b7280;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+</head>
+
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <nav class="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200/70 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="h-16 flex items-center justify-between">
+                <a href="index.html" class="flex items-center gap-3">
+                    <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-9 w-auto">
+                    <span class="hidden sm:block font-extrabold text-gray-900 dark:text-white">GrandVisionTrust Bank</span>
+                </a>
+
+                <div class="hidden lg:flex items-center gap-1">
+                    <a href="index.html" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Home</a>
+                    <a href="dashboard.html" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Dashboard</a>
+                    <div class="relative group">
+                        <button class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold flex items-center gap-2">
+                            Services
+                            <span class="text-xs opacity-70">▾</span>
+                        </button>
+                        <div class="absolute left-0 mt-2 w-72 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <div class="p-2">
+                                <a href="#personal-banking" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Personal Banking</a>
+                                <a href="#business-banking" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Business Banking</a>
+                                <a href="#loans-credit" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Loans &amp; Credit</a>
+                                <a href="#cards" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Cards</a>
+                                <a href="#grants-aid" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Grants &amp; Aid</a>
+                                <a href="#tax-refund" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Tax Refund</a>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="index.html#contact" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Contact</a>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)" class="p-2.5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs font-bold" aria-label="Toggle dark mode">
+                        <span x-show="!darkMode">Dark</span>
+                        <span x-show="darkMode">Light</span>
+                    </button>
+                    <a href="login.html" class="hidden sm:inline-flex items-center justify-center px-4 py-2.5 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">
+                        Login
+                    </a>
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="lg:hidden p-2.5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" aria-label="Open menu">
+                        <i class="fa-solid fa-bars" x-show="!mobileMenuOpen"></i>
+                        <i class="fa-solid fa-xmark" x-show="mobileMenuOpen"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="lg:hidden pb-4" x-show="mobileMenuOpen" x-transition>
+                <div class="grid grid-cols-1 gap-2 pt-2">
+                    <a href="index.html" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Home</a>
+                    <a href="dashboard.html" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Dashboard</a>
+                    <a href="#personal-banking" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Personal Banking</a>
+                    <a href="#business-banking" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Business Banking</a>
+                    <a href="#loans-credit" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Loans &amp; Credit</a>
+                    <a href="#cards" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Cards</a>
+                    <a href="#grants-aid" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Grants &amp; Aid</a>
+                    <a href="#tax-refund" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Tax Refund</a>
+                    <a href="index.html#contact" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 dark:from-primary-900 dark:via-primary-900 dark:to-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <div class="max-w-3xl">
+                <p class="inline-flex items-center px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white/90 text-xs font-bold tracking-wide">
+                    <i class="fa-solid fa-concierge-bell mr-2"></i> Services
+                </p>
+                <h1 class="mt-4 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white">Everything you need in one place</h1>
+                <p class="mt-4 text-white/90 text-lg">Browse all service cards on this single scrollable page, and jump directly to any service from the dropdown.</p>
+                <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                    <a href="#services-grid" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-white text-primary-700 font-extrabold hover:bg-white/90 transition-colors">
+                        Explore Services
+                    </a>
+                    <a href="login.html" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-primary-500/30 border border-white/20 text-white font-extrabold hover:bg-primary-500/40 transition-colors">
+                        Online Banking Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+        <section id="services-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <a href="#personal-banking" class="group p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center">
+                        <i class="fa-solid fa-user text-primary-700 dark:text-primary-300"></i>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-gray-400 group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all"></i>
+                </div>
+                <h2 class="mt-4 text-lg font-extrabold text-gray-900 dark:text-white">Personal Banking</h2>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Checking, savings, digital tools, and security built for everyday life.</p>
+            </a>
+
+            <a href="#business-banking" class="group p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                        <i class="fa-solid fa-briefcase text-blue-700 dark:text-blue-300"></i>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-gray-400 group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all"></i>
+                </div>
+                <h2 class="mt-4 text-lg font-extrabold text-gray-900 dark:text-white">Business Banking</h2>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Accounts, payments, and cash-management essentials for growth.</p>
+            </a>
+
+            <a href="#loans-credit" class="group p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                        <i class="fa-solid fa-handshake text-green-700 dark:text-green-300"></i>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-gray-400 group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all"></i>
+                </div>
+                <h2 class="mt-4 text-lg font-extrabold text-gray-900 dark:text-white">Loans &amp; Credit</h2>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Personal and business lending with clear terms and support.</p>
+            </a>
+
+            <a href="#cards" class="group p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                        <i class="fa-solid fa-credit-card text-purple-700 dark:text-purple-300"></i>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-gray-400 group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all"></i>
+                </div>
+                <h2 class="mt-4 text-lg font-extrabold text-gray-900 dark:text-white">Cards</h2>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Debit and credit cards with instant controls and fraud protection.</p>
+            </a>
+
+            <a href="#grants-aid" class="group p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+                        <i class="fa-solid fa-hand-holding-dollar text-orange-700 dark:text-orange-300"></i>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-gray-400 group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all"></i>
+                </div>
+                <h2 class="mt-4 text-lg font-extrabold text-gray-900 dark:text-white">Grants &amp; Aid</h2>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Explore eligibility checklists, documents, and next steps.</p>
+            </a>
+
+            <a href="#tax-refund" class="group p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center">
+                        <i class="fa-solid fa-receipt text-pink-700 dark:text-pink-300"></i>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-gray-400 group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all"></i>
+                </div>
+                <h2 class="mt-4 text-lg font-extrabold text-gray-900 dark:text-white">Tax Refund</h2>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Submit refund details for review and processing support.</p>
+            </a>
+        </section>
+
+        <section id="personal-banking" class="mt-12 lg:mt-16 scroll-mt-24">
+            <div class="p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                    <div>
+                        <p class="inline-flex items-center px-3 py-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-xs font-extrabold">Personal Banking</p>
+                        <h2 class="mt-3 text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">Everyday accounts and digital tools</h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">Stay on top of your money with checking, savings, alerts, and easy transfers.</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="login.html" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">Open / Access Account</a>
+                        <a href="#cards" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 font-extrabold transition-colors">Compare Cards</a>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Checking</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Manage bills, pay friends, and get paid faster with direct deposit.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Savings</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Build goals with automatic transfers and clear progress tracking.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Digital Security</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Login alerts, device management, and secure verification flows.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="business-banking" class="mt-12 lg:mt-16 scroll-mt-24">
+            <div class="p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                    <div>
+                        <p class="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 text-xs font-extrabold">Business Banking</p>
+                        <h2 class="mt-3 text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">Accounts, payments, and cash flow</h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">Tools to help you invoice, pay vendors, manage payroll, and scale operations.</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="login.html" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">Get Started</a>
+                        <a href="#loans-credit" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 font-extrabold transition-colors">Explore Business Loans</a>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Business Checking</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Keep operating funds organized with transparent fees and reporting.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Merchant Payments</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Accept card payments and track settlements with clear dashboards.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Cash Management</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Schedule transfers and set alerts to stay ahead of expenses.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="loans-credit" class="mt-12 lg:mt-16 scroll-mt-24">
+            <div class="p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                    <div>
+                        <p class="inline-flex items-center px-3 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs font-extrabold">Loans &amp; Credit</p>
+                        <h2 class="mt-3 text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">Flexible funding with clear next steps</h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">Apply for personal and business loans, and track your request from submission to approval.</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="loans-credit.html#apply" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">Apply in Dashboard</a>
+                        <a href="#tax-refund" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 font-extrabold transition-colors">Tax Refund Support</a>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Personal Loans</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Emergency, travel, tuition, and debt consolidation with flexible terms.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Business Loans</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Inventory, equipment, and working capital options for growth.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Credit Builder</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Build positive history with reminders, alerts, and helpful controls.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cards" class="mt-12 lg:mt-16 scroll-mt-24">
+            <div class="p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                    <div>
+                        <p class="inline-flex items-center px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-800 dark:text-purple-200 text-xs font-extrabold">Cards</p>
+                        <h2 class="mt-3 text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">Spend with control and confidence</h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">Manage spending, freeze/unfreeze cards, and get alerts for unusual activity.</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="dashboard-cards.html" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">Manage Cards</a>
+                        <a href="login.html" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 font-extrabold transition-colors">Apply / Request</a>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Debit Cards</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Everyday access with chip security and fast card controls.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Credit Cards</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Rewards-friendly options with spending insights and alerts.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Virtual Cards</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Create secure online-only cards for safer internet purchases.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="grants-aid" class="mt-12 lg:mt-16 scroll-mt-24">
+            <div class="p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                    <div>
+                        <p class="inline-flex items-center px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 text-xs font-extrabold">Grants &amp; Aid</p>
+                        <h2 class="mt-3 text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">Relief programs and application guidance</h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">Explore programs, document checklists, and ways to submit for review.</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="grants-aid.html#apply" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">Apply in Dashboard</a>
+                        <a href="#tax-refund" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 font-extrabold transition-colors">Tax Refund Support</a>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Eligibility Checklist</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Confirm basic requirements and gather supporting documents.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Document Upload</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Submit identity and proof-of-need documents for review.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Status Updates</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Get notifications when review begins, completes, or needs info.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tax-refund" class="mt-12 lg:mt-16 scroll-mt-24">
+            <div class="p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                    <div>
+                        <p class="inline-flex items-center px-3 py-1 rounded-full bg-pink-50 dark:bg-pink-900/30 text-pink-800 dark:text-pink-200 text-xs font-extrabold">Tax Refund</p>
+                        <h2 class="mt-3 text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">Refund support and deposit options</h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">Share your refund details for review, then choose how you want to receive funds.</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="tax-refund.html#request" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">Submit in Dashboard</a>
+                        <a href="#personal-banking" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 font-extrabold transition-colors">Back to Personal Banking</a>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Confirm Filing Details</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Select tax year and filing status to align the request.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Provide Amount</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Enter the expected refund amount for processing guidance.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200/70 dark:border-gray-700">
+                        <p class="text-sm font-extrabold text-gray-900 dark:text-white">Choose Delivery</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Pick bank deposit or card credit based on your preference.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <a href="index.html" class="flex items-center gap-3">
+                    <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-9 w-auto">
+                    <div>
+                        <p class="font-extrabold text-gray-900 dark:text-white">GrandVisionTrust Bank</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-300">Secure. Modern. Built around you.</p>
+                    </div>
+                </a>
+                <div class="flex flex-wrap gap-3">
+                    <a href="#services-grid" class="px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 font-extrabold hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">All Services</a>
+                    <a href="login.html" class="px-4 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">Login</a>
+                    <a href="dashboard.html" class="px-4 py-2 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 font-extrabold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">Dashboard</a>
+                </div>
+            </div>
+            <div class="mt-8 text-sm text-gray-500 dark:text-gray-400">
+                © <span x-text="new Date().getFullYear()"></span> GrandVisionTrust Bank. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://kit.fontawesome.com/dc4cdf4a71.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

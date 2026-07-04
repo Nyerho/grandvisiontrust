@@ -1,0 +1,411 @@
+<html lang="en" x-data="{ darkMode: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)" :class="{ 'dark': darkMode }">
+<head>
+    <title>International Transfer - GrandVisionTrust Bank</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="apple-mobile-web-app-title" content="GrandVisionTrust Bank">
+    <meta name="application-name" content="GrandVisionTrust Bank">
+    <meta name="description" content="Send money internationally using IBAN/SWIFT details.">
+    <link rel="shortcut icon" href="storage/app/public/photos/UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+
+    <script>
+        const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
+    <script src="assets/tailwindcss.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        background: '#f8fafc',
+                        foreground: '#1e293b',
+                    },
+                },
+            },
+        };
+    </script>
+    <script defer src="assets/alpine.min.js"></script>
+</head>
+<body class="bg-background text-foreground">
+    <div class="min-h-screen flex">
+        <aside class="hidden lg:flex w-72 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200/50 dark:border-gray-700/50 flex-col">
+            <div class="p-6 border-b border-gray-200/50 dark:border-gray-700/50">
+                <a href="dashboard.html" class="inline-flex">
+                    <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-12 w-auto">
+                </a>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-6 overflow-y-auto">
+                <div class="mb-8">
+                    <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Main</h3>
+                    <div class="space-y-2">
+                        <a href="dashboard.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-house text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Dashboard</span>
+                        </a>
+                        <a href="dashboard-transactions.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-chart-line text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Transactions</span>
+                        </a>
+                        <a href="dashboard-cards.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-credit-card text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Cards</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Transfers</h3>
+                    <div class="space-y-2">
+                        <a href="dashboard-local-transfer.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-paper-plane text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Local Transfer</span>
+                        </a>
+                        <a href="dashboard-international-transfer.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-white/20 transition-colors">
+                                <i class="fa-solid fa-globe text-white transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">International</span>
+                            <div class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                        </a>
+                        <a href="dashboard-deposit.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-plus text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Deposit</span>
+                        </a>
+                        <a href="dashboard-currency-swap.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-arrows-rotate text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Currency Swap</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Account</h3>
+                    <div class="space-y-2">
+                        <a href="dashboard-settings.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-gear text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Settings</span>
+                        </a>
+                        <a href="dashboard-support.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-headset text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Support</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <div class="flex-1 flex flex-col min-w-0">
+            <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 px-4 lg:px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">International Transfer</h1>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Send money abroad with SWIFT/IBAN</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)" class="w-11 h-11 bg-gray-50 hover:bg-primary-50 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-2xl flex items-center justify-center transition-colors group">
+                            <i x-show="!darkMode" class="fa-solid fa-moon text-gray-600 group-hover:text-primary-600 dark:text-gray-300 transition-colors"></i>
+                            <i x-show="darkMode" class="fa-solid fa-sun text-yellow-500 group-hover:text-yellow-400 transition-colors"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="flex-1 p-4 lg:p-6">
+                <div class="max-w-6xl mx-auto space-y-6" x-data="{ 
+                    method: 'wire', 
+                    loading: false, 
+                    error: '', 
+                    success: '', 
+                    beneficiaryName: '', 
+                    country: '', 
+                    iban: '', 
+                    swift: '', 
+                    bankName: '', 
+                    amount: '', 
+                    purpose: '', 
+                    cotCode: '', 
+                    taxCode: '', 
+                    imfCode: '', 
+                    step: 1, 
+                    setMethod(m) { this.method = m; this.error = ''; this.success = ''; }, 
+                    verifyCOT() { this.error = ''; if (this.cotCode.trim()) { this.step = 2; } else { this.error = 'Please enter COT Code'; } }, 
+                    verifyTax() { this.error = ''; if (this.taxCode.trim()) { this.step = 3; } else { this.error = 'Please enter Tax Code'; } }, 
+                    async submitTransfer() { 
+                        try { 
+                            this.error = ''; 
+                            this.success = ''; 
+                            this.loading = true; 
+                            const payload = { beneficiaryName: this.beneficiaryName.trim(), country: this.country.trim(), iban: this.iban.trim(), swift: this.swift.trim(), bankName: this.bankName.trim(), amount: Number(this.amount), purpose: this.purpose.trim(), cotCode: this.cotCode.trim(), taxCode: this.taxCode.trim(), imfCode: this.imfCode.trim() }; 
+                            const res = await fetch('/api/transfers/international', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); 
+                            const data = await res.json().catch(() => ({})); 
+                            if (!res.ok) { this.loading = false; this.error = 'Unable to submit right now. Please check your details and try again.'; return; } 
+                            this.loading = false; 
+                            this.success = `Transfer submitted. Reference: ${String(data?.transactionId || '').trim()}`; 
+                        } catch (err) { this.loading = false; this.error = 'Unable to submit right now. Please check your details and try again.'; } 
+                    } 
+                }">
+                    <section class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+                                <i class="fa-solid fa-globe text-primary-700 dark:text-primary-300"></i>
+                            </div>
+                            <div>
+                                <div class="text-xl font-extrabold text-gray-900 dark:text-white">International Transfer</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Send money worldwide with multiple payment methods</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="text-base font-extrabold text-gray-900 dark:text-white">Select Transfer Method</div>
+
+                    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button type="button" @click="setMethod('wire')" :class="method === 'wire' ? 'ring-2 ring-primary-500/40 border-primary-200 dark:border-primary-800' : ''" class="text-left bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 transition-colors">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                                    <i class="fa-solid fa-building-columns text-blue-700 dark:text-blue-300"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-extrabold text-gray-900 dark:text-white">Wire Transfer</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Transfer funds directly to international bank accounts.</div>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button type="button" @click="setMethod('crypto')" :class="method === 'crypto' ? 'ring-2 ring-primary-500/40 border-primary-200 dark:border-primary-800' : ''" class="text-left bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 transition-colors">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                                    <i class="fa-brands fa-bitcoin text-amber-700 dark:text-amber-300"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-extrabold text-gray-900 dark:text-white">Cryptocurrency</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Send funds to your cryptocurrency wallet.</div>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button type="button" @click="setMethod('paypal')" :class="method === 'paypal' ? 'ring-2 ring-primary-500/40 border-primary-200 dark:border-primary-800' : ''" class="text-left bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 transition-colors">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-2xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                                    <i class="fa-brands fa-paypal text-indigo-700 dark:text-indigo-300"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-extrabold text-gray-900 dark:text-white">PayPal</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Transfer funds to your PayPal account.</div>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button type="button" @click="setMethod('wise')" :class="method === 'wise' ? 'ring-2 ring-primary-500/40 border-primary-200 dark:border-primary-800' : ''" class="text-left bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 transition-colors">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                                    <i class="fa-solid fa-sack-dollar text-emerald-700 dark:text-emerald-300"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-extrabold text-gray-900 dark:text-white">Wise Transfer</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Transfer with lower fees using Wise.</div>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button type="button" @click="setMethod('cashapp')" :class="method === 'cashapp' ? 'ring-2 ring-primary-500/40 border-primary-200 dark:border-primary-800' : ''" class="text-left bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 transition-colors">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-2xl bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center">
+                                    <i class="fa-solid fa-dollar-sign text-pink-700 dark:text-pink-300"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-extrabold text-gray-900 dark:text-white">Cash App</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Quick transfers to your Cash App account.</div>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button type="button" @click="setMethod('more')" :class="method === 'more' ? 'ring-2 ring-primary-500/40 border-primary-200 dark:border-primary-800' : ''" class="text-left bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-800 transition-colors">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-2xl bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
+                                    <i class="fa-solid fa-ellipsis text-yellow-700 dark:text-yellow-300"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-extrabold text-gray-900 dark:text-white">More Options</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Zelle, Venmo, Revolut, and more.</div>
+                                </div>
+                            </div>
+                        </button>
+                    </section>
+
+                    <section x-show="method === 'wire'" class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700">
+                        <div class="mb-4">
+                            <h2 class="text-lg font-bold text-gray-900 dark:text-white">Wire Transfer Details</h2>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Fill in beneficiary and bank details.</p>
+                        </div>
+
+                        <form class="space-y-4" @submit.prevent="submitTransfer()">
+                            <div x-show="step === 1" class="space-y-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Beneficiary Name</label>
+                                        <input type="text" x-model="beneficiaryName" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Full name">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Beneficiary Country</label>
+                                        <input type="text" x-model="country" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Country">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">IBAN / Account Number</label>
+                                        <input type="text" x-model="iban" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="IBAN or account number">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">SWIFT / BIC</label>
+                                        <input type="text" x-model="swift" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="e.g. ABCDGB2L">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Bank Name</label>
+                                        <input type="text" x-model="bankName" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Beneficiary bank">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Amount (USD)</label>
+                                        <input type="number" x-model="amount" min="0.01" step="0.01" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="0.00">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Purpose of Payment</label>
+                                    <input type="text" x-model="purpose" required class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="e.g. Tuition, invoice, family support">
+                                </div>
+
+                                <div class="flex items-center justify-between pt-2">
+                                    <a href="dashboard-transactions.html" class="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">View Transaction History</a>
+                                    <button type="button" @click="step = 2" :disabled="!beneficiaryName || !country || !iban || !swift || !bankName || !amount || !purpose" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-primary-500 to-primary-600 text-white text-sm font-semibold hover:from-primary-600 hover:to-primary-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                                        Next: Verify COT Code
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div x-show="step === 2" class="space-y-4">
+                                <div class="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-900/20 dark:to-blue-900/20 rounded-2xl p-6 border border-primary-100 dark:border-primary-800">
+                                    <h3 class="text-2xl font-extrabold text-gray-900 dark:text-white mb-3">Cost of Transfer (COT) Code</h3>
+                                    <p class="text-gray-700 dark:text-gray-300 mb-4">Wire transfers can be an expensive way to send money from one bank account to another, with typical outgoing fees of $25 per $1,000.00 transfer within the U.S. and $150.00 outside United States but if you're sending a lot of money or need a transfer to happen quickly, you will need Cost of Transfer Code from our customer service to complete your transactions</p>
+                                    <label class="block text-sm font-bold text-gray-900 dark:text-white mb-2">Enter your Cost of Transfer (COT) Code</label>
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <i class="fa-solid fa-lock text-gray-700 dark:text-gray-300 text-xl"></i>
+                                        <span class="font-semibold text-gray-700 dark:text-gray-300">COT CODE</span>
+                                    </div>
+                                    <input type="text" x-model="cotCode" required class="w-full px-4 py-4 rounded-xl bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="Enter COT Code">
+                                </div>
+                                <div x-show="error" class="rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-800 dark:text-red-200" x-text="error"></div>
+                                <div class="flex items-center justify-between pt-2">
+                                    <button type="button" @click="step = 1" class="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Back</button>
+                                    <button type="button" @click="verifyCOT()" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-red-700 to-red-800 text-white text-sm font-bold hover:from-red-800 hover:to-red-900 transition-all shadow-lg">
+                                        Verify COT Transfer >>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div x-show="step === 3" class="space-y-4">
+                                <div class="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-900/20 dark:to-blue-900/20 rounded-2xl p-6 border border-primary-100 dark:border-primary-800">
+                                    <h3 class="text-2xl font-extrabold text-gray-900 dark:text-white mb-3">TAX/VAT Code</h3>
+                                    <p class="text-gray-700 dark:text-gray-300 mb-4">A tax is a compulsory financial charge or some other type of levy imposed on a taxpayer (an individual in order to fund government spending and various public expenditures. A failure to pay, along with evasion of or resistance to taxation, is punishable by law</p>
+                                    <label class="block text-sm font-bold text-gray-900 dark:text-white mb-2">Kindly enter your TAX Code</label>
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <i class="fa-solid fa-lock text-gray-700 dark:text-gray-300 text-xl"></i>
+                                        <span class="font-semibold text-gray-700 dark:text-gray-300">TAX CODE</span>
+                                    </div>
+                                    <input type="text" x-model="taxCode" required class="w-full px-4 py-4 rounded-xl bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="Enter Tax Code">
+                                </div>
+                                <div x-show="error" class="rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-800 dark:text-red-200" x-text="error"></div>
+                                <div class="flex items-center justify-between pt-2">
+                                    <button type="button" @click="step = 2" class="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Back</button>
+                                    <button type="button" @click="verifyTax()" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-red-700 to-red-800 text-white text-sm font-bold hover:from-red-800 hover:to-red-900 transition-all shadow-lg">
+                                        Continue
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div x-show="step === 4" class="space-y-4">
+                                <div class="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-900/20 dark:to-blue-900/20 rounded-2xl p-6 border border-primary-100 dark:border-primary-800">
+                                    <h3 class="text-2xl font-extrabold text-gray-900 dark:text-white mb-3">International Monetary Fund</h3>
+                                    <p class="text-gray-700 dark:text-gray-300 mb-4">The IMF monitors the international monetary system and global economic developments to identify risks and recommend policies for growth and financial stability. The Fund also regularly reviews the economic and financial policies of its 190 member countries and advises their governments on possible policy adjustments.</p>
+                                    <label class="block text-sm font-bold text-gray-900 dark:text-white mb-2">Enter your International Monetary Fund (IMF) code.</label>
+                                    <input type="text" x-model="imfCode" required class="w-full px-4 py-4 rounded-xl bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="Enter IMF Code">
+                                </div>
+                                <div x-show="error" class="rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-800 dark:text-red-200" x-text="error"></div>
+                                <div x-show="success" class="rounded-2xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 px-4 py-3 text-sm text-green-800 dark:text-green-200" x-text="success"></div>
+                                <div class="flex items-center justify-between pt-2">
+                                    <button type="button" @click="step = 3" class="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Back</button>
+                                    <button type="submit" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-red-700 to-red-800 text-white text-sm font-bold hover:from-red-800 hover:to-red-900 transition-all shadow-lg">
+                                        <span x-show="!loading">Submit Transfer</span>
+                                        <span x-show="loading">Submitting…</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+
+                    <section x-show="method !== 'wire'" class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-2xl bg-gray-100 dark:bg-gray-900/40 flex items-center justify-center">
+                                <i class="fa-solid fa-circle-info text-gray-700 dark:text-gray-200"></i>
+                            </div>
+                            <div>
+                                <div class="text-base font-extrabold text-gray-900 dark:text-white">This method is not available yet</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">For now, use Wire Transfer to submit an international payment.</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-2xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+                                <i class="fa-solid fa-shield-halved text-primary-700 dark:text-primary-300"></i>
+                            </div>
+                            <div>
+                                <div class="font-extrabold text-gray-900 dark:text-white">Secure Transaction</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">All transfers are encrypted and processed securely. Never share your PIN with anyone.</div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

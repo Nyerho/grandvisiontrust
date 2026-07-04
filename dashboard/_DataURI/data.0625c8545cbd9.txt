@@ -1,0 +1,1 @@
+chrome-extension://0734ba2d-9fe8-41bd-bdbc-09d47955f00b/js/contentScriptMain.bundle.js

@@ -1,0 +1,241 @@
+<html lang="en" x-data="{ darkMode: false, sidebarOpen: false, showBankAccount: false, showReceiveModal: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)" :class="{ 'dark': darkMode }">
+<head>
+    <title>Deposit - GrandVisionTrust Bank</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="apple-mobile-web-app-title" content="GrandVisionTrust Bank">
+    <meta name="application-name" content="GrandVisionTrust Bank">
+    <meta name="description" content="Add funds to your account using bank transfer or crypto deposit.">
+    <link rel="shortcut icon" href="storage/app/public/photos/UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+
+    <script>
+        const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
+    <script src="assets/tailwindcss.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        background: '#f8fafc',
+                        foreground: '#1e293b',
+                    },
+                },
+            },
+        };
+    </script>
+    <script defer src="assets/alpine.min.js"></script>
+</head>
+<body class="bg-background text-foreground">
+    <div class="min-h-screen flex">
+        <aside class="hidden lg:flex w-72 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200/50 dark:border-gray-700/50 flex-col">
+            <div class="p-6 border-b border-gray-200/50 dark:border-gray-700/50">
+                <a href="dashboard.html" class="inline-flex">
+                    <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-12 w-auto">
+                </a>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-6 overflow-y-auto">
+                <div class="mb-8">
+                    <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Main</h3>
+                    <div class="space-y-2">
+                        <a href="dashboard.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-house text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Dashboard</span>
+                        </a>
+                        <a href="dashboard-transactions.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-chart-line text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Transactions</span>
+                        </a>
+                        <a href="dashboard-cards.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-credit-card text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Cards</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Transfers</h3>
+                    <div class="space-y-2">
+                        <a href="dashboard-local-transfer.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-paper-plane text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Local Transfer</span>
+                        </a>
+                        <a href="dashboard-international-transfer.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-globe text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">International</span>
+                        </a>
+                        <a href="dashboard-deposit.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-white/20 transition-colors">
+                                <i class="fa-solid fa-plus text-white transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Deposit</span>
+                            <div class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                        </a>
+                        <a href="dashboard-currency-swap.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-arrows-rotate text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Currency Swap</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Account</h3>
+                    <div class="space-y-2">
+                        <a href="dashboard-settings.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-gear text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Settings</span>
+                        </a>
+                        <a href="dashboard-support.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                <i class="fa-solid fa-headset text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                            </div>
+                            <span class="font-semibold">Support</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <div class="flex-1 flex flex-col min-w-0">
+            <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 px-4 lg:px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Deposit</h1>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Add funds to your account</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)" class="w-11 h-11 bg-gray-50 hover:bg-primary-50 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-2xl flex items-center justify-center transition-colors group">
+                            <i x-show="!darkMode" class="fa-solid fa-moon text-gray-600 group-hover:text-primary-600 dark:text-gray-300 transition-colors"></i>
+                            <i x-show="darkMode" class="fa-solid fa-sun text-yellow-500 group-hover:text-yellow-400 transition-colors"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="flex-1 p-4 lg:p-6">
+                <div class="max-w-5xl mx-auto space-y-6">
+                    <section class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-start justify-between gap-4 mb-4">
+                            <div>
+                                <h2 class="text-lg font-bold text-gray-900 dark:text-white">Deposit</h2>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Add funds to your account using bank transfer or crypto deposit.</p>
+                            </div>
+                            <a href="dashboard-transactions.html" class="text-sm font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">View Activity</a>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3 class="text-sm font-bold text-gray-900 dark:text-white">Bank Transfer</h3>
+                                    <span class="text-xs font-semibold text-gray-600 dark:text-gray-300">Recommended</span>
+                                </div>
+                                <p class="text-xs text-gray-600 dark:text-gray-300 mb-3">Use your account details to send a deposit from any supported bank.</p>
+                                <button type="button" @click="showBankAccount = true" class="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white text-xs font-semibold hover:from-primary-600 hover:to-primary-700 transition-all">
+                                    <i class="fa-solid fa-building-columns mr-2 text-xs"></i>View Bank Details
+                                </button>
+                            </div>
+                            <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3 class="text-sm font-bold text-gray-900 dark:text-white">Crypto Deposit</h3>
+                                    <span class="text-xs font-semibold text-gray-600 dark:text-gray-300">BTC</span>
+                                </div>
+                                <p class="text-xs text-gray-600 dark:text-gray-300 mb-3">Receive Bitcoin to your address and it will reflect after confirmations.</p>
+                                <button type="button" @click="showReceiveModal = true" class="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-gray-900 dark:bg-gray-700 text-white text-xs font-semibold hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors">
+                                    <i class="fa-brands fa-bitcoin mr-2 text-xs"></i>Show BTC Address
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div x-show="showBankAccount" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="showBankAccount = false"></div>
+        <div class="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-5">
+            <div class="flex items-start justify-between gap-4 mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Bank Account Details</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Use these details to deposit via bank transfer.</p>
+                </div>
+                <button @click="showBankAccount = false" class="w-9 h-9 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fa-solid fa-times text-xs text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+            <div class="space-y-3">
+                <div class="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Account Name</p>
+                    <p class="text-sm font-semibold text-gray-900 dark:text-white">Khrome Gabriel</p>
+                </div>
+                <div class="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Account Number</p>
+                    <p class="text-sm font-semibold text-gray-900 dark:text-white font-mono">07036430586</p>
+                </div>
+                <div class="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Bank</p>
+                    <p class="text-sm font-semibold text-gray-900 dark:text-white">GrandVisionTrust Bank</p>
+                </div>
+            </div>
+            <div class="mt-5 flex justify-end">
+                <button @click="showBankAccount = false" class="px-4 py-2 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white text-sm font-semibold hover:from-primary-600 hover:to-primary-700 transition-all">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <div x-show="showReceiveModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="showReceiveModal = false"></div>
+        <div class="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-5">
+            <div class="flex items-start justify-between gap-4 mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">BTC Deposit Address</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Send only BTC to this address.</p>
+                </div>
+                <button @click="showReceiveModal = false" class="w-9 h-9 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fa-solid fa-times text-xs text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+            <div class="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Address</p>
+                <p class="text-sm font-semibold text-gray-900 dark:text-white font-mono break-all">bc1qexampleaddress0000000000000000000000</p>
+            </div>
+            <div class="mt-5 flex justify-end gap-2">
+                <button @click="navigator.clipboard.writeText('bc1qexampleaddress0000000000000000000000')" class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">Copy</button>
+                <button @click="showReceiveModal = false" class="px-4 py-2 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white text-sm font-semibold hover:from-primary-600 hover:to-primary-700 transition-all">Done</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1 @@
+chrome-extension://iidnbdjijdkbmajdffnidomddglmieko/ai-chat.js
