@@ -1221,10 +1221,19 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'internal_server_error' });
 });
 
+let dbInitialized = false;
+
+app.use(async (req, res, next) => {
+  if (!dbInitialized) {
+    await initDb();
+    dbInitialized = true;
+  }
+  next();
+});
+
 let server;
 
 async function startServer() {
-  await initDb();
   if (require.main === module) {
     server = app.listen(PORT, () => {
       process.stdout.write(`Server running on http://localhost:${PORT}\n`);
