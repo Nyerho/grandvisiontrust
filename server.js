@@ -18,7 +18,7 @@ if (IS_PROD && !process.env.SESSION_SECRET) {
   console.warn('Warning: SESSION_SECRET is not set in production. Using insecure fallback. Set SESSION_SECRET for secure sessions.');
 }
 
-const dataDir = path.join(__dirname, 'data');
+const dataDir = process.env.VERCEL ? '/tmp' : path.join(__dirname, 'data');
 fs.mkdirSync(dataDir, { recursive: true });
 const dbPath = path.join(dataDir, 'app.db');
 const db = new Database(dbPath);
@@ -1081,7 +1081,7 @@ app.put('/api/admin/transactions/:id', requireSameOrigin, requireApiAuth, (req, 
 });
 
 app.use(
-  ['/dashboard.html', '/dashboard-transactions.html', '/dashboard-cards.html', '/dashboard-local-transfer.html', '/dashboard-international-transfer.html', '/dashboard-deposit.html', '/dashboard-currency-swap.html', '/dashboard-grants.html', '/dashboard-settings.html', '/dashboard-support.html', '/admin.html'],
+  ['/dashboard.html', '/dashboard-transactions.html', '/dashboard-cards.html', '/dashboard-local-transfer.html', '/dashboard-international-transfer.html', '/dashboard-deposit.html', '/dashboard-currency-swap.html', '/dashboard-grants.html', '/dashboard-settings.html', '/dashboard-support.html', '/dashboard-paybills.html', '/admin.html'],
   requireAuth
 );
 
@@ -1091,6 +1091,10 @@ app.get('/health', (req, res) => {
   res.json({ ok: true });
 });
 
-app.listen(PORT, () => {
-  process.stdout.write(`Server running on http://localhost:${PORT}\n`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    process.stdout.write(`Server running on http://localhost:${PORT}\n`);
+  });
+} else {
+  module.exports = app;
+}
