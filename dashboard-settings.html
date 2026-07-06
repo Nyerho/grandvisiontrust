@@ -310,6 +310,13 @@
                     <div class="mb-8">
                         <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Services</h3>
                         <div class="space-y-2">
+                            <a href="dashboard-paybills.html" :class="isActiveRoute('paybills') ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25' : 'text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400'" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200">
+                                <div :class="isActiveRoute('paybills') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700'" class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors">
+                                    <i :class="isActiveRoute('paybills') ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'" class="fa-solid fa-file-invoice transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">Pay Bills</span>
+                                <div x-show="isActiveRoute('paybills')" class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                            </a>
                             <a href="loans-credit.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
                                 <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
                                     <i class="fa-solid fa-landmark text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>

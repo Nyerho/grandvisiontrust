@@ -310,6 +310,13 @@
                     <div class="mb-8">
                         <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Services</h3>
                         <div class="space-y-2">
+                            <a href="dashboard-paybills.html" :class="isActiveRoute('paybills') ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25' : 'text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400'" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200">
+                                <div :class="isActiveRoute('paybills') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700'" class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors">
+                                    <i :class="isActiveRoute('paybills') ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'" class="fa-solid fa-file-invoice transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">Pay Bills</span>
+                                <div x-show="isActiveRoute('paybills')" class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                            </a>
                             <a href="loans-credit.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
                                 <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
                                     <i class="fa-solid fa-landmark text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
@@ -508,25 +515,27 @@
                                 <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
                                 <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
                                 <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">4</div>
+                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">5</div>
                             </div>
                             <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Transfer Details</h2>
                             <form class="space-y-6">
                                 <div class="space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Recipient Name</label>
-                                        <input type="text" placeholder="Enter recipient name" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                        <input type="text" placeholder="Enter recipient name" x-model="recipientName" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Account Number / IBAN</label>
-                                        <input type="text" placeholder="Enter account number or IBAN" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                        <input type="text" placeholder="Enter account number or IBAN" x-model="accountNumber" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bank Name</label>
-                                        <input type="text" placeholder="Enter bank name" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                        <input type="text" placeholder="Enter bank name" x-model="bankName" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Country</label>
-                                        <select class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                        <select x-model="country" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                                             <option value="">Select country</option>
                                             <option value="us">United States</option>
                                             <option value="uk">United Kingdom</option>
@@ -540,7 +549,7 @@
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amount</label>
                                         <div class="relative">
                                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
-                                            <input type="number" placeholder="0.00" class="w-full pl-8 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                            <input type="number" placeholder="0.00" x-model="amount" class="w-full pl-8 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                                         </div>
                                     </div>
                                 </div>
@@ -560,13 +569,16 @@
                                 <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
                                 <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
                                 <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">4</div>
+                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">5</div>
                             </div>
-                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">COT Code Verification</h2>
-                            <p class="text-gray-600 dark:text-gray-400 mb-6">Please enter the Cost of Transfer (COT) code to proceed with the transfer.</p>
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Cost of Transfer Code</h2>
+                            <p class="text-gray-700 dark:text-gray-300 mb-4">Wire transfers can be an expensive way to send money from one bank account to another, with typical outgoing fees of $25 per $1,000.00 transfer within the U.S. and $150.00 outside United States but if you're sending a lot of money or need a transfer to happen quickly, you will need Cost of Transfer Code from our customer service to complete your transactions</p>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Enter your Cost of Transfer (COT) Code</h3>
                             <form class="space-y-6">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">COT Code</label>
-                                    <input type="text" placeholder="Enter COT code" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                    <input type="text" placeholder="Enter COT code" x-model="cotCode" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                                 </div>
                                 <div class="flex gap-4 pt-4">
                                     <button type="button" @click="step = 1" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
@@ -587,13 +599,16 @@
                                 <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">3</div>
                                 <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
                                 <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">4</div>
+                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">5</div>
                             </div>
-                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Tax Code Verification</h2>
-                            <p class="text-gray-600 dark:text-gray-400 mb-6">Please enter the Tax code to proceed with the transfer.</p>
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">TAX/VAT Code</h2>
+                            <p class="text-gray-700 dark:text-gray-300 mb-4">A tax is a compulsory financial charge or some other type of levy imposed on a taxpayer (an individual in order to fund government spending and various public expenditures. A failure to pay, along with evasion of or resistance to taxation, is punishable by law</p>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Kindly enter your TAX Code</h3>
                             <form class="space-y-6">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tax Code</label>
-                                    <input type="text" placeholder="Enter Tax code" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                    <input type="text" placeholder="Enter Tax code" x-model="taxCode" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                                 </div>
                                 <div class="flex gap-4 pt-4">
                                     <button type="button" @click="step = 2" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
@@ -614,6 +629,38 @@
                                 <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
                                 <div class="h-1 flex-1 bg-primary-500"></div>
                                 <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">4</div>
+                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">5</div>
+                            </div>
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">International Monetary Fund</h2>
+                            <p class="text-gray-700 dark:text-gray-300 mb-4">The IMF monitors the international monetary system and global economic developments to identify risks and recommend policies for growth and financial stability. The Fund also regularly reviews the economic and financial policies of its 190 member countries and advises their governments on possible policy adjustments.</p>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Enter your International Monetary Fund (IMF) code.</h3>
+                            <form class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">IMF Code</label>
+                                    <input type="text" placeholder="Enter IMF code" x-model="imfCode" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                </div>
+                                <div class="flex gap-4 pt-4">
+                                    <button type="button" @click="step = 3" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
+                                        Back
+                                    </button>
+                                    <button type="button" @click="step = 5" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                        Verify
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div x-show="step === 5">
+                            <div class="flex items-center space-x-4 mb-8">
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">1</div>
+                                <div class="h-1 flex-1 bg-primary-500"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">2</div>
+                                <div class="h-1 flex-1 bg-primary-500"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
+                                <div class="h-1 flex-1 bg-primary-500"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">4</div>
+                                <div class="h-1 flex-1 bg-primary-500"></div>
+                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">5</div>
                             </div>
                             <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Transfer Complete</h2>
                             <div class="text-center py-8">

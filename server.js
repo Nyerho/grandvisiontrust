@@ -10,12 +10,12 @@ const Database = require('better-sqlite3');
 const { nanoid } = require('nanoid');
 
 const PORT = Number.parseInt(process.env.PORT || '3000', 10);
-const SESSION_SECRET = process.env.SESSION_SECRET || '';
+const SESSION_SECRET = process.env.SESSION_SECRET || 'temp-secret-key-change-in-production';
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const IS_PROD = NODE_ENV === 'production';
 
-if (!SESSION_SECRET) {
-  throw new Error('SESSION_SECRET is required');
+if (IS_PROD && !process.env.SESSION_SECRET) {
+  console.warn('Warning: SESSION_SECRET is not set in production. Using insecure fallback. Set SESSION_SECRET for secure sessions.');
 }
 
 const dataDir = path.join(__dirname, 'data');
@@ -795,8 +795,14 @@ app.get('/api/transactions', requireApiAuth, (req, res) => {
     )
     .all(req.session.userId);
 
-  res.json(
-    rows.map((r) => ({
+  const transactions = rows.map((r) => {
+    let meta;
+    try {
+      meta = JSON.parse(r.meta_json);
+    } catch (e) {
+      meta = {};
+    }
+    return {
       id: r.id,
       kind: r.kind,
       description: r.description,
@@ -804,9 +810,11 @@ app.get('/api/transactions', requireApiAuth, (req, res) => {
       currency: r.currency,
       status: r.status,
       createdAt: r.created_at,
-      meta: JSON.parse(r.meta_json),
-    })
-  );
+      meta
+    };
+  });
+
+  res.json(transactions);
 });
 
 app.post('/api/transfers/local', requireSameOrigin, requireApiAuth, (req, res) => {
@@ -935,57 +943,106 @@ app.put('/api/admin/users/:id', requireSameOrigin, requireApiAuth, (req, res) =>
 
 app.get('/api/admin/applications', requireSameOrigin, requireApiAuth, (req, res) => {
   const rows = db.prepare('SELECT id, type, payload_json, status, admin_notes, created_at FROM applications ORDER BY created_at DESC').all();
-  res.json(rows.map(r => ({
-    id: r.id,
-    type: r.type,
-    payload: JSON.parse(r.payload_json),
-    status: r.status,
-    adminNotes: r.admin_notes,
-    createdAt: r.created_at
-  })));
+  res.json(rows.map(r => {
+    let payload;
+    try {
+      payload = JSON.parse(r.payload_json);
+    } catch (e) {
+      payload = {};
+    }
+    return {
+      id: r.id,
+      type: r.type,
+      payload,
+      status: r.status,
+      adminNotes: r.admin_notes,
+      createdAt: r.created_at
+    };
+  }));
 });
 
 app.put('/api/admin/applications/:id', requireSameOrigin, requireApiAuth, (req, res) => {
-  const id = req.params.id;
-  const status = typeof req.body?.status === 'string' ? req.body.status.trim() : '';
-  const adminNotes = typeof req.body?.adminNotes === 'string' ? req.body.adminNotes.trim() : null;
+    const id = req.params.id;
+    const status = typeof req.body?.status === 'string' ? req.body.status.trim() : '';
+    const adminNotes = typeof req.body?.adminNotes === 'string' ? req.body.adminNotes.trim() : null;
 
-  if (!status) {
-    res.status(400).json({ error: 'invalid_input' });
-    return;
-  }
+    if (!status) {
+        res.status(400).json({ error: 'invalid_input' });
+        return;
+    }
 
-  const updates = ['status = ?'];
-  const params = [status];
+    const updates = ['status = ?'];
+    const params = [status];
 
-  if (adminNotes !== null) {
-    updates.push('admin_notes = ?');
-    params.push(adminNotes);
-  }
+    if (adminNotes !== null) {
+        updates.push('admin_notes = ?');
+        params.push(adminNotes);
+    }
 
-  params.push(id);
+    params.push(id);
 
-  const stmt = db.prepare(`UPDATE applications SET ${updates.join(', ')} WHERE id = ?`);
-  stmt.run(...params);
+    const stmt = db.prepare(`UPDATE applications SET ${updates.join(', ')} WHERE id = ?`);
+    stmt.run(...params);
 
-  res.json({ ok: true });
+    res.json({ ok: true });
+});
+
+app.post('/api/admin/transactions', requireSameOrigin, requireApiAuth, (req, res) => {
+    const userId = typeof req.body?.userId === 'string' ? req.body.userId.trim() : '';
+    const kind = typeof req.body?.kind === 'string' ? req.body.kind.trim() : '';
+    const description = typeof req.body?.description === 'string' ? req.body.description.trim() : '';
+    const amount = typeof req.body?.amount === 'number' ? req.body.amount : Number(req.body?.amount);
+    const currency = typeof req.body?.currency === 'string' ? req.body.currency.trim() : 'USD';
+    const status = typeof req.body?.status === 'string' ? req.body.status.trim() : 'completed';
+    const transferCode = typeof req.body?.transferCode === 'string' ? req.body.transferCode.trim() : null;
+    const createdAt = typeof req.body?.createdAt === 'string' ? req.body.createdAt : new Date().toISOString();
+
+    if (!userId || !kind || !description || !Number.isFinite(amount)) {
+        res.status(400).json({ error: 'invalid_input' });
+        return;
+    }
+
+    let amountCents = Math.round(Math.abs(amount) * 100);
+    if (['withdrawal', 'transfer_local', 'transfer_international'].includes(kind)) {
+        amountCents = -amountCents;
+    }
+
+    const id = nanoid();
+
+    db.prepare(`INSERT INTO transactions (id, user_id, kind, description, amount_cents, currency, status, transfer_code, meta_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(
+        id, userId, kind, description, amountCents, currency, status, transferCode, JSON.stringify({}), createdAt
+    );
+
+    if (status === 'completed') {
+        db.prepare(`UPDATE users SET balance_cents = balance_cents + ? WHERE id = ?`).run(amountCents, userId);
+    }
+
+    res.json({ ok: true, transactionId: id });
 });
 
 app.get('/api/admin/transactions', requireSameOrigin, requireApiAuth, (req, res) => {
   const rows = db.prepare('SELECT t.*, u.full_name FROM transactions t JOIN users u ON t.user_id = u.id ORDER BY t.created_at DESC LIMIT 100').all();
-  res.json(rows.map(r => ({
-    id: r.id,
-    userId: r.user_id,
-    userFullName: r.full_name,
-    kind: r.kind,
-    description: r.description,
-    amountCents: r.amount_cents,
-    currency: r.currency,
-    status: r.status,
-    transferCode: r.transfer_code,
-    meta: JSON.parse(r.meta_json),
-    createdAt: r.created_at
-  })));
+  res.json(rows.map(r => {
+    let meta;
+    try {
+      meta = JSON.parse(r.meta_json);
+    } catch (e) {
+      meta = {};
+    }
+    return {
+      id: r.id,
+      userId: r.user_id,
+      userFullName: r.full_name,
+      kind: r.kind,
+      description: r.description,
+      amountCents: r.amount_cents,
+      currency: r.currency,
+      status: r.status,
+      transferCode: r.transfer_code,
+      meta,
+      createdAt: r.created_at
+    };
+  }));
 });
 
 app.put('/api/admin/transactions/:id', requireSameOrigin, requireApiAuth, (req, res) => {

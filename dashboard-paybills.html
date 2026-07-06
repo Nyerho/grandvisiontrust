@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GrandVisionTrust | Local Transfer</title>
-    <meta name="description" content="Send local transfers with GrandVisionTrust." />
+    <title>GrandVisionTrust | Pay Bills</title>
+    <meta name="description" content="Pay your bills with GrandVisionTrust." />
     <link rel="shortcut icon" href="images/PixVerse_Image_Effect_prompt_create_a_logo_for.jpg" />
 
 
@@ -201,12 +201,12 @@
         }
     </style>
 </head>
-<body class="font-sans bg-background text-foreground" x-data="{ darkMode: false, sidebarOpen: false, mobileMenuOpen: false, notificationOpen: false, userDropdownOpen: false, currentRoute: 'local-transfer' }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches); if (darkMode) { document.documentElement.classList.add('dark'); }" :class="{ 'dark': darkMode }">    <div x-data="{ 
+<body class="font-sans bg-background text-foreground" x-data="{ darkMode: false, sidebarOpen: false, mobileMenuOpen: false, notificationOpen: false, userDropdownOpen: false, currentRoute: 'paybills' }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches); if (darkMode) { document.documentElement.classList.add('dark'); }" :class="{ 'dark': darkMode }">    <div x-data="{ 
         sidebarOpen: false,
         mobileMenuOpen: false,
         notificationOpen: false,
         userDropdownOpen: false,
-        currentRoute: 'local-transfer',
+        currentRoute: 'paybills',
         darkMode: localStorage.getItem('darkMode') === 'true' || false,
         toggleSidebar() { this.sidebarOpen = !this.sidebarOpen; },
         closeSidebar() { this.sidebarOpen = false; },
@@ -372,7 +372,7 @@
                         <div class="flex items-center space-x-4">
                             <div>
                                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                                    Local Transfer </h1>
+                                    Pay Bills </h1>
                                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                     Welcome back, User </p>
                             </div>
@@ -493,176 +493,153 @@
                 <main class="flex-1 bg-gray-50 dark:bg-gray-900 min-h-0">
                     <div class="h-full overflow-y-auto">
                         
-                <div class="max-w-3xl mx-auto" x-data="{
-                    step: 1,
-                    recipientName: '',
-                    accountNumber: '',
-                    bankName: '',
-                    amount: '',
-                    description: '',
-                    cotCode: '',
-                    taxCode: '',
-                    imfCode: ''
-                }">
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm dark:shadow-gray-900/25 border border-gray-200 dark:border-gray-700 p-6">
-                        <div x-show="step === 1">
-                            <div class="flex items-center space-x-4 mb-8">
-                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">1</div>
-                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">2</div>
-                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
-                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">4</div>
-                            </div>
-                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Transfer Details</h2>
-                            <form class="space-y-6">
-                                <div class="space-y-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Recipient Name</label>
-                                        <input type="text" placeholder="Enter recipient name" x-model="recipientName" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Account Number</label>
-                                        <input type="text" placeholder="Enter account number" x-model="accountNumber" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bank Name</label>
-                                        <select x-model="bankName" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                                            <option value="">Select bank</option>
-                                            <option value="bank1">Bank of Example</option>
-                                            <option value="bank2">Example Bank</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amount</label>
-                                        <div class="relative">
-                                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
-                                            <input type="number" placeholder="0.00" x-model="amount" class="w-full pl-8 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        <div class="max-w-4xl mx-auto p-6" x-data="{
+                            selectedBiller: null,
+                            amount: '',
+                            showConfirm: false,
+                            loading: false,
+                            success: false,
+                            billers: [
+                                { id: 1, name: 'Electric Company', icon: 'fa-bolt', color: 'bg-yellow-500' },
+                                { id: 2, name: 'Water Utility', icon: 'fa-droplet', color: 'bg-blue-500' },
+                                { id: 3, name: 'Internet Provider', icon: 'fa-wifi', color: 'bg-purple-500' },
+                                { id: 4, name: 'Gas Company', icon: 'fa-fire', color: 'bg-orange-500' },
+                                { id: 5, name: 'Mobile Carrier', icon: 'fa-mobile-alt', color: 'bg-green-500' },
+                                { id: 6, name: 'TV Subscription', icon: 'fa-tv', color: 'bg-red-500' }
+                            ],
+                            recentPayments: [
+                                { id: 1, name: 'Electric Company', amount: -125.50, date: new Date(Date.now() - 86400000 * 2).toISOString() },
+                                { id: 2, name: 'Internet Provider', amount: -79.99, date: new Date(Date.now() - 86400000 * 5).toISOString() }
+                            ],
+                            formatCurrency(amount) {
+                                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+                            },
+                            formatDate(dateStr) {
+                                return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                            },
+                            selectBiller(biller) {
+                                this.selectedBiller = biller;
+                                this.amount = '';
+                                this.showConfirm = false;
+                                this.success = false;
+                            },
+                            async makePayment() {
+                                if (!this.selectedBiller || !this.amount || Number(this.amount) <= 0) return;
+                                this.loading = true;
+                                await new Promise(resolve => setTimeout(resolve, 1500));
+                                this.success = true;
+                                this.loading = false;
+                            },
+                            reset() {
+                                this.selectedBiller = null;
+                                this.amount = '';
+                                this.showConfirm = false;
+                                this.success = false;
+                            }
+                        }">
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                <!-- Billers List -->
+                                <div class="lg:col-span-2">
+                                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                                        <h2 class="text-xl font-bold mb-6 text-gray-900 dark:text-white">Select Biller</h2>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <template x-for="biller in billers" :key="biller.id">
+                                                <button @click="selectBiller(biller)" :class="selectedBiller?.id === biller.id ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'" class="flex items-center space-x-4 p-4 rounded-xl border transition-all">
+                                                    <div :class="biller.color" class="w-12 h-12 rounded-xl flex items-center justify-center text-white">
+                                                        <i :class="'fa-solid ' + biller.icon" class="text-lg"></i>
+                                                    </div>
+                                                    <span class="font-medium text-gray-900 dark:text-white" x-text="biller.name"></span>
+                                                    <i class="fa-solid fa-check text-primary-500 ml-auto" x-show="selectedBiller?.id === biller.id"></i>
+                                                </button>
+                                            </template>
+                                        </div>
+
+                                        <!-- Payment Form -->
+                                        <div x-show="selectedBiller" x-transition class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
+                                            <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white" x-text="'Pay ' + selectedBiller.name"></h3>
+                                            
+                                            <div x-show="!success" class="space-y-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amount</label>
+                                                    <div class="relative">
+                                                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                                                        <input type="number" x-model="amount" placeholder="0.00" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Account Number / Reference</label>
+                                                    <input type="text" placeholder="Enter reference" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                                </div>
+                                                <button @click="showConfirm = true" :disabled="!amount || Number(amount) <= 0" :class="(!amount || Number(amount) <= 0) ? 'bg-gray-300 cursor-not-allowed' : 'bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700'" class="w-full py-3 rounded-xl text-white font-semibold transition-all">
+                                                    Continue
+                                                </button>
+                                            </div>
+
+                                            <!-- Confirmation Modal -->
+                                            <div x-show="showConfirm" x-transition class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="showConfirm = false">
+                                                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full">
+                                                    <h3 class="text-xl font-bold mb-6 text-gray-900 dark:text-white">Confirm Payment</h3>
+                                                    <div class="space-y-4 mb-6">
+                                                        <div class="flex justify-between">
+                                                            <span class="text-gray-500 dark:text-gray-400">Biller</span>
+                                                            <span class="font-semibold text-gray-900 dark:text-white" x-text="selectedBiller.name"></span>
+                                                        </div>
+                                                        <div class="flex justify-between">
+                                                            <span class="text-gray-500 dark:text-gray-400">Amount</span>
+                                                            <span class="font-semibold text-gray-900 dark:text-white" x-text="formatCurrency(Number(amount))"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex space-x-4">
+                                                        <button @click="showConfirm = false" class="flex-1 py-3 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
+                                                            Cancel
+                                                        </button>
+                                                        <button @click="makePayment()" :disabled="loading" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold transition-all flex items-center justify-center">
+                                                            <i x-show="loading" class="fa-solid fa-spinner fa-spin mr-2"></i>
+                                                            <span x-text="loading ? 'Processing...' : 'Pay Now'"></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Success Message -->
+                                            <div x-show="success" x-transition class="text-center py-8">
+                                                <div class="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                    <i class="fa-solid fa-check text-green-500 text-3xl"></i>
+                                                </div>
+                                                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Payment Successful!</h3>
+                                                <p class="text-gray-500 dark:text-gray-400 mb-6">Your payment has been processed.</p>
+                                                <button @click="reset()" class="px-8 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold transition-all">
+                                                    Make Another Payment
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description (Optional)</label>
-                                        <textarea rows="3" placeholder="Enter description" x-model="description" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"></textarea>
+                                </div>
+
+                                <!-- Recent Payments -->
+                                <div>
+                                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                                        <h2 class="text-xl font-bold mb-6 text-gray-900 dark:text-white">Recent Payments</h2>
+                                        <div class="space-y-4">
+                                            <template x-for="payment in recentPayments" :key="payment.id">
+                                                <div class="flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50">
+                                                    <div class="flex items-center space-x-3">
+                                                        <div class="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+                                                            <i class="fa-solid fa-file-invoice text-gray-500 dark:text-gray-400"></i>
+                                                        </div>
+                                                        <div>
+                                                            <p class="font-semibold text-gray-900 dark:text-white" x-text="payment.name"></p>
+                                                            <p class="text-xs text-gray-500 dark:text-gray-400" x-text="formatDate(payment.date)"></p>
+                                                        </div>
+                                                    </div>
+                                                    <p class="font-semibold text-red-500" x-text="formatCurrency(payment.amount)"></p>
+                                                </div>
+                                            </template>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="pt-4">
-                                    <button type="button" @click="step = 2" class="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
-                                        Continue
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        <div x-show="step === 2">
-                            <div class="flex items-center space-x-4 mb-8">
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">1</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">2</div>
-                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
-                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">4</div>
-                            </div>
-                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Cost of Transfer Code</h2>
-                            <p class="text-gray-700 dark:text-gray-300 mb-4">Wire transfers can be an expensive way to send money from one bank account to another, with typical outgoing fees of $25 per $1,000.00 transfer within the U.S. and $150.00 outside United States but if you're sending a lot of money or need a transfer to happen quickly, you will need Cost of Transfer Code from our customer service to complete your transactions</p>
-                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Enter your Cost of Transfer (COT) Code</h3>
-                            <form class="space-y-6">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">COT Code</label>
-                                    <input type="text" placeholder="Enter COT code" x-model="cotCode" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                                </div>
-                                <div class="flex gap-4 pt-4">
-                                    <button type="button" @click="step = 1" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
-                                        Back
-                                    </button>
-                                    <button type="button" @click="step = 3" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
-                                        Verify
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        <div x-show="step === 3">
-                            <div class="flex items-center space-x-4 mb-8">
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">1</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">2</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">3</div>
-                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">4</div>
-                            </div>
-                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">TAX/VAT Code</h2>
-                            <p class="text-gray-700 dark:text-gray-300 mb-4">A tax is a compulsory financial charge or some other type of levy imposed on a taxpayer (an individual in order to fund government spending and various public expenditures. A failure to pay, along with evasion of or resistance to taxation, is punishable by law</p>
-                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Kindly enter your TAX Code</h3>
-                            <form class="space-y-6">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tax Code</label>
-                                    <input type="text" placeholder="Enter Tax code" x-model="taxCode" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                                </div>
-                                <div class="flex gap-4 pt-4">
-                                    <button type="button" @click="step = 2" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
-                                        Back
-                                    </button>
-                                    <button type="button" @click="step = 4" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
-                                        Verify
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        <div x-show="step === 4">
-                            <div class="flex items-center space-x-4 mb-8">
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">1</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">2</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">4</div>
-                            </div>
-                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">International Monetary Fund</h2>
-                            <p class="text-gray-700 dark:text-gray-300 mb-4">The IMF monitors the international monetary system and global economic developments to identify risks and recommend policies for growth and financial stability. The Fund also regularly reviews the economic and financial policies of its 190 member countries and advises their governments on possible policy adjustments.</p>
-                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Enter your International Monetary Fund (IMF) code.</h3>
-                            <form class="space-y-6">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">IMF Code</label>
-                                    <input type="text" placeholder="Enter IMF code" x-model="imfCode" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                                </div>
-                                <div class="flex gap-4 pt-4">
-                                    <button type="button" @click="step = 3" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
-                                        Back
-                                    </button>
-                                    <button type="button" @click="step = 5" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
-                                        Verify
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        <div x-show="step === 5">
-                            <div class="flex items-center space-x-4 mb-8">
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">1</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">2</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">4</div>
-                            </div>
-                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Transfer Complete</h2>
-                            <div class="text-center py-8">
-                                <div class="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-6">
-                                    <i class="fa-solid fa-check text-green-600 dark:text-green-400 text-4xl"></i>
-                                </div>
-                                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Transfer Successful!</h3>
-                                <p class="text-gray-600 dark:text-gray-400 mb-8">Your transfer has been completed successfully.</p>
-                                <a href="dashboard.html" class="inline-flex items-center bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
-                                    <i class="fa-solid fa-arrow-left mr-2"></i>
-                                    Back to Dashboard
-                                </a>
                             </div>
                         </div>
-                    </div>
-                </div>
-            
                     </div>
                 </main>
             </div>
