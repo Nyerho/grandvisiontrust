@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ darkMode: false, open: false, step: 1, loading: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches); if (darkMode) { document.documentElement.classList.add('dark'); }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open an Account - GrandVisionTrust Bank</title>
+    <meta name="description" content="Open a bank account with GrandVisionTrust Bank - Complete, secure, and easy registration">
+    <link rel="shortcut icon" href="storage/app/public/photos/UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAPBT1yStJbk4I_6sLvctlmGXu0lBotaiA",
+            authDomain: "grandvisiontrust.firebaseapp.com",
+            projectId: "grandvisiontrust",
+            storageBucket: "grandvisiontrust.firebasestorage.app",
+            messagingSenderId: "796538268477",
+            appId: "1:796538268477:web:78a8bab0eb8d36d6ca7354",
+            measurementId: "G-6XWG7HEG2V"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const storage = firebase.storage();
+    </script>
+    <script src="assets/tailwindcss.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                            foreground: '#ffffff',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1f2937',
+                            900: '#0f172a',
+                            foreground: '#0f172a',
+                        },
+                        accent: {
+                            50: '#fdf2f8',
+                            100: '#fce7f3',
+                            200: '#fbcfe8',
+                            300: '#f9a8d4',
+                            400: '#f472b6',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            700: '#be185d',
+                            800: '#9d174d',
+                            900: '#831843',
+                            foreground: '#ffffff',
+                        },
+                        background: '#f8fafc',
+                        foreground: '#1e293b',
+                        card: {
+                            DEFAULT: '#ffffff',
+                            foreground: '#1e293b',
+                        },
+                        muted: {
+                            DEFAULT: '#f1f5f9',
+                            foreground: '#64748b',
+                        },
+                        border: '#e2e8f0',
+                        input: '#e2e8f0',
+                        ring: '#10b981',
+                    },
+                    boxShadow: {
+                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+                    },
+                    borderRadius: {
+                        lg: '0.75rem',
+                        xl: '0.75rem',
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="assets/alpine.min.js"></script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+    </style>
+</head>
+<body class="font-sans bg-background">
+    <nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center">
+                        <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-10 w-auto">
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode); if (darkMode) { document.documentElement.classList.add('dark'); } else { document.documentElement.classList.remove('dark'); }" class="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-moon text-gray-700 dark:text-gray-300" x-show="!darkMode"></i>
+                        <i class="fas fa-sun text-yellow-500" x-show="darkMode"></i>
+                    </button>
+                    <a href="login.html" class="hidden md:inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">Sign In</a>
+                    <div class="-mr-2 flex items-center md:hidden">
+                        <button @click="open = !open" class="inline-flex items-center justify-center p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none">
+                            <i class="fas fa-bars text-xl" x-show="!open"></i>
+                            <i class="fas fa-times text-xl" x-show="open"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="md:hidden" x-show="open" x-transition>
+            <div class="pt-2 pb-3 space-y-1 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+                <a href="index.html" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 dark:text-gray-400 hover:bg-primary-50 dark:hover:bg-gray-800 hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400">Home</a>
+                <a href="login.html" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-primary-600 dark:text-primary-400">Sign In</a>
+            </div>
+        </div>
+    </nav>
+    <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-2">Open Your Account</h1>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Complete your registration to get started with GrandVisionTrust Bank</p>
+            </div>
+
+            <div class="flex items-center justify-center mb-8">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm" :class="step >= 1 ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'">1</div>
+                    <div class="w-16 md:w-24 h-1" :class="step >= 2 ? 'bg-primary-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm" :class="step >= 2 ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'">2</div>
+                    <div class="w-16 md:w-24 h-1" :class="step >= 3 ? 'bg-primary-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm" :class="step >= 3 ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'">3</div>
+                    <div class="w-16 md:w-24 h-1" :class="step >= 4 ? 'bg-primary-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm" :class="step >= 4 ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'">4</div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-8">
+                <form id="registrationForm" @submit.prevent>
+                    <!-- Step 1: Personal Information -->
+                    <div x-show="step === 1">
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Personal Information</h2>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">First Name *</label>
+                                <input type="text" id="firstName" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter first name">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Middle Name</label>
+                                <input type="text" id="middleName" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter middle name">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Last Name *</label>
+                                <input type="text" id="lastName" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter last name">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Date of Birth *</label>
+                                <input type="date" id="dateOfBirth" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Social Security Number (SSN) *</label>
+                                <input type="text" id="ssn" required maxlength="11" placeholder="XXX-XX-XXXX" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Citizenship *</label>
+                                <select id="citizenship" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                    <option value="">Select country</option>
+                                    <option value="US">United States</option>
+                                    <option value="UK">United Kingdom</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="FR">France</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Marital Status</label>
+                                <select id="maritalStatus" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                    <option value="">Select status</option>
+                                    <option value="single">Single</option>
+                                    <option value="married">Married</option>
+                                    <option value="divorced">Divorced</option>
+                                    <option value="widowed">Widowed</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Occupation *</label>
+                                <input type="text" id="occupation" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter occupation">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Employer Name</label>
+                                <input type="text" id="employerName" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter employer name">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Annual Income *</label>
+                                <select id="annualIncome" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                    <option value="">Select range</option>
+                                    <option value="0-25000">$0 - $25,000</option>
+                                    <option value="25001-50000">$25,001 - $50,000</option>
+                                    <option value="50001-75000">$50,001 - $75,000</option>
+                                    <option value="75001-100000">$75,001 - $100,000</option>
+                                    <option value="100001-200000">$100,001 - $200,000</option>
+                                    <option value="200001+">$200,001+</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-8 flex justify-end">
+                            <button type="button" @click="step = 2" class="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-200">Continue</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Contact Information -->
+                    <div x-show="step === 2">
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Contact Information</h2>
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email Address *</label>
+                                <input type="email" id="email" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter email address">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Phone Number *</label>
+                                <input type="tel" id="phone" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="(XXX) XXX-XXXX">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Street Address *</label>
+                                <input type="text" id="streetAddress" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Enter street address">
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Apt/Suite #</label>
+                                    <input type="text" id="aptNumber" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Apt/Suite #">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">City *</label>
+                                    <input type="text" id="city" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="City">
+                                </div>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">State/Province *</label>
+                                    <input type="text" id="state" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="State/Province">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">ZIP/Postal Code *</label>
+                                    <input type="text" id="zipCode" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="ZIP/Postal Code">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8 flex justify-between">
+                            <button type="button" @click="step = 1" class="px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold rounded-xl transition-all duration-200">Back</button>
+                            <button type="button" @click="step = 3" class="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-200">Continue</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Account Details -->
+                    <div x-show="step === 3">
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Account Details</h2>
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Account Type *</label>
+                                <select id="accountType" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                    <option value="">Select account type</option>
+                                    <option value="checking">Checking Account</option>
+                                    <option value="savings">Savings Account</option>
+                                    <option value="both">Checking & Savings</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Password *</label>
+                                <input type="password" id="password" required minlength="8" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Minimum 8 characters">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Confirm Password *</label>
+                                <input type="password" id="confirmPassword" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Re-enter password">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Security Question 1 *</label>
+                                <select id="securityQuestion1" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                    <option value="">Select security question</option>
+                                    <option value="motherMaiden">What is your mother's maiden name?</option>
+                                    <option value="firstCar">What was the make and model of your first car?</option>
+                                    <option value="elementarySchool">What elementary school did you attend?</option>
+                                    <option value="birthPlace">In what city were you born?</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Answer *</label>
+                                <input type="text" id="securityAnswer1" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Your answer">
+                            </div>
+                        </div>
+                        <div class="mt-8 flex justify-between">
+                            <button type="button" @click="step = 2" class="px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold rounded-xl transition-all duration-200">Back</button>
+                            <button type="button" @click="step = 4" class="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-200">Continue</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: KYC & Verification -->
+                    <div x-show="step === 4">
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">KYC Verification</h2>
+                        <div class="space-y-6">
+                            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4">
+                                <div class="flex items-start">
+                                    <i class="fas fa-exclamation-circle text-yellow-600 dark:text-yellow-400 mt-1 mr-3"></i>
+                                    <p class="text-sm text-yellow-800 dark:text-yellow-300">To complete your account setup, please upload a valid government-issued ID and a proof of address. Your account will be reviewed by an administrator.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Government-Issued ID *</label>
+                                <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center">
+                                    <input type="file" id="governmentId" accept=".jpg,.jpeg,.png,.pdf" required class="hidden">
+                                    <label for="governmentId" class="cursor-pointer">
+                                        <i class="fas fa-id-card text-4xl text-gray-400 dark:text-gray-500 mb-2"></i>
+                                        <p class="text-gray-600 dark:text-gray-400 mb-1">Click to upload or drag and drop</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-500">JPG, PNG, or PDF (Max 10MB)</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Proof of Address *</label>
+                                <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center">
+                                    <input type="file" id="proofOfAddress" accept=".jpg,.jpeg,.png,.pdf" required class="hidden">
+                                    <label for="proofOfAddress" class="cursor-pointer">
+                                        <i class="fas fa-file-alt text-4xl text-gray-400 dark:text-gray-500 mb-2"></i>
+                                        <p class="text-gray-600 dark:text-gray-400 mb-1">Click to upload or drag and drop</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-500">Utility bill, bank statement, etc.</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="pt-4">
+                                <div class="flex items-start">
+                                    <input id="terms" type="checkbox" required class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded mt-1">
+                                    <label for="terms" class="ml-2 text-sm text-gray-600 dark:text-gray-400">I agree to the <a href="#" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold">Terms of Service</a>, <a href="#" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold">Privacy Policy</a>, and <a href="#" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold">Electronic Communications Agreement</a>.</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8 flex justify-between">
+                            <button type="button" @click="step = 3" class="px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold rounded-xl transition-all duration-200">Back</button>
+                            <button type="button" @click="submitRegistration()" :disabled="loading" class="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span x-show="!loading">Create Account</span>
+                                <span x-show="loading">Creating Account...</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="mt-8 text-center">
+                <p class="text-gray-600 dark:text-gray-400">Already have an account? <a href="login.html" class="font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-10 w-auto mb-4">
+                    <p class="text-gray-400">Empowering your financial future with trust, security, and innovation.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#features" class="text-gray-400 hover:text-white transition-colors">Features</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Services</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="dashboard-local-transfer.html" class="text-gray-400 hover:text-white transition-colors">Local Transfers</a></li>
+                        <li><a href="dashboard-international-transfer.html" class="text-gray-400 hover:text-white transition-colors">International Transfers</a></li>
+                        <li><a href="loans-credit.html" class="text-gray-400 hover:text-white transition-colors">Loans</a></li>
+                        <li><a href="grants-aid.html" class="text-gray-400 hover:text-white transition-colors">Grants & Aid</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 GrandVisionTrust Bank. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // SSN formatting
+        document.getElementById('ssn').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 5) {
+                value = value.slice(0, 3) + '-' + value.slice(3, 5) + '-' + value.slice(5, 9);
+            } else if (value.length > 3) {
+                value = value.slice(0, 3) + '-' + value.slice(3, 5);
+            }
+            e.target.value = value;
+        });
+
+        // Phone formatting
+        document.getElementById('phone').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 6) {
+                value = '(' + value.slice(0, 3) + ') ' + value.slice(3, 6) + '-' + value.slice(6, 10);
+            } else if (value.length > 3) {
+                value = '(' + value.slice(0, 3) + ') ' + value.slice(3, 6);
+            } else if (value.length > 0) {
+                value = '(' + value;
+            }
+            e.target.value = value;
+        });
+
+        async function submitRegistration() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            window.Alpine.store('registrationData').loading = true;
+
+            try {
+                // Create user account
+                const userCredential = await auth.createUserWithEmailAndPassword(
+                    document.getElementById('email').value,
+                    password
+                );
+
+                const user = userCredential.user;
+                const userId = user.uid;
+
+                // Generate account number
+                const accountNumber = 'GVT' + Math.floor(Math.random() * 1000000000).toString().padStart(9, '0');
+
+                // Upload KYC documents
+                let governmentIdUrl = '';
+                let proofOfAddressUrl = '';
+
+                const governmentIdFile = document.getElementById('governmentId').files[0];
+                if (governmentIdFile) {
+                    const governmentIdRef = storage.ref('kyc/' + userId + '/governmentId/' + governmentIdFile.name);
+                    await governmentIdRef.put(governmentIdFile);
+                    governmentIdUrl = await governmentIdRef.getDownloadURL();
+                }
+
+                const proofOfAddressFile = document.getElementById('proofOfAddress').files[0];
+                if (proofOfAddressFile) {
+                    const proofOfAddressRef = storage.ref('kyc/' + userId + '/proofOfAddress/' + proofOfAddressFile.name);
+                    await proofOfAddressRef.put(proofOfAddressFile);
+                    proofOfAddressUrl = await proofOfAddressRef.getDownloadURL();
+                }
+
+                // Save user data to Firestore
+                await db.collection('users').doc(userId).set({
+                    firstName: document.getElementById('firstName').value,
+                    middleName: document.getElementById('middleName').value,
+                    lastName: document.getElementById('lastName').value,
+                    dateOfBirth: document.getElementById('dateOfBirth').value,
+                    ssn: document.getElementById('ssn').value,
+                    citizenship: document.getElementById('citizenship').value,
+                    maritalStatus: document.getElementById('maritalStatus').value,
+                    occupation: document.getElementById('occupation').value,
+                    employerName: document.getElementById('employerName').value,
+                    annualIncome: document.getElementById('annualIncome').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    streetAddress: document.getElementById('streetAddress').value,
+                    aptNumber: document.getElementById('aptNumber').value,
+                    city: document.getElementById('city').value,
+                    state: document.getElementById('state').value,
+                    zipCode: document.getElementById('zipCode').value,
+                    accountType: document.getElementById('accountType').value,
+                    securityQuestion1: document.getElementById('securityQuestion1').value,
+                    securityAnswer1: document.getElementById('securityAnswer1').value,
+                    accountNumber: accountNumber,
+                    balance: 0,
+                    status: 'pending',
+                    kycStatus: 'pending',
+                    governmentIdUrl: governmentIdUrl,
+                    proofOfAddressUrl: proofOfAddressUrl,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert('Account created successfully! Your account is pending administrator review.');
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('Registration failed: ' + error.message);
+            } finally {
+                window.Alpine.store('registrationData').loading = false;
+            }
+        }
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('registrationData', { loading: false });
+        });
+    </script>
+</body>
+</html>

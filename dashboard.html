@@ -1,37 +1,45 @@
-<html lang="en">
+‎
+<script src="//code.jivosite.com/widget/7SxfEeE7iA" async></script>
 
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="JAGkFj4qWARIVz9qSrUSXIjABWhqeMLd6Z5VD43Z">
-    <title>GrandVisionTrust Bank | Customer Dashboard</title>
-    <meta name="description" content="Swift and Secure Money Transfer to any UK bank account will become a breeze with GrandVisionTrust Bank." />
-    <link rel="shortcut icon" href="storage/app/public/photos/UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+    <title>GrandVisionTrust | Customer Dashboard</title>
+    <meta name="description" content="Swift and Secure Money Transfer to any bank account will become a breeze with GrandVisionTrust." />
+    <link rel="shortcut icon" href="images/PixVerse_Image_Effect_prompt_create_a_logo_for.jpg" />
 
-    <script src="assets/tailwindcss.js"></script>
+
+    <!-- Tailwind CSS with custom color variables -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
                     colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
+                        primary: { // Dynamic primary colors from appearance settings
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
                             400: '#38bdf8',
                             DEFAULT: '#0ea5e9',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
                             foreground: '#ffffff',
                         },
-                        secondary: {
+                        secondary: { // Dynamic secondary colors from appearance settings
                             50: '#f8fafc',
                             100: '#f1f5f9',
                             200: '#e2e8f0',
@@ -41,11 +49,9 @@
                             500: '#64748b',
                             600: '#475569',
                             700: '#334155',
-                            800: '#1f2937',
-                            900: '#0f172a',
                             foreground: '#0f172a',
                         },
-                        accent: {
+                        accent: { // Dynamic accent colors from appearance settings
                             50: '#fdf2f8',
                             100: '#fce7f3',
                             200: '#fbcfe8',
@@ -55,8 +61,6 @@
                             500: '#ec4899',
                             600: '#db2777',
                             700: '#be185d',
-                            800: '#9d174d',
-                            900: '#831843',
                             foreground: '#ffffff',
                         },
                         background: '#f8fafc',
@@ -72,11 +76,15 @@
                         border: '#e2e8f0',
                         input: '#e2e8f0',
                         ring: '#0ea5e9',
+
+                        // Specific colors from original design for gradients/highlights
                         'gradient-pink-from': '#ec4899',
                         'gradient-purple-via': '#a855f7',
                         'gradient-indigo-to': '#4f46e5',
-                        'mobile-header-bg': '#1e293b',
-                        'mobile-header-text': '#f1f5f9',
+
+                        'mobile-header-bg': '#1e293b', // Dark slate for mobile top section
+                        'mobile-header-text': '#f1f5f9', // Light text for mobile top section
+
                         'yellow-action': '#facc15',
                         'green-positive': '#22c55e',
                         'red-negative': '#ef4444',
@@ -95,11 +103,11 @@
                         pulse: {
                             '0%, 100%': {
                                 transform: 'scale(1)',
-                                boxShadow: '0 0 0 0 rgba(14, 165, 233, 0.4)'
-                            },
+                                boxShadow: '0 0 0 0 rgba(16, 185, 129, 0.4)'
+                            }, // primary color
                             '50%': {
                                 transform: 'scale(1.05)',
-                                boxShadow: '0 0 0 10px rgba(14, 165, 233, 0)'
+                                boxShadow: '0 0 0 10px rgba(16, 185, 129, 0)'
                             },
                         },
                         shine: {
@@ -109,41 +117,41 @@
                             '100%': {
                                 transform: 'translateX(100%) translateY(100%) rotate(45deg)'
                             },
-                        },
-                        float: {
-                            '0%, 100%': {
-                                transform: 'translateY(0px)'
-                            },
-                            '50%': {
-                                transform: 'translateY(-10px)'
-                            },
-                        },
-                        'float-delayed': {
-                            '0%, 100%': {
-                                transform: 'translateY(0px) rotate(0deg)'
-                            },
-                            '50%': {
-                                transform: 'translateY(-15px) rotate(180deg)'
-                            },
                         }
                     },
                     animation: {
                         'pulse-slow': 'pulse 2.5s infinite',
                         'shine-once': 'shine 1.5s ease-in-out',
-                        'float': 'float 3s ease-in-out infinite',
-                        'float-delayed': 'float-delayed 4s ease-in-out infinite',
                     }
                 }
             }
         }
     </script>
-    <script defer src="assets/alpine.min.js"></script>
+
+
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- External Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
+            font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: theme('colors.background');
+            color: theme('colors.foreground');
         }
 
         ::-webkit-scrollbar {
@@ -267,14 +275,14 @@
             width: 100%;
             height: 100%;
             transition: all .6s cubic-bezier(0.4, 0, 0.2, 1);
-            background: radial-gradient(ellipse at center, rgba(14, 165, 233, 0.08) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 1) 100%);
+            background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.08) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 1) 100%);
             backdrop-filter: blur(2px);
             visibility: hidden;
             z-index: 9999;
         }
 
         .dark .page-loading {
-            background: radial-gradient(ellipse at center, rgba(14, 165, 233, 0.12) 0%, rgba(17, 24, 39, 0.95) 50%, rgba(17, 24, 39, 1) 100%);
+            background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.12) 0%, rgba(17, 24, 39, 0.95) 50%, rgba(17, 24, 39, 1) 100%);
         }
 
         .page-loading.active {
@@ -320,7 +328,7 @@
             position: absolute;
             width: 4px;
             height: 4px;
-            background: linear-gradient(45deg, #0ea5e9, #4f46e5);
+            background: linear-gradient(45deg, #10b981, #4f46e5);
             border-radius: 50%;
             opacity: 0.6;
             animation: floatParticle 4s ease-in-out infinite;
@@ -370,7 +378,7 @@
             height: 120px;
             margin-bottom: 2rem;
             position: relative;
-            filter: drop-shadow(0 0 20px rgba(14, 165, 233, 0.2));
+            filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.2));
         }
 
         /* Outer orbital rings */
@@ -378,15 +386,15 @@
         .loading-animation .orbit-ring {
             position: absolute;
             border-radius: 50%;
-            border: 2px solid rgba(14, 165, 233, 0.2);
+            border: 2px solid rgba(16, 185, 129, 0.2);
             animation: rotateOrbit 8s linear infinite;
         }
 
         .orbit-ring:nth-child(1) {
             width: 100%;
             height: 100%;
-            border-top: 2px solid #0ea5e9;
-            border-right: 2px solid rgba(14, 165, 233, 0.3);
+            border-top: 2px solid #10b981;
+            border-right: 2px solid rgba(16, 185, 129, 0.3);
             animation-duration: 2s;
         }
 
@@ -395,8 +403,8 @@
             height: 80%;
             top: 10%;
             left: 10%;
-            border-bottom: 2px solid #0ea5e9;
-            border-left: 2px solid rgba(14, 165, 233, 0.3);
+            border-bottom: 2px solid #10b981;
+            border-left: 2px solid rgba(16, 185, 129, 0.3);
             animation-duration: 2.5s;
             animation-direction: reverse;
         }
@@ -406,8 +414,8 @@
             height: 60%;
             top: 20%;
             left: 20%;
-            border-top: 2px solid #0ea5e9;
-            border-right: 2px solid rgba(14, 165, 233, 0.3);
+            border-top: 2px solid #10b981;
+            border-right: 2px solid rgba(16, 185, 129, 0.3);
             animation-duration: 3s;
         }
 
@@ -418,20 +426,20 @@
             width: 15px;
             height: 15px;
             border-radius: 50%;
-            background: #0ea5e9;
-            box-shadow: 0 0 10px rgba(14, 165, 233, 0.6);
+            background: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
             animation: spinInner 2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
         }
 
         .inner-circle:nth-child(4) {
-            border-top: 3px solid #0ea5e9;
-            border-right: 3px solid rgba(14, 165, 233, 0.4);
+            border-top: 3px solid #10b981;
+            border-right: 3px solid rgba(16, 185, 129, 0.4);
             animation-delay: 0s;
         }
 
         .inner-circle:nth-child(5) {
-            border-bottom: 3px solid #0ea5e9;
-            border-left: 3px solid rgba(14, 165, 233, 0.4);
+            border-bottom: 3px solid #10b981;
+            border-left: 3px solid rgba(16, 185, 129, 0.4);
             animation-delay: 0.3s;
             animation-direction: reverse;
         }
@@ -446,9 +454,9 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: linear-gradient(45deg, #0ea5e9, #4f46e5);
+            background: linear-gradient(45deg, #10b981, #4f46e5);
             background-size: 200% 200%;
-            box-shadow: 0 0 20px rgba(14, 165, 233, 0.6), 0 0 40px rgba(14, 165, 233, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6), 0 0 40px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.3);
             animation: coreGlow 2s ease-in-out infinite, morphCore 4s ease-in-out infinite;
         }
 
@@ -460,13 +468,13 @@
             margin-top: 1.5rem;
             font-size: 1.1rem;
             position: relative;
-            background: linear-gradient(90deg, #0ea5e9, #0ea5e9, #4f46e5, #0ea5e9, #0ea5e9);
+            background: linear-gradient(90deg, #10b981, #10b981, #4f46e5, #10b981, #10b981);
             background-size: 300% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: textShimmer 3s linear infinite;
-            text-shadow: 0 0 30px rgba(14, 165, 233, 0.3);
+            text-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
         }
 
         .page-loading .text::before {
@@ -476,7 +484,7 @@
             left: -2px;
             right: -2px;
             bottom: -2px;
-            background: linear-gradient(45deg, transparent, rgba(14, 165, 233, 0.1), transparent);
+            background: linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.1), transparent);
             border-radius: 4px;
             z-index: -1;
             animation: textGlow 2s ease-in-out infinite alternate;
@@ -512,7 +520,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, #0ea5e9, transparent);
+            background: linear-gradient(90deg, transparent, #10b981, transparent);
             animation: progressSlide 2s ease-in-out infinite;
         }
 
@@ -692,7 +700,7 @@
                 </div>
 
                 <!-- Enhanced text with effects -->
-                <div class="text">GrandVisionTrust Bank</div>
+                <div class="text">GrandVisionTrust</div>
                 <div class="subtitle">Secure Banking Platform</div>
             </div>
         </div>
@@ -709,16 +717,6 @@
         toggleSidebar() { this.sidebarOpen = !this.sidebarOpen; },
         closeSidebar() { this.sidebarOpen = false; },
         isActiveRoute(route) { return this.currentRoute === route; },
-        navigate(sectionId) {
-            const el = document.getElementById(sectionId);
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-            window.location.hash = sectionId;
-            this.sidebarOpen = false;
-            this.notificationOpen = false;
-            this.userDropdownOpen = false;
-        },
         toggleNotifications() { this.notificationOpen = !this.notificationOpen; this.userDropdownOpen = false; },
         toggleUserDropdown() { this.userDropdownOpen = !this.userDropdownOpen; this.notificationOpen = false; },
         closeDropdowns() { this.notificationOpen = false; this.userDropdownOpen = false; },
@@ -748,9 +746,7 @@
                 <div class="p-6 border-b border-gray-200/50 dark:border-gray-700/50">
                     <div class="flex items-center space-x-3">
                         <div class="w-full">
-                            <a href="dashboard.html" class="inline-flex">
-                                <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-12 w-auto">
-                            </a>
+                            <img src="images/PixVerse_Image_Effect_prompt_create_a_logo_for.jpg" alt="GrandVisionTrust" class="h-12 w-auto">
                         </div>
                     </div>
                 </div>
@@ -853,26 +849,8 @@
                     </div>
                 </nav>
 
-                <!-- User Profile Section -->
-                <div class="p-4 border-t border-gray-200/50 dark:border-gray-700/50">
-                    <div class="flex items-center space-x-4 p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 border border-gray-200/50 dark:border-gray-700/50">
-                        <div class="relative">
-                            <div class="h-10 w-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold border-2 border-primary-100">
-                                KG
-                            </div>
-                            <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-600"></div>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-bold text-gray-900 dark:text-white truncate">Khrome</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 truncate">binancependingtransaction02@gmail.com</p>
-                        </div>
-                        <form method="POST" action="#">
-                            <input type="hidden" name="_token" value="JAGkFj4qWARIVz9qSrUSXIjABWhqeMLd6Z5VD43Z"> <button type="submit" class="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 transition-colors flex items-center justify-center">
-                                <i class="fa-solid fa-right-from-bracket text-sm"></i>
-                        </button>
-                        </form>
-                    </div>
-                </div>
+                <!-- Footer -->
+                <div class="p-4 border-t border-gray-200/50 dark:border-gray-700/50"></div>
             </div>
 
             <!-- Desktop Main Content -->
@@ -886,7 +864,7 @@
                                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
                                     Dashboard </h1>
                                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                    Welcome back, Khrome </p>
+                                    Welcome back, User </p>
                             </div>
                         </div>
 
@@ -928,7 +906,7 @@
                                             <button class="text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
                                                 Mark all as read
 </button>
-                                            <a href="#notifications" @click.prevent="navigate('notifications')" class="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">
+                                            <a href="https://grandvisiontrust.com/dashboard/notifications" class="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">
                                                 View All Notifications
                                             </a>
                                         </div>
@@ -940,11 +918,11 @@
                             <div class="relative">
                                 <button @click="toggleUserDropdown()" class="flex items-center space-x-3 p-2 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group">
                                                             <div class="h-10 w-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold border-2 border-primary-100">
-                KG
+                UN
             </div>
                                             <div class="hidden md:block text-left">
-                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">Khrome</p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">binancependingtransaction02@gmail.com</p>
+                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">User</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">user@example.com</p>
                                     </div>
                                     <i class="fa-solid fa-chevron-down text-gray-400 dark:text-gray-500 text-sm group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
                     </button>
@@ -955,17 +933,17 @@
                                     <div class="p-4 border-b border-gray-100 dark:border-gray-700">
                                         <div class="flex items-center space-x-3">
                                             <div class="h-10 w-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold border-2 border-primary-100">
-                                                KG
+                                                UN
                                             </div>
                                             <div>
-                                                <p class="text-sm font-bold text-gray-900 dark:text-white">Khrome</p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">binancependingtransaction02@gmail.com</p>
+                                                <p class="text-sm font-bold text-gray-900 dark:text-white">User</p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400">user@example.com</p>
                                             </div>
                                         </div>
 
                                         <!-- KYC Verification Status -->
                                         <div class="mt-3">
-                                            <a href="dashboard-settings.html" class="flex items-center justify-center py-2 rounded-xl bg-red-50 dark:bg-red-900/30 border border-red-100 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors">
+                                            <a href="https://grandvisiontrust.com/dashboard/verify-account" class="flex items-center justify-center py-2 rounded-xl bg-red-50 dark:bg-red-900/30 border border-red-100 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors">
                                                     <span class="text-xs text-red-800 dark:text-red-300 font-semibold flex items-center">
                                                         <i class="fa-solid fa-exclamation-triangle text-red-600 dark:text-red-400 mr-2"></i> Verify KYC
                                                     </span>
@@ -973,21 +951,21 @@
                                         </div>
                                     </div>
                                     <div class="p-2">
-                                        <a href="dashboard-settings.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
+                                        <a href="https://grandvisiontrust.com/dashboard/account-settings" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
                                             <div class="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center group-hover:bg-primary-100 dark:group-hover:bg-primary-900/30 transition-colors">
                                                 <i class="fa-solid fa-user text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors text-sm"></i>
                                             </div>
                                             <span class="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">Profile Settings</span>
                                         </a>
-                                        <a href="dashboard-support.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
+                                        <a href="https://grandvisiontrust.com/dashboard/support" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
                                             <div class="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center group-hover:bg-primary-100 dark:group-hover:bg-primary-900/30 transition-colors">
                                                 <i class="fa-solid fa-headset text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors text-sm"></i>
                                             </div>
                                             <span class="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">Help & Support</span>
                                         </a>
                                         <div class="border-t border-gray-100 dark:border-gray-700 my-2"></div>
-                                        <form method="POST" action="#">
-                                            <input type="hidden" name="_token" value="JAGkFj4qWARIVz9qSrUSXIjABWhqeMLd6Z5VD43Z"> <button type="submit" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors group">
+                                        <form method="POST" action="https://grandvisiontrust.com/logout">
+                                            <input type="hidden" name="_token" value="NBWKYaUirqCW28yYiXNC5UZNweHwtuuoqd4bDOKK"> <button type="submit" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors group">
                                                 <div class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center group-hover:bg-red-200 dark:group-hover:bg-red-900/50 transition-colors">
                                                     <i class="fa-solid fa-right-from-bracket text-red-500 dark:text-red-400 text-sm"></i>
                                 </div>
@@ -1013,15 +991,6 @@
     greeting: '',
     currentDate: '',
     balanceVisible: true,
-    navigate(sectionId) {
-        const el = document.getElementById(sectionId);
-        if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        window.location.hash = sectionId;
-        this.showMobileMenu = false;
-        this.showMobileNotifications = false;
-    },
     toggleBalance() {
         this.balanceVisible = !this.balanceVisible;
         localStorage.setItem('balanceVisible', this.balanceVisible);
@@ -1037,23 +1006,23 @@
 }" x-init="
     updateTime();
     setInterval(() => updateTime(), 60000);
-    this.balanceVisible = localStorage.getItem('balanceVisible') === null 
+    balanceVisible = localStorage.getItem('balanceVisible') === null 
         ? true 
         : localStorage.getItem('balanceVisible') === 'true';
 ">
 
 
                             <div class="lg:hidden mb-4">
-                                <!-- Mobile Header with Extended Gradient Background -->
+                                <!-- Mobile Header with Extended Gradient background -->
                                 <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-white px-4 pt-6 pb-8 rounded-b-3xl">
                                     <!-- Header Section -->
                                     <div class="flex items-center justify-between mb-6">
                                         <div class="flex items-center space-x-2">
-                                            <div class="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold border-2 border-white/20">KG</div>
+                                            <img src="/placeholder.svg?width=40&amp;height=40" alt="Profile" class="w-10 h-10 rounded-full border-2 border-white/20">
                                             <div>
                                                 <p class="text-white/80 text-xs" x-text="greeting + ' 👋'"></p>
                                                 <p class="text-white font-semibold text-base">
-                                                    Khrome Gabriel
+                                                    Your Name
                                                 </p>
                                             </div>
                                         </div>
@@ -1114,7 +1083,7 @@
                                                 <!-- Fiat Balance Card -->
                                                 <div class="w-full flex-shrink-0">
                                                     <div class="bg-gradient-to-br from-primary-600 via-primary-500 to-primary-700 dark:from-primary-700 dark:via-primary-600 dark:to-primary-800 rounded-2xl p-4 text-white shadow-xl dark:shadow-2xl dark:shadow-primary-900/50 relative overflow-hidden">
-                                                        <!-- Background Pattern -->
+                                                        <!-- background Pattern -->
                                                         <div class="absolute inset-0 opacity-10">
                                                             <div class="absolute top-3 right-3 w-24 h-24 bg-white rounded-full -translate-y-6 translate-x-6"></div>
                                                             <div class="absolute bottom-3 left-3 w-20 h-20 bg-white rounded-full translate-y-4 -translate-x-4"></div>
@@ -1125,7 +1094,7 @@
                                                             <div class="flex justify-between items-start mb-3">
                                                                 <div>
                                                                     <p class="text-white/60 text-xs uppercase tracking-wide">GrandVisionTrust Bank</p>
-                                                                    <p class="text-white/80 text-xs">Khrome Gabriel</p>
+                                                                    <p class="text-white/80 text-xs">Your Name</p>
                                                                 </div>
                                                                 <div class="text-right">
                                                                     <p class="text-white/60 text-xs">Fiat Account</p>
@@ -1157,7 +1126,7 @@
                                                                     <span class="text-white/70">Active</span>
                                                                 </div>
                                                                 <div class="text-white/70">
-                                                                    Last updated: Mar 17, 15:09
+                                                                    Last updated: Jul 01, 20:23
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1167,7 +1136,7 @@
                                                 <!-- Crypto Balance Card -->
                                                 <div class="w-full flex-shrink-0">
                                                     <div class="bg-gradient-to-br from-secondary-700 via-secondary-600 to-secondary-800 dark:from-secondary-800 dark:via-secondary-700 dark:to-secondary-900 rounded-2xl p-4 text-white shadow-xl dark:shadow-2xl dark:shadow-secondary-900/50 relative overflow-hidden">
-                                                        <!-- Background Pattern -->
+                                                        <!-- background Pattern -->
                                                         <div class="absolute inset-0 opacity-10">
                                                             <div class="absolute top-3 right-3 w-24 h-24 bg-white rounded-full -translate-y-6 translate-x-6"></div>
                                                             <div class="absolute bottom-3 left-3 w-20 h-20 bg-white rounded-full translate-y-4 -translate-x-4"></div>
@@ -1178,7 +1147,7 @@
                                                             <div class="flex justify-between items-start mb-3">
                                                                 <div>
                                                                     <p class="text-white/60 text-xs uppercase tracking-wide">Bitcoin Wallet</p>
-                                                                    <p class="text-white/80 text-xs">Khrome Gabriel</p>
+                                                                    <p class="text-white/80 text-xs">Your Name</p>
                                                                 </div>
                                                                 <div class="text-right">
                                                                     <p class="text-white/60 text-xs">Crypto Account</p>
@@ -1213,7 +1182,7 @@
                                                             <div class="flex justify-between items-center text-xs">
                                                                 <div class="flex items-center space-x-2">
                                                                     <div class="w-1.5 h-1.5 bg-secondary-400 rounded-full"></div>
-                                                                    <span class="text-white/70">1 BTC = ƒ74,517</span>
+                                                                    <span class="text-white/70">1 BTC = ƒ59,844</span>
                                                                 </div>
                                                                 <div class="text-white/70">
                                                                     Live Rate
@@ -1242,12 +1211,12 @@
                                     <!-- Mobile Quick Actions - Circular Design (Inside Gradient) -->
                                     <div class="grid grid-cols-4 gap-3">
                                         <!-- Top Up - Circular -->
-                                        <a href="dashboard-deposit.html" class="flex flex-col items-center justify-center">
+                                        <button onclick="window.location.href='https://grandvisiontrust.com/dashboard/deposits'" class="flex flex-col items-center justify-center">
                 <div class="w-14 h-14 bg-yellow-400 dark:bg-yellow-500 rounded-full flex items-center justify-center shadow-lg dark:shadow-yellow-500/25 mb-1">
                     <i class="fa-solid fa-plus text-black dark:text-gray-900 text-lg"></i>
                 </div>
                 <span class="text-white text-xs font-medium">Top Up</span>
-            </a>
+            </button>
 
                                         <!-- Send - Circular -->
                                         <button @click="showSendMoney = true" class="flex flex-col items-center justify-center">
@@ -1316,7 +1285,7 @@
                                 <div class="px-4 mb-4 mt-4" x-data="dashboardQuickTransfer()" x-init="loadBeneficiaries()">
                                     <div class="flex justify-between items-center mb-3">
                                         <h3 class="text-base font-semibold text-gray-900 dark:text-white">Quick Transfer</h3>
-                                        <a href="dashboard-transactions.html" class="text-xs text-primary-600 dark:text-primary-400 font-medium flex items-center hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
+                                        <a href="https://grandvisiontrust.com/dashboard/beneficiaries" class="text-xs text-primary-600 dark:text-primary-400 font-medium flex items-center hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
                 View All
                 <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
             </a>
@@ -1324,7 +1293,7 @@
 
                                     <div class="flex space-x-3 overflow-x-auto pb-2" x-show="!loading">
                                         <!-- Add New Beneficiary -->
-                                        <a href="#beneficiaries" @click.prevent="navigate('beneficiaries')" class="flex-shrink-0 flex flex-col items-center justify-center group">
+                                        <a href="https://grandvisiontrust.com/dashboard/localtransfer" class="flex-shrink-0 flex flex-col items-center justify-center group">
                                             <div class="w-14 h-14 rounded-full border-2 border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 flex items-center justify-center mb-1 group-hover:bg-gray-100 dark:group-hover:bg-gray-700 group-hover:border-primary-400 dark:group-hover:border-primary-500 transition-all duration-200">
                                                 <i class="fa-solid fa-plus text-gray-400 dark:text-gray-500 text-base group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors"></i>
                                             </div>
@@ -1393,7 +1362,7 @@
                                         </div>
                                         <h3 class="text-sm font-semibold text-primary-900 dark:text-primary-100 mb-1">No active cards</h3>
                                         <p class="text-xs text-primary-700 dark:text-primary-300 mb-4 max-w-xs mx-auto">Apply for a virtual card to get started with secure online payments.</p>
-                                        <a href="dashboard-cards.html" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white text-xs font-medium rounded-xl shadow-lg shadow-primary-500/25 dark:shadow-primary-900/50 transition-all duration-200 transform hover:scale-105">
+                                        <a href="https://grandvisiontrust.com/dashboard/cards/apply" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white text-xs font-medium rounded-xl shadow-lg shadow-primary-500/25 dark:shadow-primary-900/50 transition-all duration-200 transform hover:scale-105">
                 <i class="fa-solid fa-plus text-xs mr-2"></i>
                 Apply for Card
             </a>
@@ -1405,7 +1374,7 @@
                             <div class="px-4 mb-4">
                                 <div class="flex justify-between items-center mb-3">
                                     <h3 class="text-base font-semibold text-gray-900 dark:text-white">Financial Services</h3>
-                                    <button @click="navigate('services-overview')" class="text-xs text-primary-600 dark:text-primary-400 font-medium flex items-center hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
+                                    <button class="text-xs text-primary-600 dark:text-primary-400 font-medium flex items-center hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
             View All
             <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
         </button>
@@ -1434,7 +1403,7 @@
                                             <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Quick approval process</p>
 
                                             <!-- Action Button -->
-                                            <a href="loans-credit.html" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105">
+                                            <a href="https://grandvisiontrust.com/dashboard/loan" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105">
                     <i class="fa-solid fa-landmark text-xs mr-2"></i>
                     Apply Now
                 </a>
@@ -1462,7 +1431,7 @@
                                             <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">No repayment required</p>
 
                                             <!-- Action Button -->
-                                            <a href="dashboard-grants.html" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105">
+                                            <a href="https://grandvisiontrust.com/dashboard/grant-application" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105">
                     <i class="fa-solid fa-hand-holding-dollar text-xs mr-2"></i>
                     Apply Now
                 </a>
@@ -1490,7 +1459,7 @@
                                             <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Fast processing</p>
 
                                             <!-- Action Button -->
-                                            <a href="tax-refund.html" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105">
+                                            <a href="https://grandvisiontrust.com/dashboard/irs-refund" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105">
                     <i class="fa-solid fa-receipt text-xs mr-2"></i>
                     Apply Now
                 </a>
@@ -1518,7 +1487,7 @@
                                             <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Instant virtual cards</p>
 
                                             <!-- Action Button -->
-                                            <a href="dashboard-cards.html" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-orange-500 to-red-600 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105">
+                                            <a href="https://grandvisiontrust.com/dashboard/cards" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-orange-500 to-red-600 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105">
                     <i class="fa-solid fa-credit-card text-xs mr-2"></i>
                     Apply Now
                 </a>
@@ -1604,17 +1573,17 @@
                                         <div class="p-4">
                                             <div class="flex items-start space-x-3">
                                                 <div class="w-10 h-10 bg-white dark:bg-gray-800 rounded-xl flex items-center justify-center shadow-sm">
-                                                    <i class="fa-solid fa-shield-alt text-purple-600 text-sm"></i>
+                                                    <i class="fa-solid fa-chart-line text-green-600 text-sm"></i>
                                                 </div>
                                                 <div class="flex-1">
                                                     <div class="flex items-center space-x-2 mb-1">
-                                                        <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Stay Secure</h4>
+                                                        <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Track Spending</h4>
                                                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300">
                                 <i class="fa-solid fa-lightbulb text-xs mr-1"></i>
                                 Tip
                             </span>
                                                     </div>
-                                                    <p class="text-xs text-gray-600 dark:text-gray-300">Enable two-factor authentication for better security</p>
+                                                    <p class="text-xs text-gray-600 dark:text-gray-300">Monitor your expenses to identify saving opportunities</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1625,7 +1594,7 @@
                             <div class="px-4 mb-4">
                                 <div class="flex justify-between items-center mb-3">
                                     <h3 class="text-base font-semibold text-gray-900 dark:text-white">Recent Activity</h3>
-                                    <a href="dashboard-transactions.html" class="text-xs text-primary-600 dark:text-primary-400 font-medium flex items-center hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
+                                    <a href="https://grandvisiontrust.com/dashboard/accounthistory" class="text-xs text-primary-600 dark:text-primary-400 font-medium flex items-center hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
             View All
             <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
         </a>
@@ -1643,28 +1612,12 @@
                                 </div>
 
                                 <!-- Milestones Section -->
-                                <div class="mt-4">
-                                    <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Achievements</h4>
-                                    <div class="space-y-2">
-                                        <div class="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-xl border border-primary-100 dark:border-gray-600 p-3">
-                                            <div class="flex items-center space-x-3">
-                                                <div class="w-8 h-8 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center shadow-sm">
-                                                    <i class="fa-solid fa-star text-yellow-600 text-sm"></i>
-                                                </div>
-                                                <div class="flex-1">
-                                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Welcome to GrandVisionTrust Bank</p>
-                                                    <p class="text-xs text-gray-600 dark:text-gray-300">Account created 17 minutes ago</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <!-- Mobile Support Widget -->
                             <div class="px-4 mb-4">
                                 <div class="flex justify-between items-center mb-3">
                                     <h3 class="text-base font-semibold text-gray-900 dark:text-white">Need Help?</h3>
-                                    <a href="dashboard-support.html" class="text-xs text-primary-600 dark:text-primary-400 font-medium flex items-center hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
+                                    <a href="https://grandvisiontrust.com/dashboard/support" class="text-xs text-primary-600 dark:text-primary-400 font-medium flex items-center hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
             Support Center
             <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
         </a>
@@ -1672,7 +1625,7 @@
 
                                 <!-- Support Options -->
                                 <div class="grid grid-cols-2 gap-3 mb-4">
-                                    <a href="dashboard-support.html" class="block">
+                                    <a href="https://grandvisiontrust.com/dashboard/support" class="block">
                                         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-lg dark:shadow-gray-900/50 border border-white/20 dark:border-gray-700/50 p-3 hover:shadow-xl transition-all duration-200 transform hover:scale-105">
                                             <div class="text-center">
                                                 <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-2">
@@ -1683,7 +1636,7 @@
                                             </div>
                                         </div>
                                     </a>
-                                    <a href="mailto:careline@grandvisiontrustbank.com" class="block">
+                                    <a href="mailto:careline@grandvisiontrust.com" class="block">
                                         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-lg dark:shadow-gray-900/50 border border-white/20 dark:border-gray-700/50 p-3 hover:shadow-xl transition-all duration-200 transform hover:scale-105">
                                             <div class="text-center">
                                                 <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mx-auto mb-2">
@@ -1762,7 +1715,7 @@
                                                     </div>
                                                     <div>
                                                         <h3 class="font-bold text-gray-900 dark:text-white"> </h3>
-                                                        <p class="text-sm text-gray-500 dark:text-gray-400">binancependingtransaction02@gmail.com</p>
+                                                        <p class="text-sm text-gray-500 dark:text-gray-400">user@example.com</p>
                                                     </div>
                                                 </div>
                                                 <button @click="showMobileMenu = false" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
@@ -1778,7 +1731,7 @@
                                             <div class="mb-6">
                                                 <h4 class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">Main</h4>
                                                 <div class="space-y-1">
-                                                    <a href="dashboard.html" class="flex items-center space-x-4 p-3 rounded-2xl bg-primary-50 dark:bg-slate-700/80 border border-primary-100 dark:border-slate-600 group">
+                                                    <a href="https://grandvisiontrust.com/dashboard" class="flex items-center space-x-4 p-3 rounded-2xl bg-primary-50 dark:bg-slate-700/80 border border-primary-100 dark:border-slate-600 group">
                                                         <div class="w-10 h-10 bg-primary-100 dark:bg-primary-600 rounded-xl flex items-center justify-center group-hover:bg-primary-200 dark:group-hover:bg-primary-500 transition-colors">
                                                             <i class="fa-solid fa-house text-primary-600 dark:text-white"></i>
                                                         </div>
@@ -1789,7 +1742,7 @@
                                                         <i class="fa-solid fa-chevron-right text-primary-400 dark:text-slate-400 text-xs"></i>
                                                     </a>
 
-                                                    <a href="dashboard-transactions.html" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
+                                                    <a href="https://grandvisiontrust.com/dashboard/accounthistory" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
                                                         <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-800/50 transition-colors">
                                                             <i class="fa-solid fa-chart-line text-blue-600 dark:text-blue-400"></i>
                                                         </div>
@@ -1800,7 +1753,7 @@
                                                         <i class="fa-solid fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
                                                     </a>
 
-                                                    <a href="dashboard-cards.html" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
+                                                    <a href="https://grandvisiontrust.com/dashboard/cards" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
                                                         <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center group-hover:bg-purple-200 dark:group-hover:bg-purple-800/50 transition-colors">
                                                             <i class="fa-solid fa-credit-card text-purple-600 dark:text-purple-400"></i>
                                                         </div>
@@ -1817,7 +1770,7 @@
                                             <div class="mb-6">
                                                 <h4 class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">Transfers</h4>
                                                 <div class="space-y-1">
-                                                    <a href="dashboard-local-transfer.html" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
+                                                    <a href="https://grandvisiontrust.com/dashboard/localtransfer" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
                                                         <div class="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center group-hover:bg-orange-200 dark:group-hover:bg-orange-800/50 transition-colors">
                                                             <i class="fa-solid fa-paper-plane text-orange-600 dark:text-orange-400"></i>
                                                         </div>
@@ -1828,7 +1781,7 @@
                                                         <i class="fa-solid fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
                                                     </a>
 
-                                                    <a href="dashboard-international-transfer.html" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
+                                                    <a href="https://grandvisiontrust.com/dashboard/internationaltransfer" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
                                                         <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center group-hover:bg-indigo-200 dark:group-hover:bg-indigo-800/50 transition-colors">
                                                             <i class="fa-solid fa-globe text-indigo-600 dark:text-indigo-400"></i>
                                                         </div>
@@ -1839,7 +1792,7 @@
                                                         <i class="fa-solid fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
                                                     </a>
 
-                                                    <a href="dashboard-deposit.html" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
+                                                    <a href="https://grandvisiontrust.com/dashboard/deposits" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
                                                         <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center group-hover:bg-green-200 dark:group-hover:bg-green-800/50 transition-colors">
                                                             <i class="fa-solid fa-plus text-green-600 dark:text-green-400"></i>
                                                         </div>
@@ -1850,7 +1803,7 @@
                                                         <i class="fa-solid fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
                                                     </a>
 
-                                                    <a href="dashboard-currency-swap.html" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
+                                                    <a href="https://grandvisiontrust.com/dashboard/swap" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
                                                         <div class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-xl flex items-center justify-center group-hover:bg-yellow-200 dark:group-hover:bg-yellow-800/50 transition-colors">
                                                             <i class="fa-solid fa-arrows-rotate text-yellow-600 dark:text-yellow-400"></i>
                                                         </div>
@@ -1867,7 +1820,7 @@
                                             <div class="mb-6">
                                                 <h4 class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">Services</h4>
                                                 <div class="space-y-1">
-                                                    <a href="loans-credit.html" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
+                                                    <a href="https://grandvisiontrust.com/dashboard/loan" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
                                                         <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-800/50 transition-colors">
                                                             <i class="fa-solid fa-landmark text-blue-600 dark:text-blue-400"></i>
                                                         </div>
@@ -1878,7 +1831,7 @@
                                                         <i class="fa-solid fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
                                                     </a>
 
-                                                    <a href="tax-refund.html" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
+                                                    <a href="https://grandvisiontrust.com/dashboard/irs-refund" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
                                                         <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center group-hover:bg-green-200 dark:group-hover:bg-green-800/50 transition-colors">
                                                             <i class="fa-solid fa-receipt text-green-600 dark:text-green-400"></i>
                                                         </div>
@@ -1889,7 +1842,7 @@
                                                         <i class="fa-solid fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
                                                     </a>
 
-                                                    <a href="dashboard-grants.html" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
+                                                    <a href="https://grandvisiontrust.com/dashboard/grant-application" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
                                                         <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center group-hover:bg-purple-200 dark:group-hover:bg-purple-800/50 transition-colors">
                                                             <i class="fa-solid fa-hand-holding-dollar text-purple-600 dark:text-purple-400"></i>
                                                         </div>
@@ -1917,7 +1870,7 @@
                                 <i class="fa-solid fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
                             </button>
 
-                                                    <a href="dashboard-settings.html" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
+                                                    <a href="https://grandvisiontrust.com/dashboard/account-settings" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
                                                         <div class="w-10 h-10 bg-teal-100 dark:bg-teal-900/30 rounded-xl flex items-center justify-center group-hover:bg-teal-200 dark:group-hover:bg-teal-800/50 transition-colors">
                                                             <i class="fa-solid fa-gear text-teal-600 dark:text-teal-400"></i>
                                                         </div>
@@ -1928,7 +1881,7 @@
                                                         <i class="fa-solid fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
                                                     </a>
 
-                                                    <a href="dashboard-support.html" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
+                                                    <a href="https://grandvisiontrust.com/dashboard/support" class="flex items-center space-x-4 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 group transition-colors">
                                                         <div class="w-10 h-10 bg-pink-100 dark:bg-pink-900/30 rounded-xl flex items-center justify-center group-hover:bg-pink-200 dark:group-hover:bg-pink-800/50 transition-colors">
                                                             <i class="fa-solid fa-headset text-pink-600 dark:text-pink-400"></i>
                                                         </div>
@@ -1939,8 +1892,8 @@
                                                         <i class="fa-solid fa-chevron-right text-gray-400 dark:text-gray-500 text-xs"></i>
                                                     </a>
 
-                                                    <form method="POST" action="#">
-                                                        <input type="hidden" name="_token" value="JAGkFj4qWARIVz9qSrUSXIjABWhqeMLd6Z5VD43Z"> <button type="submit" class="w-full text-left flex items-center space-x-4 p-3 rounded-2xl hover:bg-red-50 dark:hover:bg-red-900/20 group transition-colors">
+                                                    <form method="POST" action="https://grandvisiontrust.com/logout">
+                                                        <input type="hidden" name="_token" value="NBWKYaUirqCW28yYiXNC5UZNweHwtuuoqd4bDOKK"> <button type="submit" class="w-full text-left flex items-center space-x-4 p-3 rounded-2xl hover:bg-red-50 dark:hover:bg-red-900/20 group transition-colors">
         <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center group-hover:bg-red-200 dark:group-hover:bg-red-800/50 transition-colors">
             <i class="fa-solid fa-right-from-bracket text-red-600 dark:text-red-400"></i>
         </div>
@@ -2037,117 +1990,80 @@
                                 <!-- Left Column -->
                                 <div class="lg:col-span-2 space-y-6">
                                     <!-- Enhanced Desktop Balance Card -->
-                                    <div class="bg-gradient-to-br from-primary-600 via-primary-500 to-primary-700 dark:from-primary-700 dark:via-primary-600 dark:to-primary-800 rounded-2xl p-6 text-white shadow-xl dark:shadow-2xl dark:shadow-primary-900/50 relative overflow-hidden z-10">
+                                    <div class="bg-gradient-to-br from-primary-600 via-primary-500 to-emerald-700 dark:from-primary-700 dark:via-primary-600 dark:to-emerald-800 rounded-2xl p-6 text-white shadow-xl dark:shadow-2xl dark:shadow-primary-900/50 relative overflow-hidden z-10">
                                         <!-- Background Pattern -->
-                                        <div class="absolute inset-0 opacity-10">
-                                            <div class="absolute top-6 right-6 w-32 h-32 bg-white rounded-full -translate-y-8 translate-x-8"></div>
-                                            <div class="absolute bottom-6 left-6 w-24 h-24 bg-white rounded-full translate-y-6 -translate-x-6"></div>
-                                            <div class="absolute top-1/2 left-1/2 w-20 h-20 bg-white rounded-full -translate-x-10 -translate-y-10"></div>
+                                        <div class="absolute inset-0">
+                                            <svg class="absolute -top-10 -right-10 w-48 h-48 text-white opacity-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="8" />
+                                            </svg>
+                                            <svg class="absolute -bottom-10 -left-10 w-40 h-40 text-white opacity-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M50 5 L95 50 L50 95 L5 50 Z" stroke="currentColor" stroke-width="6" />
+                                            </svg>
                                         </div>
 
                                         <div class="relative z-10">
-                                            <!-- Top Row: Bank Info and Account Number -->
+                                            <!-- Top Row: Bank Info -->
                                             <div class="flex justify-between items-start mb-6">
                                                 <div>
-                                                    <div class="flex items-center space-x-2 mb-1">
-                                                        <div class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                                                            <i class="fa-solid fa-university text-white text-xs"></i>
+                                                    <div class="flex items-center space-x-3 mb-2">
+                                                        <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust" class="h-10 w-auto" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDEwMCAxMDAiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHgyPSIxIiB5MT0iMCIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMxMGI5ODEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwNDc4NTciLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2cpIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIwIi8+PHRleHQgeD0iNTAiIHk9IjYwIiBmb250LXNpemU9IjQwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXdlaWdodD0iYm9sZCI+R1w8L3RleHQ+PC9zdmc+'" />
+                                                        <div>
+                                                            <h2 class="text-xl font-bold text-white">GrandVisionTrust</h2>
+                                                            <p class="text-white/70 text-xs">Secure Banking Platform</p>
                                                         </div>
-                                                        <p class="text-white/90 text-base font-semibold">GrandVisionTrust Bank</p>
                                                     </div>
-                                                    <p class="text-white/70 text-xs">Primary Account</p>
                                                 </div>
-                                                <div class="text-right bg-white/10 dark:bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2">
-                                                    <p class="text-white/70 dark:text-white/80 text-xs uppercase tracking-wide mb-1">Account Number</p>
+                                                <div class="text-right bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2">
+                                                    <p class="text-white/70 text-xs uppercase tracking-wide mb-1">Account Number</p>
                                                     <p class="text-white font-mono text-sm">•••••• 0586</p>
                                                 </div>
                                             </div>
 
-                                            <!-- Middle Row: Account Holder and Balances -->
-                                            <div class="grid grid-cols-3 gap-6 mb-6">
-                                                <!-- Account Holder Info -->
-                                                <div>
-                                                    <p class="text-white/70 text-xs mb-1">Account Holder</p>
-                                                    <p class="text-white text-base font-semibold mb-3">Khrome Gabriel</p>
-
-                                                    <!-- Account Status -->
-                                                    <div class="space-y-1">
-                                                        <div class="flex items-center space-x-2">
-                                                            <div class="w-2 h-2 bg-green-400 rounded-full"></div>
-                                                            <span class="text-white/80 text-xs">Account Active</span>
-                                                        </div>
-                                                        <div class="flex items-center space-x-2">
-                                                            <i class="fa-solid fa-shield-exclamation text-orange-400 text-xs"></i>
-                                                            <span class="text-white/80 text-xs">Verification Required</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Fiat Balance Display -->
-                                                <div class="text-center">
-                                                    <p class="text-white/70 text-xs mb-1">Fiat Balance</p>
-                                                    <div class="flex items-center justify-center space-x-2 mb-1">
-                                                        <div class="text-center">
-                                                            <p class="text-2xl font-bold leading-none" x-show="balanceVisible" x-transition>
-                                                                ƒ0.00
-                                                            </p>
-                                                            <p class="text-2xl font-bold leading-none" x-show="!balanceVisible" x-transition>
-                                                                ƒ ••••••
-                                                            </p>
-                                                        </div>
-                                                        <button @click="toggleBalance()" class="text-white/60 hover:text-white transition-colors p-1">
-                                    <i x-show="balanceVisible" class="fa-solid fa-eye-slash text-sm"></i>
-                                    <i x-show="!balanceVisible" class="fa-solid fa-eye text-sm"></i>
-                                </button>
-                                                    </div>
-                                                    <p class="text-white/60 text-xs">AWG Balance</p>
-                                                </div>
-
-                                                <!-- Crypto Balance Display -->
-                                                <div class="text-center">
-                                                    <p class="text-white/70 text-xs mb-1">Bitcoin Balance</p>
-                                                    <div class="mb-1">
-                                                        <p class="text-lg font-bold leading-none" x-show="balanceVisible" x-transition>
-                                                            0.000000 BTC
+                                            <!-- Balance Section -->
+                                            <div class="mb-6">
+                                                <p class="text-white/70 text-xs mb-1">Available Balance</p>
+                                                <div class="flex items-baseline space-x-2 mb-2">
+                                                    <div class="text-center">
+                                                        <p class="text-4xl font-bold leading-tight" x-show="balanceVisible" x-transition>
+                                                            ƒ0.00
                                                         </p>
-                                                        <p class="text-lg font-bold leading-none" x-show="!balanceVisible" x-transition>
-                                                            ••••••• BTC
-                                                        </p>
-                                                        <p class="text-white/60 text-xs mt-1" x-show="balanceVisible" x-transition>
-                                                            ≈ ƒ0.00
+                                                        <p class="text-4xl font-bold leading-tight" x-show="!balanceVisible" x-transition>
+                                                            ƒ ••••••
                                                         </p>
                                                     </div>
-                                                    <div class="flex items-center justify-center space-x-1">
-                                                        <div class="w-1.5 h-1.5 bg-orange-400 rounded-full"></div>
-                                                        <span class="text-white/60 text-xs">1 BTC = ƒ74,517</span>
-                                                    </div>
+                                                    <button @click="toggleBalance()" class="text-white/60 hover:text-white transition-colors">
+                                                        <i x-show="balanceVisible" class="fa-solid fa-eye-slash text-lg"></i>
+                                                        <i x-show="!balanceVisible" class="fa-solid fa-eye text-lg"></i>
+                                                    </button>
                                                 </div>
+                                                <p class="text-white/60 text-xs">Total Portfolio Value</p>
                                             </div>
 
-                                            <!-- Bottom Row: Action Buttons -->
-                                            <div class="flex justify-between items-center">
-                                                <!-- Left: Total Portfolio Value -->
-                                                <div class="bg-white/10 dark:bg-white/20 backdrop-blur-sm rounded-lg p-3">
-                                                    <p class="text-white/60 dark:text-white/70 text-xs mb-1">Total Portfolio</p>
-                                                    <p class="text-white text-lg font-bold" x-show="balanceVisible" x-transition>
-                                                        ƒ0.00
-                                                    </p>
-                                                    <p class="text-white text-lg font-bold" x-show="!balanceVisible" x-transition>
-                                                        ƒ ••••••
-                                                    </p>
+                                            <!-- Account Status -->
+                                            <div class="mb-6 bg-white/10 backdrop-blur-sm rounded-xl p-3">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <span class="text-sm font-medium">Welcome, User</span>
+                                                    <div class="flex items-center space-x-2">
+                                                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                                        <span class="text-xs">Account Active</span>
+                                                    </div>
                                                 </div>
+                                                <a href="#" class="inline-flex items-center space-x-1 text-xs text-orange-300 hover:text-orange-200 transition-colors">
+                                                    <i class="fa-solid fa-shield-exclamation"></i>
+                                                    <span>Complete Account Verification</span>
+                                                </a>
+                                            </div>
 
-                                                <!-- Right: Action Buttons -->
-                                                <div class="flex space-x-3">
-                                                    <button @click="showSendMoney = true" class="bg-white/20 dark:bg-white/30 backdrop-blur-sm px-6 py-3 rounded-lg text-white font-semibold hover:bg-white/30 dark:hover:bg-white/40 transition-all duration-200 flex items-center space-x-2">
-                                <i class="fa-solid fa-paper-plane text-sm"></i>
-                                <span class="text-sm">Send Money</span>
-                            </button>
-                                                    <a href="dashboard-deposit.html" class="bg-white dark:bg-gray-100 text-primary-600 dark:text-primary-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-200 transition-all duration-200 flex items-center space-x-2 shadow-lg dark:shadow-gray-900/25">
-                                <i class="fa-solid fa-plus text-sm"></i>
-                                <span class="text-sm">Add Money</span>
-                            </a>
-                                                </div>
+                                            <!-- Action Buttons -->
+                                            <div class="flex space-x-3">
+                                                <button @click="showSendMoney = true" class="flex-1 bg-white/20 backdrop-blur-sm px-5 py-3 rounded-xl text-white font-semibold hover:bg-white/30 transition-all duration-200 flex items-center justify-center space-x-2">
+                                                    <i class="fa-solid fa-paper-plane"></i>
+                                                    <span>Send Money</span>
+                                                </button>
+                                                <button onclick="window.location.href='dashboard-deposit.html'" class="flex-1 bg-white text-primary-600 px-5 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                    <span>Add Money</span>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -2156,13 +2072,13 @@
                                     <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700">
                                         <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
                                         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                            <a href="dashboard-local-transfer.html" class="flex flex-col items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                            <a href="https://grandvisiontrust.com/dashboard/localtransfer" class="flex flex-col items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                                 <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mb-2">
                                                     <i class="fa-solid fa-exchange-alt text-white text-sm"></i>
                                                 </div>
                                                 <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Transfer</span>
                                             </a>
-                                            <a href="#bills" @click.prevent="navigate('bills')" class="flex flex-col items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                            <a href="https://grandvisiontrust.com/dashboard/internationaltransfer" class="flex flex-col items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                                 <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center mb-2">
                                                     <i class="fa-solid fa-file-invoice text-white text-sm"></i>
                                                 </div>
@@ -2187,7 +2103,7 @@
                                     <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700" x-data="dashboardQuickTransfer()" x-init="loadBeneficiaries()">
                                         <div class="flex justify-between items-center mb-4">
                                             <h3 class="text-base font-semibold text-gray-900 dark:text-white">Quick Transfer</h3>
-                                            <a href="dashboard-transactions.html" class="text-xs text-primary-600 dark:text-primary-400 font-medium flex items-center hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
+                                            <a href="https://grandvisiontrust.com/dashboard/beneficiaries" class="text-xs text-primary-600 dark:text-primary-400 font-medium flex items-center hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
                         View All
                         <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
                     </a>
@@ -2195,7 +2111,7 @@
 
                                         <div class="flex space-x-3 overflow-x-auto pb-2" x-show="!loading">
                                             <!-- Add New Beneficiary -->
-                                            <a href="#beneficiaries" @click.prevent="navigate('beneficiaries')" class="flex-shrink-0 flex flex-col items-center justify-center group">
+                                            <a href="https://grandvisiontrust.com/dashboard/localtransfer" class="flex-shrink-0 flex flex-col items-center justify-center group">
                                                 <div class="w-16 h-16 rounded-full border-2 border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 flex items-center justify-center mb-2 group-hover:bg-gray-100 dark:group-hover:bg-gray-700 group-hover:border-primary-400 dark:group-hover:border-primary-500 transition-all duration-200">
                                                     <i class="fa-solid fa-plus text-gray-400 dark:text-gray-500 text-lg group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors"></i>
                                                 </div>
@@ -2275,7 +2191,7 @@
                                             <p class="text-xs text-primary-700 dark:text-primary-300 mb-3 max-w-xs">
                                                 Apply for a virtual card to get started with secure online payments.
                                             </p>
-                                            <a href="dashboard-cards.html" class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white text-xs font-medium rounded-lg shadow-sm transition-all duration-200 transform hover:scale-105">
+                                            <a href="https://grandvisiontrust.com/dashboard/cards/apply" class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white text-xs font-medium rounded-lg shadow-sm transition-all duration-200 transform hover:scale-105">
                     <i class="fa-solid fa-plus text-xs mr-1.5"></i>
                     Apply for Card
                 </a>
@@ -2293,7 +2209,7 @@
                                 <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700">
                                     <div class="flex items-center justify-between mb-4">
                                         <h3 class="text-base font-semibold text-gray-900 dark:text-white">Recent Transactions</h3>
-                                        <a href="dashboard-transactions.html" class="text-xs text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300 transition-colors">View All</a>
+                                        <a href="https://grandvisiontrust.com/dashboard/accounthistory" class="text-xs text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300 transition-colors">View All</a>
                                     </div>
 
                                     <div class="space-y-3">
@@ -2410,7 +2326,7 @@
 
                                 <!-- Help & Support -->
                                 <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-lg dark:shadow-gray-900/50 overflow-hidden border border-white/20 dark:border-gray-700/50 relative">
-                                    <!-- Gradient Background -->
+                                    <!-- Gradient background -->
                                     <div class="absolute inset-0 bg-gradient-to-br from-primary-50/80 via-primary-100/50 to-primary-200/30 dark:from-gray-900/80 dark:via-gray-800/50 dark:to-gray-700/30"></div>
 
                                     <!-- Content -->
@@ -2463,7 +2379,7 @@
 
                                         <!-- Action Button -->
                                         <div class="flex justify-center">
-                                            <a href="dashboard-support.html" class="group inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold rounded-xl shadow-lg shadow-primary-500/25 dark:shadow-primary-900/50 hover:shadow-primary-500/40 dark:hover:shadow-primary-800/50 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-sm">
+                                            <a href="https://grandvisiontrust.com/dashboard/support" class="group inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold rounded-xl shadow-lg shadow-primary-500/25 dark:shadow-primary-900/50 hover:shadow-primary-500/40 dark:hover:shadow-primary-800/50 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-sm">
                 <i class="fa-solid fa-comments text-xs mr-2 group-hover:animate-bounce"></i>
                 <span>Start Live Chat</span>
                 <div class="ml-2 w-1.5 h-1.5 bg-white/80 rounded-full group-hover:bg-white transition-colors duration-300"></div>
@@ -2486,57 +2402,10 @@
                         </div>
                     </div>
 
-                    <div class="px-4 lg:px-6 pb-12">
-                        <div class="space-y-6">
-                            <section id="services-overview" class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700">
-                                <div class="flex items-start justify-between gap-4 mb-4">
-                                    <div>
-                                        <h2 class="text-lg font-bold text-gray-900 dark:text-white">Financial Services</h2>
-                                        <p class="text-sm text-gray-600 dark:text-gray-300">Apply for loans, request tax refund support, or submit a grant application.</p>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <a href="loans-credit.html" class="group block p-4 rounded-xl border border-gray-100 dark:border-gray-700 bg-gradient-to-br from-blue-50 to-white dark:from-gray-800 dark:to-gray-800 hover:shadow-md transition-all">
-                                        <div class="flex items-center justify-between mb-3">
-                                            <div class="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center">
-                                                <i class="fa-solid fa-landmark text-white text-sm"></i>
-                                            </div>
-                                            <i class="fa-solid fa-arrow-right text-blue-600 dark:text-blue-400 text-sm group-hover:translate-x-0.5 transition-transform"></i>
-                                        </div>
-                                        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-1">Loans</h3>
-                                        <p class="text-xs text-gray-600 dark:text-gray-300">Personal and business options with flexible repayment terms.</p>
-                                    </a>
-
-                                    <a href="tax-refund.html" class="group block p-4 rounded-xl border border-gray-100 dark:border-gray-700 bg-gradient-to-br from-purple-50 to-white dark:from-gray-800 dark:to-gray-800 hover:shadow-md transition-all">
-                                        <div class="flex items-center justify-between mb-3">
-                                            <div class="w-10 h-10 rounded-xl bg-purple-500 flex items-center justify-center">
-                                                <i class="fa-solid fa-receipt text-white text-sm"></i>
-                                            </div>
-                                            <i class="fa-solid fa-arrow-right text-purple-600 dark:text-purple-400 text-sm group-hover:translate-x-0.5 transition-transform"></i>
-                                        </div>
-                                        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-1">Tax Refund</h3>
-                                        <p class="text-xs text-gray-600 dark:text-gray-300">Submit refund details for review and processing support.</p>
-                                    </a>
-
-                                    <a href="dashboard-grants.html" class="group block p-4 rounded-xl border border-gray-100 dark:border-gray-700 bg-gradient-to-br from-green-50 to-white dark:from-gray-800 dark:to-gray-800 hover:shadow-md transition-all">
-                                        <div class="flex items-center justify-between mb-3">
-                                            <div class="w-10 h-10 rounded-xl bg-green-500 flex items-center justify-center">
-                                                <i class="fa-solid fa-hand-holding-dollar text-white text-sm"></i>
-                                            </div>
-                                            <i class="fa-solid fa-arrow-right text-green-600 dark:text-green-400 text-sm group-hover:translate-x-0.5 transition-transform"></i>
-                                        </div>
-                                        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-1">Grants</h3>
-                                        <p class="text-xs text-gray-600 dark:text-gray-300">Apply for eligible programs and track your application status.</p>
-                                    </a>
-                                </div>
-                            </section>
-                        </div>
-                    </div>
-
 
                     <div x-show="showBankAccount" x-transition:enter="transition ease-out duration-300" enter-start="opacity-0" enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" leave-start="opacity-100" leave-end="opacity-0" class="fixed inset-0 z-50 overflow-y-auto"
                         aria-labelledby="bank-account-title" role="dialog" aria-modal="true" style="display: none;">
+                        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                             <!-- Backdrop with enhanced blur -->
                             <div x-show="showBankAccount" x-transition:enter="transition ease-out duration-300" enter-start="opacity-0" enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" leave-start="opacity-100" leave-end="opacity-0" class="fixed inset-0 bg-slate-900/20 dark:bg-black/40 backdrop-blur-md transition-opacity"
                                 @click="showBankAccount = false" aria-hidden="true">
@@ -2560,7 +2429,7 @@
                                         <i class="fa-solid fa-building-columns text-white text-sm"></i>
                                     </div>
                                     <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1" id="bank-account-title">Bank Account Details</h3>
-                                    <p class="text-xs text-gray-600 dark:text-gray-400 font-medium">GrandVisionTrust Bank Banking</p>
+                                    <p class="text-xs text-gray-600 dark:text-gray-400 font-medium">GrandVisionTrust Banking</p>
                                 </div>
 
                                 <!-- Account Details Card -->
@@ -2580,11 +2449,11 @@
                                                     <div class="h-2 w-2 bg-primary-500 rounded-full mr-3"></div>
                                                     <div>
                                                         <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Account Name</p>
-                                                        <p class="text-xs font-bold text-gray-900 dark:text-white mt-0.5">Khrome Gabriel</p>
+                                                        <p class="text-xs font-bold text-gray-900 dark:text-white mt-0.5">Your Name</p>
                                                     </div>
                                                 </div>
                                                 <button class="w-7 h-7 bg-primary-50 dark:bg-primary-900/50 hover:bg-primary-100 dark:hover:bg-primary-800/50 rounded-lg text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 focus:outline-none transition-all duration-200 flex items-center justify-center group-hover:scale-105"
-                                                    @click="navigator.clipboard.writeText('Khrome Gabriel'); $el.querySelector('i').classList.add('text-green-500'); setTimeout(() => $el.querySelector('i').classList.remove('text-green-500'), 1500)">
+                                                    @click="navigator.clipboard.writeText('Your Name'); $el.querySelector('i').classList.add('text-green-500'); setTimeout(() => $el.querySelector('i').classList.remove('text-green-500'), 1500)">
                                 <i class="fa-solid fa-copy text-xs transition-colors duration-300"></i>
                             </button>
                                             </div>
@@ -2633,7 +2502,7 @@
                                     </div>
                                     <div>
                                         <h5 class="font-bold text-slate-900 dark:text-slate-50 mb-0.5 text-xs">Security Notice</h5>
-                                        <p class="text-xs text-slate-800 dark:text-slate-100">Always contact GrandVisionTrust Bank Support before making payments to verify account details.</p>
+                                        <p class="text-xs text-slate-800 dark:text-slate-100">Always contact GrandVisionTrust Support before making payments to verify account details.</p>
                                     </div>
                                 </div>
 
@@ -2670,7 +2539,7 @@
                                     <p class="text-xs text-gray-600 dark:text-gray-400 font-medium">Swift & Secure Money Transfer</p>
                                 </div>
                                 <div class="space-y-3 mb-4">
-                                    <a href="dashboard-local-transfer.html" class="block group">
+                                    <a href="https://grandvisiontrust.com/dashboard/localtransfer" class="block group">
                                         <div class="relative p-3 bg-gradient-to-br from-gray-50/80 to-white/80 dark:from-gray-700/80 dark:to-gray-800/80 hover:from-primary-50/80 hover:to-primary-100/50 dark:hover:from-primary-900/30 dark:hover:to-primary-800/30 rounded-xl border border-gray-100/50 dark:border-gray-600/50 hover:border-primary-200/50 dark:hover:border-primary-700/50 transition-all duration-300 hover:shadow-md hover:shadow-primary-500/10 dark:hover:shadow-primary-900/20 transform hover:scale-[1.02]">
                                             <div class="absolute top-2 right-2 w-6 h-6 bg-primary-200/20 dark:bg-primary-800/30 rounded-full blur-lg group-hover:bg-primary-300/30 dark:group-hover:bg-primary-700/40 transition-colors duration-300"></div>
                                             <div class="flex items-center justify-between relative">
@@ -2699,7 +2568,7 @@
                                             </div>
                                         </div>
                                     </a>
-                                    <a href="dashboard-international-transfer.html" class="block group">
+                                    <a href="https://grandvisiontrust.com/dashboard/internationaltransfer" class="block group">
                                         <div class="relative p-3 bg-gradient-to-br from-gray-50/80 to-white/80 dark:from-gray-700/80 dark:to-gray-800/80 hover:from-blue-50/80 hover:to-blue-100/50 dark:hover:from-blue-900/30 dark:hover:to-blue-800/30 rounded-xl border border-gray-100/50 dark:border-gray-600/50 hover:border-blue-200/50 dark:hover:border-blue-700/50 transition-all duration-300 hover:shadow-md hover:shadow-blue-500/10 dark:hover:shadow-blue-900/20 transform hover:scale-[1.02]">
                                             <div class="absolute top-2 right-2 w-6 h-6 bg-blue-200/20 dark:bg-blue-800/30 rounded-full blur-lg group-hover:bg-blue-300/30 dark:group-hover:bg-blue-700/40 transition-colors duration-300"></div>
                                             <div class="flex items-center justify-between relative">
@@ -2778,7 +2647,7 @@
                                     <!-- Compact QR Code Section -->
                                     <div class="text-center mb-4">
                                         <div class="w-32 h-32 mx-auto mb-3 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 p-2 rounded-2xl shadow border border-gray-200 dark:border-gray-600 relative">
-                                            <img src="storage/app/public/photos/UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png" alt="BTC Address QR Code" class="w-full h-full rounded-xl">
+                                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=bc1qrqulpq0ue9nugqjtwndwl94fygygc78gk3em76&bgcolor=ffffff&color=1f2937" alt="BTC Address QR Code" class="w-full h-full rounded-xl">
 
                                             <!-- Small Bitcoin Logo -->
                                             <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -2871,27 +2740,20 @@
                                     }
                                 });
 
-                                localStorage.setItem('selectedBeneficiaryId', beneficiary.id);
-                                localStorage.setItem('selectedBeneficiaryType', beneficiary.type || 'local');
-                                if (beneficiary.method_type) {
-                                    localStorage.setItem('selectedBeneficiaryMethod', beneficiary.method_type);
-                                } else {
-                                    localStorage.removeItem('selectedBeneficiaryMethod');
-                                }
-
+                                // Redirect to appropriate transfer page based on beneficiary type
                                 if (beneficiary.type === 'local') {
-                                    window.location.href = 'dashboard-local-transfer.html';
+                                    window.location.href = `/dashboard/localtransfer?beneficiary=${beneficiary.id}`;
                                 } else if (beneficiary.type === 'international') {
-                                    window.location.href = 'dashboard-international-transfer.html';
+                                    const method = beneficiary.method_type ? `&method=${encodeURIComponent(beneficiary.method_type)}` : '';
+                                    window.location.href = `/dashboard/internationaltransfer?beneficiary=${beneficiary.id}${method}`;
                                 }
                             } catch (error) {
                                 console.error('Error selecting beneficiary:', error);
-                                localStorage.setItem('selectedBeneficiaryId', beneficiary.id);
-                                localStorage.setItem('selectedBeneficiaryType', beneficiary.type || 'local');
+                                // Fallback: just redirect to transfer page
                                 if (beneficiary.type === 'local') {
-                                    window.location.href = 'dashboard-local-transfer.html';
+                                    window.location.href = '/dashboard/localtransfer';
                                 } else {
-                                    window.location.href = 'dashboard-international-transfer.html';
+                                    window.location.href = '/dashboard/internationaltransfer';
                                 }
                             }
                         }
@@ -2917,5 +2779,9 @@
             }, 800);
         };
     </script>
-</html>
+
+
+
+</body>
+
 </html>

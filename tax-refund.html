@@ -1,331 +1,246 @@
-<html lang="en" x-data="{ darkMode: false, mobileMenuOpen: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)" :class="{ 'dark': darkMode }">
-
+<!DOCTYPE html>
+<html lang="en" x-data="{ darkMode: false, open: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches); if (darkMode) { document.documentElement.classList.add('dark'); }">
 <head>
-    <title>Tax Refund - GrandVisionTrust Bank</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="index, follow">
-    <meta name="apple-mobile-web-app-title" content="GrandVisionTrust Bank">
-    <meta name="application-name" content="GrandVisionTrust Bank">
-    <meta name="description" content="Tax refund tracking steps and status request guidance.">
+    <title>Tax Refund - GrandVisionTrust Bank</title>
+    <meta name="description" content="Get your tax refund quickly and securely with GrandVisionTrust Bank">
     <link rel="shortcut icon" href="storage/app/public/photos/UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script>
-        const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
-            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        if (isDarkMode) {
-            document.documentElement.classList.add('dark');
-        }
+        const firebaseConfig = {
+            apiKey: "AIzaSyAPBT1yStJbk4I_6sLvctlmGXu0lBotaiA",
+            authDomain: "grandvisiontrust.firebaseapp.com",
+            projectId: "grandvisiontrust",
+            storageBucket: "grandvisiontrust.firebasestorage.app",
+            messagingSenderId: "796538268477",
+            appId: "1:796538268477:web:78a8bab0eb8d36d6ca7354",
+            measurementId: "G-6XWG7HEG2V"
+        };
+        firebase.initializeApp(firebaseConfig);
     </script>
-
     <script src="assets/tailwindcss.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
                     colors: {
                         primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e'
-                        }
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                            foreground: '#ffffff',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1f2937',
+                            900: '#0f172a',
+                            foreground: '#0f172a',
+                        },
+                        accent: {
+                            50: '#fdf2f8',
+                            100: '#fce7f3',
+                            200: '#fbcfe8',
+                            300: '#f9a8d4',
+                            400: '#f472b6',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            700: '#be185d',
+                            800: '#9d174d',
+                            900: '#831843',
+                            foreground: '#ffffff',
+                        },
+                        background: '#f8fafc',
+                        foreground: '#1e293b',
+                        card: {
+                            DEFAULT: '#ffffff',
+                            foreground: '#1e293b',
+                        },
+                        muted: {
+                            DEFAULT: '#f1f5f9',
+                            foreground: '#64748b',
+                        },
+                        border: '#e2e8f0',
+                        input: '#e2e8f0',
+                        ring: '#10b981',
+                    },
+                    boxShadow: {
+                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+                    },
+                    borderRadius: {
+                        lg: '0.75rem',
+                        xl: '0.75rem',
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
                     }
                 }
             }
         }
     </script>
     <script defer src="assets/alpine.min.js"></script>
-
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #e2e8f0;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #94a3b8;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
-
-        .dark ::-webkit-scrollbar-track {
-            background: #374151;
-        }
-
-        .dark ::-webkit-scrollbar-thumb {
-            background: #6b7280;
-        }
-
-        .dark ::-webkit-scrollbar-thumb:hover {
-            background: #9ca3af;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
         }
     </style>
 </head>
-
-<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    <nav class="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200/70 dark:border-gray-800">
+<body class="font-sans bg-background">
+    <nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 fixed w-full z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="h-16 flex items-center justify-between">
-                <a href="index.html" class="flex items-center gap-3">
-                    <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-9 w-auto">
-                    <span class="hidden sm:block font-extrabold text-gray-900 dark:text-white">GrandVisionTrust Bank</span>
-                </a>
-
-                <div class="hidden lg:flex items-center gap-1">
-                    <a href="index.html" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Home</a>
-                    <a href="dashboard.html" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Dashboard</a>
-                    <div class="relative group">
-                        <button class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold flex items-center gap-2">
-                            Services
-                            <span class="text-xs opacity-70">▾</span>
-                        </button>
-                        <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                            <div class="p-2">
-                                <a href="personal-banking.html" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Personal Banking</a>
-                                <a href="business-banking.html" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Business Banking</a>
-                                <a href="loans-credit.html" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Loans &amp; Credit</a>
-                                <a href="cards.html" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Cards</a>
-                                <a href="grants-aid.html" class="block px-4 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Grants &amp; Aid</a>
-                                <a href="tax-refund.html" class="block px-4 py-2.5 rounded-xl bg-primary-50 dark:bg-primary-900/20 text-primary-800 dark:text-primary-200 font-semibold">Tax Refund</a>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="index.html#contact" class="px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-semibold">Contact</a>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)" class="p-2.5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs font-bold" aria-label="Toggle dark mode">
-                        <span x-show="!darkMode">Dark</span>
-                        <span x-show="darkMode">Light</span>
-                    </button>
-                    <a href="login.html" class="hidden sm:inline-flex items-center justify-center px-4 py-2.5 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">
-                        Online Banking
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center">
+                        <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-10 w-auto">
                     </a>
-                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="lg:hidden p-2.5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs font-bold" aria-label="Open menu">
-                        <span x-show="!mobileMenuOpen">Menu</span>
-                        <span x-show="mobileMenuOpen">Close</span>
+                    <div class="hidden md:ml-10 md:flex md:space-x-8">
+                        <a href="index.html" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">Home</a>
+                        <a href="tax-refund.html" class="inline-flex items-center px-1 pt-1 border-b-2 border-primary-500 text-sm font-semibold text-primary-600 dark:text-primary-400">Tax Refund</a>
+                        <a href="#features" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">Features</a>
+                        <a href="#contact" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">Contact</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode); if (darkMode) { document.documentElement.classList.add('dark'); } else { document.documentElement.classList.remove('dark'); }" class="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-moon text-gray-700 dark:text-gray-300" x-show="!darkMode"></i>
+                        <i class="fas fa-sun text-yellow-500" x-show="darkMode"></i>
                     </button>
+                    <a href="login.html" class="hidden md:inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">Sign In</a>
+                    <div class="-mr-2 flex items-center md:hidden">
+                        <button @click="open = !open" class="inline-flex items-center justify-center p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none">
+                            <i class="fas fa-bars text-xl" x-show="!open"></i>
+                            <i class="fas fa-times text-xl" x-show="open"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-
-            <div x-show="mobileMenuOpen" x-transition class="lg:hidden pb-4">
-                <div class="grid gap-2">
-                    <a href="index.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Home</a>
-                    <a href="dashboard.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Dashboard</a>
-                    <a href="personal-banking.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Personal Banking</a>
-                    <a href="business-banking.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Business Banking</a>
-                    <a href="loans-credit.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Loans &amp; Credit</a>
-                    <a href="cards.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Cards</a>
-                    <a href="grants-aid.html" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Grants &amp; Aid</a>
-                    <a href="tax-refund.html" class="px-4 py-3 rounded-2xl bg-primary-50 dark:bg-primary-900/20 text-primary-800 dark:text-primary-200 transition-colors font-semibold">Tax Refund</a>
-                    <a href="index.html#contact" class="px-4 py-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Contact</a>
-                    <a href="login.html" class="px-4 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-center transition-colors">Online Banking</a>
-                </div>
+        </div>
+        <div class="md:hidden" x-show="open" x-transition>
+            <div class="pt-2 pb-3 space-y-1 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+                <a href="index.html" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 dark:text-gray-400 hover:bg-primary-50 dark:hover:bg-gray-800 hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400">Home</a>
+                <a href="tax-refund.html" class="block pl-3 pr-4 py-2 border-l-4 border-primary-500 text-base font-semibold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-gray-800">Tax Refund</a>
+                <a href="#features" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 dark:text-gray-400 hover:bg-primary-50 dark:hover:bg-gray-800 hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400">Features</a>
+                <a href="#contact" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 dark:text-gray-400 hover:bg-primary-50 dark:hover:bg-gray-800 hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400">Contact</a>
+                <a href="login.html" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-primary-600 dark:text-primary-400">Sign In</a>
             </div>
         </div>
     </nav>
-
-    <header class="bg-gradient-to-br from-gray-900 via-primary-800 to-primary-700 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-            <div class="max-w-3xl">
-                <div class="inline-flex items-center px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-sm font-semibold">
-                    Tax Refund
-                </div>
-                <h1 class="mt-4 text-3xl lg:text-5xl font-extrabold">Track your refund with confidence</h1>
-                <p class="mt-4 text-white/80 text-lg leading-relaxed">
-                    Review typical tracking steps and keep your information ready for a status check.
-                </p>
-                <div class="mt-6 flex flex-col sm:flex-row gap-3">
-                    <a href="#steps" class="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-white text-primary-800 font-extrabold hover:bg-white/90 transition-colors">
-                        View steps
-                    </a>
-                    <a href="#request" class="inline-flex items-center justify-center px-6 py-3 rounded-2xl border border-white/30 bg-white/10 hover:bg-white/15 text-white font-extrabold transition-colors">
-                        Request status
-                    </a>
-                </div>
-            </div>
+    <div class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">Fast & Secure Tax Refunds</h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">Get your tax refund deposited directly into your GrandVisionTrust Bank account quickly and securely</p>
         </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12 space-y-10">
-        <section id="steps" class="scroll-mt-24">
-            <div class="flex items-end justify-between gap-6 flex-col md:flex-row">
-                <div class="max-w-2xl">
-                    <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white">Tracking steps</h2>
-                    <p class="mt-2 text-gray-600 dark:text-gray-300">
-                        A typical refund timeline is shown below. Times can vary.
-                    </p>
-                </div>
-                <a href="login.html" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">
-                    View deposits in Online Banking
-                </a>
-            </div>
-
-            <div class="mt-6 grid md:grid-cols-4 gap-4">
-                <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
-                    <div class="text-xs font-bold text-primary-700 dark:text-primary-300">Step 1</div>
-                    <div class="mt-1 font-extrabold text-gray-900 dark:text-white">Submit return</div>
-                    <div class="mt-2 text-sm text-gray-600 dark:text-gray-300">Confirm filing method and keep a copy of your return.</div>
-                </div>
-                <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
-                    <div class="text-xs font-bold text-primary-700 dark:text-primary-300">Step 2</div>
-                    <div class="mt-1 font-extrabold text-gray-900 dark:text-white">Processing</div>
-                    <div class="mt-2 text-sm text-gray-600 dark:text-gray-300">Processing may include verification and review of key fields.</div>
-                </div>
-                <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
-                    <div class="text-xs font-bold text-primary-700 dark:text-primary-300">Step 3</div>
-                    <div class="mt-1 font-extrabold text-gray-900 dark:text-white">Approved</div>
-                    <div class="mt-2 text-sm text-gray-600 dark:text-gray-300">If approved, a payment is scheduled for deposit or mailing.</div>
-                </div>
-                <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
-                    <div class="text-xs font-bold text-primary-700 dark:text-primary-300">Step 4</div>
-                    <div class="mt-1 font-extrabold text-gray-900 dark:text-white">Funds received</div>
-                    <div class="mt-2 text-sm text-gray-600 dark:text-gray-300">Check your account activity for incoming deposits.</div>
-                </div>
-            </div>
-        </section>
-
-        <section id="documents" class="scroll-mt-24">
-            <div class="rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-6 lg:p-8">
-                <div class="grid lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2">
-                        <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white">Common information to keep</h2>
-                        <p class="mt-2 text-gray-600 dark:text-gray-300 leading-relaxed">
-                            Keep these details available when checking a status or reconciling a deposit.
-                        </p>
-                        <div class="mt-5 grid sm:grid-cols-2 gap-4">
-                            <div class="rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-5">
-                                <div class="font-extrabold text-gray-900 dark:text-white">Filing status</div>
-                                <div class="mt-1 text-sm text-gray-600 dark:text-gray-300">Single, married, or head of household.</div>
-                            </div>
-                            <div class="rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-5">
-                                <div class="font-extrabold text-gray-900 dark:text-white">Refund amount</div>
-                                <div class="mt-1 text-sm text-gray-600 dark:text-gray-300">Exact amount from your return.</div>
-                            </div>
-                            <div class="rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-5">
-                                <div class="font-extrabold text-gray-900 dark:text-white">Tax year</div>
-                                <div class="mt-1 text-sm text-gray-600 dark:text-gray-300">The year the return applies to.</div>
-                            </div>
-                            <div class="rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-5">
-                                <div class="font-extrabold text-gray-900 dark:text-white">Account details</div>
-                                <div class="mt-1 text-sm text-gray-600 dark:text-gray-300">Deposit account and routing details when applicable.</div>
-                            </div>
+        <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Why Choose Our Tax Refund Service?</h2>
+                <div class="space-y-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-bolt text-primary-600 dark:text-primary-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Fast Processing</h3>
+                            <p class="text-gray-600 dark:text-gray-400">Get your refund deposited in as little as 24 hours with our expedited processing</p>
                         </div>
                     </div>
-                    <div class="rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-6">
-                        <div class="font-extrabold text-gray-900 dark:text-white">Related services</div>
-                        <div class="mt-4 space-y-3 text-sm">
-                            <a href="grants-aid.html" class="block rounded-2xl border border-gray-200 dark:border-gray-800 p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                <div class="font-semibold text-gray-900 dark:text-white">Grants &amp; aid</div>
-                                <div class="text-gray-600 dark:text-gray-300">Programs and document checklist.</div>
-                            </a>
-                            <a href="personal-banking.html" class="block rounded-2xl border border-gray-200 dark:border-gray-800 p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                <div class="font-semibold text-gray-900 dark:text-white">Personal banking</div>
-                                <div class="text-gray-600 dark:text-gray-300">Accounts and digital tools.</div>
-                            </a>
-                            <a href="dashboard.html" class="block rounded-2xl border border-gray-200 dark:border-gray-800 p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                <div class="font-semibold text-gray-900 dark:text-white">Dashboard</div>
-                                <div class="text-gray-600 dark:text-gray-300">View deposits and transactions.</div>
-                            </a>
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-shield-alt text-primary-600 dark:text-primary-400 text-xl"></i>
                         </div>
-                        <a href="#request" class="mt-5 inline-flex items-center justify-center w-full px-4 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">
-                            Request status
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Bank-Level Security</h3>
+                            <p class="text-gray-600 dark:text-gray-400">Your tax information is protected with the highest level of security</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-dollar-sign text-primary-600 dark:text-primary-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Hidden Fees</h3>
+                            <p class="text-gray-600 dark:text-gray-400">Transparent pricing with no surprise charges</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-8">
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Get Started Today</h3>
+                <a href="signup.html" class="w-full inline-flex justify-center items-center px-6 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">Open an Account</a>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-10 w-auto mb-4">
+                    <p class="text-gray-400">Empowering your financial future with trust, security, and innovation.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#features" class="text-gray-400 hover:text-white transition-colors">Features</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Services</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="dashboard-local-transfer.html" class="text-gray-400 hover:text-white transition-colors">Local Transfers</a></li>
+                        <li><a href="dashboard-international-transfer.html" class="text-gray-400 hover:text-white transition-colors">International Transfers</a></li>
+                        <li><a href="loans-credit.html" class="text-gray-400 hover:text-white transition-colors">Loans</a></li>
+                        <li><a href="grants-aid.html" class="text-gray-400 hover:text-white transition-colors">Grants & Aid</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-instagram"></i>
                         </a>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section id="request" class="scroll-mt-24">
-            <div class="flex items-end justify-between gap-6 flex-col md:flex-row">
-                <div class="max-w-2xl">
-                    <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white">Status request</h2>
-                    <p class="mt-2 text-gray-600 dark:text-gray-300">
-                        Submit your details and continue in Online Banking.
-                    </p>
-                </div>
-                <a href="index.html#contact" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 font-extrabold transition-colors">
-                    Talk to support
-                </a>
-            </div>
-
-            <form x-data="{ submitting: false, async submit(e) { try { this.submitting = true; const fd = new FormData(e.target); const taxYear = String(fd.get('taxYear') || ''); const filingStatus = String(fd.get('filingStatus') || ''); const refundAmount = String(fd.get('refundAmount') || ''); const last4 = String(fd.get('last4') || ''); const notes = String(fd.get('notes') || ''); const res = await fetch('/api/applications/tax-refund-status', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ taxYear, filingStatus, refundAmount, last4, notes }) }); if (!res.ok) { throw new Error('submit_failed'); } window.location.href = 'dashboard.html'; } catch (err) { this.submitting = false; alert('Unable to submit right now. Please try again.'); } } }" @submit.prevent="submit($event)" class="mt-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 lg:p-8">
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Tax year</label>
-                        <select name="taxYear" class="w-full rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
-                            <option>2025</option>
-                            <option>2024</option>
-                            <option>2023</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Filing status</label>
-                        <select name="filingStatus" class="w-full rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
-                            <option>Single</option>
-                            <option>Married filing jointly</option>
-                            <option>Head of household</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Refund amount</label>
-                        <input name="refundAmount" type="text" inputmode="decimal" placeholder="e.g. 1,250.00" class="w-full rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Last 4 of taxpayer ID</label>
-                        <input name="last4" type="password" inputmode="numeric" placeholder="••••" class="w-full rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Notes</label>
-                        <textarea name="notes" rows="4" placeholder="Optional notes (e.g. direct deposit vs mail)" class="w-full rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"></textarea>
-                    </div>
-                </div>
-                <div class="mt-6 flex flex-col sm:flex-row gap-3">
-                    <button type="submit" class="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold transition-colors">
-                        <span x-show="!submitting">Back to dashboard</span>
-                        <span x-show="submitting">Submitting…</span>
-                    </button>
-                    <a href="login.html" class="inline-flex items-center justify-center px-6 py-3 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 font-extrabold transition-colors">
-                        Open Online Banking
-                    </a>
-                </div>
-            </form>
-        </section>
-    </main>
-
-    <footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                <div class="text-sm text-gray-600 dark:text-gray-400">
-                    © GrandVisionTrust Bank. All rights reserved.
-                </div>
-                <div class="flex flex-wrap gap-3 text-sm">
-                    <a href="index.html#services" class="font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Services</a>
-                    <a href="dashboard.html" class="font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Dashboard</a>
-                    <a href="index.html#contact" class="font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Contact</a>
-                </div>
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 GrandVisionTrust Bank. All rights reserved.</p>
             </div>
         </div>
     </footer>
 </body>
-
 </html>

@@ -1,195 +1,661 @@
-<html lang="en" x-data="{ darkMode: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)" :class="{ 'dark': darkMode }">
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <title>Local Transfer - GrandVisionTrust Bank</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="index, follow">
-    <meta name="apple-mobile-web-app-title" content="GrandVisionTrust Bank">
-    <meta name="application-name" content="GrandVisionTrust Bank">
-    <meta name="description" content="Send money to local beneficiaries quickly and securely.">
-    <link rel="shortcut icon" href="storage/app/public/photos/UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+    <title>GrandVisionTrust | Local Transfer</title>
+    <meta name="description" content="Send local transfers with GrandVisionTrust." />
+    <link rel="shortcut icon" href="images/PixVerse_Image_Effect_prompt_create_a_logo_for.jpg" />
 
-    <script>
-        const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
-            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        if (isDarkMode) {
-            document.documentElement.classList.add('dark');
-        }
-    </script>
 
-    <script src="assets/tailwindcss.js"></script>
+    <!-- Tailwind CSS with custom color variables -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
                     colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
+                        primary: { // Dynamic primary colors from appearance settings
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
                             400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
+                            DEFAULT: '#0ea5e9',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            foreground: '#ffffff',
+                        },
+                        secondary: { // Dynamic secondary colors from appearance settings
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            DEFAULT: '#64748b',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            foreground: '#0f172a',
+                        },
+                        accent: { // Dynamic accent colors from appearance settings
+                            50: '#fdf2f8',
+                            100: '#fce7f3',
+                            200: '#fbcfe8',
+                            300: '#f9a8d4',
+                            400: '#f472b6',
+                            DEFAULT: '#ec4899',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            700: '#be185d',
+                            foreground: '#ffffff',
                         },
                         background: '#f8fafc',
                         foreground: '#1e293b',
+                        card: {
+                            DEFAULT: '#ffffff',
+                            foreground: '#1e293b',
+                        },
+                        muted: {
+                            DEFAULT: '#f1f5f9',
+                            foreground: '#64748b',
+                        },
+                        border: '#e2e8f0',
+                        input: '#e2e8f0',
+                        ring: '#0ea5e9',
+
+                        // Specific colors from original design for gradients/highlights
+                        'gradient-pink-from': '#ec4899',
+                        'gradient-purple-via': '#a855f7',
+                        'gradient-indigo-to': '#4f46e5',
+
+                        'mobile-header-bg': '#1e293b', // Dark slate for mobile top section
+                        'mobile-header-text': '#f1f5f9', // Light text for mobile top section
+
+                        'yellow-action': '#facc15',
+                        'green-positive': '#22c55e',
+                        'red-negative': '#ef4444',
                     },
-                },
-            },
-        };
+                    boxShadow: {
+                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+                        'top': '0 -4px 12px -1px rgba(0,0,0,0.05), 0 -2px 8px -1px rgba(0,0,0,0.03)',
+                    },
+                    borderRadius: {
+                        lg: '0.75rem',
+                        xl: '0.75rem',
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    },
+                    keyframes: {
+                        pulse: {
+                            '0%, 100%': {
+                                transform: 'scale(1)',
+                                boxShadow: '0 0 0 0 rgba(16, 185, 129, 0.4)'
+                            }, // primary color
+                            '50%': {
+                                transform: 'scale(1.05)',
+                                boxShadow: '0 0 0 10px rgba(16, 185, 129, 0)'
+                            },
+                        },
+                        shine: {
+                            '0%': {
+                                transform: 'translateX(-100%) translateY(-100%) rotate(45deg)'
+                            },
+                            '100%': {
+                                transform: 'translateX(100%) translateY(100%) rotate(45deg)'
+                            },
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 2.5s infinite',
+                        'shine-once': 'shine 1.5s ease-in-out',
+                    }
+                }
+            }
+        }
     </script>
-    <script defer src="assets/alpine.min.js"></script>
+
+
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- External Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;90&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: theme('colors.background');
+            color: theme('colors.foreground');
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #6b7280;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #6b7280;
+        }
+
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
 </head>
-<body class="bg-background text-foreground">
-    <div class="min-h-screen flex">
-        <aside class="hidden lg:flex w-72 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200/50 dark:border-gray-700/50 flex-col">
-            <div class="p-6 border-b border-gray-200/50 dark:border-gray-700/50">
-                <a href="dashboard.html" class="inline-flex">
-                    <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-12 w-auto">
-                </a>
+<body class="font-sans bg-background text-foreground" x-data="{ darkMode: false, sidebarOpen: false, mobileMenuOpen: false, notificationOpen: false, userDropdownOpen: false, currentRoute: 'local-transfer' }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches); if (darkMode) { document.documentElement.classList.add('dark'); }" :class="{ 'dark': darkMode }">    <div x-data="{ 
+        sidebarOpen: false,
+        mobileMenuOpen: false,
+        notificationOpen: false,
+        userDropdownOpen: false,
+        currentRoute: 'local-transfer',
+        darkMode: localStorage.getItem('darkMode') === 'true' || false,
+        toggleSidebar() { this.sidebarOpen = !this.sidebarOpen; },
+        closeSidebar() { this.sidebarOpen = false; },
+        isActiveRoute(route) { return this.currentRoute === route; },
+        toggleNotifications() { this.notificationOpen = !this.notificationOpen; this.userDropdownOpen = false; },
+        toggleUserDropdown() { this.userDropdownOpen = !this.userDropdownOpen; this.notificationOpen = false; },
+        closeDropdowns() { this.notificationOpen = false; this.userDropdownOpen = false; },
+        toggleDarkMode() { 
+            this.darkMode = !this.darkMode; 
+            localStorage.setItem('darkMode', this.darkMode);
+            if (this.darkMode) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        },
+        initDarkMode() {
+            if (this.darkMode) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+    }" x-init="initDarkMode()" @click.away="closeDropdowns()" class="min-h-screen bg-gray-50 dark:bg-gray-900">
+
+        <!-- Desktop Layout -->
+        <div class="flex h-screen">
+            <!-- Desktop Sidebar -->
+            <div class="w-72 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200/50 dark:border-gray-700/50 flex flex-col shadow-xl">
+                <!-- Logo Section -->
+                <div class="p-6 border-b border-gray-200/50 dark:border-gray-700/50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-full">
+                            <img src="images/PixVerse_Image_Effect_prompt_create_a_logo_for.jpg" alt="GrandVisionTrust" class="h-12 w-auto">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="flex-1 px-4 py-6 space-y-6 overflow-y-auto custom-scrollbar">
+
+                    <div class="mb-8">
+                        <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Main</h3>
+                        <div class="space-y-2">
+                            <a href="dashboard.html" :class="isActiveRoute('dashboard') ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25' : 'text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400'" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200">
+                                <div :class="isActiveRoute('dashboard') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700'" class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors">
+                                    <i :class="isActiveRoute('dashboard') ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'" class="fa-solid fa-house transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">Dashboard</span>
+                                <div x-show="isActiveRoute('dashboard')" class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                            </a>
+                            <a href="dashboard-transactions.html" :class="isActiveRoute('transactions') ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25' : 'text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400'" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200">
+                                <div :class="isActiveRoute('transactions') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700'" class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors">
+                                    <i :class="isActiveRoute('transactions') ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'" class="fa-solid fa-chart-line transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">Transactions</span>
+                                <div x-show="isActiveRoute('transactions')" class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                            </a>
+                            <a href="dashboard-cards.html" :class="isActiveRoute('cards') ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25' : 'text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400'" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200">
+                                <div :class="isActiveRoute('cards') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700'" class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors">
+                                    <i :class="isActiveRoute('cards') ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'" class="fa-solid fa-credit-card transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">Cards</span>
+                                <div x-show="isActiveRoute('cards')" class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Transfers</h3>
+                        <div class="space-y-2">
+                            <a href="dashboard-local-transfer.html" :class="isActiveRoute('local-transfer') ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25' : 'text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400'" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200">
+                                <div :class="isActiveRoute('local-transfer') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700'" class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors">
+                                    <i :class="isActiveRoute('local-transfer') ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'" class="fa-solid fa-paper-plane transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">Local Transfer</span>
+                                <div x-show="isActiveRoute('local-transfer')" class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                            </a>
+                            <a href="dashboard-international-transfer.html" :class="isActiveRoute('international-transfer') ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25' : 'text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400'" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200">
+                                <div :class="isActiveRoute('international-transfer') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700'" class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors">
+                                    <i :class="isActiveRoute('international-transfer') ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'" class="fa-solid fa-globe transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">International</span>
+                                <div x-show="isActiveRoute('international-transfer')" class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                            </a>
+                            <a href="dashboard-deposit.html" :class="isActiveRoute('deposit') ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25' : 'text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400'" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200">
+                                <div :class="isActiveRoute('deposit') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700'" class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors">
+                                    <i :class="isActiveRoute('deposit') ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'" class="fa-solid fa-plus transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">Deposit</span>
+                                <div x-show="isActiveRoute('deposit')" class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                            </a>
+                            <a href="dashboard-currency-swap.html" :class="isActiveRoute('swap') ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25' : 'text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400'" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200">
+                                <div :class="isActiveRoute('swap') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700'" class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors">
+                                    <i :class="isActiveRoute('swap') ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'" class="fa-solid fa-arrows-rotate transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">Currency Swap</span>
+                                <div x-show="isActiveRoute('swap')" class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Services</h3>
+                        <div class="space-y-2">
+                            <a href="loans-credit.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                    <i class="fa-solid fa-landmark text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">Loans</span>
+                            </a>
+                            <a href="tax-refund.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
+                                    <i class="fa-solid fa-receipt text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">Tax Refund</span>
+                            </a>
+                            <a href="dashboard-grants.html" :class="isActiveRoute('grants') ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25' : 'text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400'" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200">
+                                <div :class="isActiveRoute('grants') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700'" class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors">
+                                    <i :class="isActiveRoute('grants') ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'" class="fa-solid fa-hand-holding-dollar transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">Grants</span>
+                                <div x-show="isActiveRoute('grants')" class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Account</h3>
+                        <div class="space-y-2">
+                            <a href="dashboard-settings.html" :class="isActiveRoute('settings') ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25' : 'text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400'" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200">
+                                <div :class="isActiveRoute('settings') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700'" class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors">
+                                    <i :class="isActiveRoute('settings') ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'" class="fa-solid fa-gear transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">Settings</span>
+                                <div x-show="isActiveRoute('settings')" class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                            </a>
+                            <a href="dashboard-support.html" :class="isActiveRoute('support') ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25' : 'text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400'" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200">
+                                <div :class="isActiveRoute('support') ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700'" class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors">
+                                    <i :class="isActiveRoute('support') ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400'" class="fa-solid fa-headset transition-colors"></i>
+                                </div>
+                                <span class="font-semibold">Support</span>
+                                <div x-show="isActiveRoute('support')" class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Footer -->
+                <div class="p-4 border-t border-gray-200/50 dark:border-gray-700/50"></div>
             </div>
-            <nav class="flex-1 px-4 py-6 space-y-6 overflow-y-auto">
-                <div class="mb-8">
-                    <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Main</h3>
-                    <div class="space-y-2">
-                        <a href="dashboard.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
-                                <i class="fa-solid fa-house text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
-                            </div>
-                            <span class="font-semibold">Dashboard</span>
-                        </a>
-                        <a href="dashboard-transactions.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
-                                <i class="fa-solid fa-chart-line text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
-                            </div>
-                            <span class="font-semibold">Transactions</span>
-                        </a>
-                        <a href="dashboard-cards.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
-                                <i class="fa-solid fa-credit-card text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
-                            </div>
-                            <span class="font-semibold">Cards</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="mb-8">
-                    <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Transfers</h3>
-                    <div class="space-y-2">
-                        <a href="dashboard-local-transfer.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-white/20 transition-colors">
-                                <i class="fa-solid fa-paper-plane text-white transition-colors"></i>
-                            </div>
-                            <span class="font-semibold">Local Transfer</span>
-                            <div class="ml-auto w-2 h-2 bg-white dark:bg-gray-300 rounded-full"></div>
-                        </a>
-                        <a href="dashboard-international-transfer.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
-                                <i class="fa-solid fa-globe text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
-                            </div>
-                            <span class="font-semibold">International</span>
-                        </a>
-                        <a href="dashboard-deposit.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
-                                <i class="fa-solid fa-plus text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
-                            </div>
-                            <span class="font-semibold">Deposit</span>
-                        </a>
-                        <a href="dashboard-currency-swap.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
-                                <i class="fa-solid fa-arrows-rotate text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
-                            </div>
-                            <span class="font-semibold">Currency Swap</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="mb-8">
-                    <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-4">Account</h3>
-                    <div class="space-y-2">
-                        <a href="dashboard-settings.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
-                                <i class="fa-solid fa-gear text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
-                            </div>
-                            <span class="font-semibold">Settings</span>
-                        </a>
-                        <a href="dashboard-support.html" class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-700 dark:hover:text-primary-400">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary-100 dark:group-hover:bg-gray-700 transition-colors">
-                                <i class="fa-solid fa-headset text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
-                            </div>
-                            <span class="font-semibold">Support</span>
-                        </a>
-                    </div>
-                </div>
-            </nav>
-        </aside>
 
-        <div class="flex-1 flex flex-col min-w-0">
-            <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 px-4 lg:px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Local Transfer</h1>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Send money to local bank accounts</p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)" class="w-11 h-11 bg-gray-50 hover:bg-primary-50 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-2xl flex items-center justify-center transition-colors group">
-                            <i x-show="!darkMode" class="fa-solid fa-moon text-gray-600 group-hover:text-primary-600 dark:text-gray-300 transition-colors"></i>
-                            <i x-show="darkMode" class="fa-solid fa-sun text-yellow-500 group-hover:text-yellow-400 transition-colors"></i>
-                        </button>
-                    </div>
-                </div>
-            </header>
-
-            <main class="flex-1 p-4 lg:p-6">
-                <div class="max-w-3xl mx-auto space-y-6">
-                    <section class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-gray-900/25 border border-gray-100 dark:border-gray-700">
-                        <div class="mb-4">
-                            <h2 class="text-lg font-bold text-gray-900 dark:text-white">Transfer Details</h2>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Fill in beneficiary details to initiate a local transfer.</p>
+            <!-- Desktop Main Content -->
+            <div class="flex-1 flex flex-col">
+                <!-- Desktop Header -->
+                <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 px-6 py-4 shadow-sm relative z-50">
+                    <div class="flex items-center justify-between">
+                        <!-- Page Title & Breadcrumb -->
+                        <div class="flex items-center space-x-4">
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                                    Local Transfer </h1>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                    Welcome back, User </p>
+                            </div>
                         </div>
 
-                        <form class="space-y-4">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Beneficiary Name</label>
-                                    <input type="text" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Full name">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Bank Name</label>
-                                    <input type="text" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Beneficiary bank">
-                                </div>
-                            </div>
+                        <!-- Header Actions -->
+                        <div class="flex items-center space-x-4">
+                            <!-- Dark Mode Toggle -->
+                            <button @click="toggleDarkMode()" class="w-11 h-11 bg-gray-50 hover:bg-primary-50 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-2xl flex items-center justify-center transition-colors group">
+                                <i x-show="!darkMode" class="fa-solid fa-moon text-gray-600 group-hover:text-primary-600 dark:text-gray-300 transition-colors"></i>
+                                <i x-show="darkMode" class="fa-solid fa-sun text-yellow-500 group-hover:text-yellow-400 transition-colors"></i>
+                            </button>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Account Number</label>
-                                    <input type="text" inputmode="numeric" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="e.g. 0123456789">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Amount</label>
-                                    <input type="number" min="0" step="0.01" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="0.00">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Narration (Optional)</label>
-                                <input type="text" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="e.g. Rent payment">
-                            </div>
-
-                            <div class="flex items-center justify-between pt-2">
-                                <a href="dashboard-transactions.html" class="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">View Transaction History</a>
-                                <button type="button" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-primary-500 to-primary-600 text-white text-sm font-semibold hover:from-primary-600 hover:to-primary-700 transition-all">
-                                    Continue
+                            <!-- Notifications -->
+                            <div class="relative">
+                                <button @click="toggleNotifications()" class="relative w-11 h-11 bg-gray-50 hover:bg-primary-50 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-2xl flex items-center justify-center transition-colors group">
+                                    <i class="fa-solid fa-bell text-gray-600 group-hover:text-primary-600 dark:text-gray-300 dark:group-hover:text-primary-400 transition-colors"></i>
                                 </button>
+
+                                <!-- Notifications Dropdown -->
+                                <div x-show="notificationOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-1 scale-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-1 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-95" class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 z-[99999]">
+                                    <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                                        <div class="flex items-center justify-between">
+                                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Notifications</h3>
+                                        </div>
+                                    </div>
+                                    <div class="max-h-96 overflow-y-auto custom-scrollbar">
+                                        <!-- Notification Items -->
+
+                                        <div class="p-6 text-center">
+                                            <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3">
+                                                <i class="fa-solid fa-bell-slash text-gray-400 dark:text-gray-500 text-xl"></i>
+                                            </div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">No notifications yet</p>
+                                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">We'll notify you when something happens</p>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 border-t border-gray-100 dark:border-gray-700">
+                                        <div class="flex items-center justify-between">
+                                            <button class="text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+                                                Mark all as read
+                                            </button>
+                                            <a href="https://grandvisiontrust.com/dashboard/notifications" class="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">
+                                                View All Notifications
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </form>
-                    </section>
+
+                            <!-- User Dropdown -->
+                            <div class="relative">
+                                <button @click="toggleUserDropdown()" class="flex items-center space-x-3 p-2 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group">
+                                    <div class="h-10 w-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold border-2 border-primary-100">
+                                        UN
+                                    </div>
+                                    <div class="hidden md:block text-left">
+                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">User</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">user@example.com</p>
+                                    </div>
+                                    <i class="fa-solid fa-chevron-down text-gray-400 dark:text-gray-500 text-sm group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
+                                </button>
+
+                                <!-- User Dropdown Menu -->
+                                <div x-show="userDropdownOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-1 scale-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-1 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-95" class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 z-[99998]">
+                                    <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="h-10 w-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold border-2 border-primary-100">
+                                                UN
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold text-gray-900 dark:text-white">User</p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400">user@example.com</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- KYC Verification Status -->
+                                        <div class="mt-3">
+                                            <a href="https://grandvisiontrust.com/dashboard/verify-account" class="flex items-center justify-center py-2 rounded-xl bg-red-50 dark:bg-red-900/30 border border-red-100 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors">
+                                                <span class="text-xs text-red-800 dark:text-red-300 font-semibold flex items-center">
+                                                    <i class="fa-solid fa-exclamation-triangle text-red-600 dark:text-red-400 mr-2"></i> Verify KYC
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="p-2">
+                                        <a href="https://grandvisiontrust.com/dashboard/account-settings" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
+                                            <div class="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center group-hover:bg-primary-100 dark:group-hover:bg-primary-900/30 transition-colors">
+                                                <i class="fa-solid fa-user text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors text-sm"></i>
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">Profile Settings</span>
+                                        </a>
+                                        <a href="https://grandvisiontrust.com/dashboard/support" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
+                                            <div class="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center group-hover:bg-primary-100 dark:group-hover:bg-primary-900/30 transition-colors">
+                                                <i class="fa-solid fa-headset text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors text-sm"></i>
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">Help & Support</span>
+                                        </a>
+                                        <div class="border-t border-gray-100 dark:border-gray-700 my-2"></div>
+                                        <form method="POST" action="https://grandvisiontrust.com/logout">
+                                            <button type="submit" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors group">
+                                                <div class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center group-hover:bg-red-200 dark:group-hover:bg-red-900/50 transition-colors">
+                                                    <i class="fa-solid fa-right-from-bracket text-red-500 dark:text-red-400 text-sm"></i>
+                                                </div>
+                                                <span class="text-sm font-medium text-red-600 dark:text-red-400">Sign Out</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Main Content -->
+                <main class="flex-1 bg-gray-50 dark:bg-gray-900 min-h-0">
+                    <div class="h-full overflow-y-auto">
+                        
+                <div class="max-w-3xl mx-auto" x-data="{
+                    step: 1,
+                    recipientName: '',
+                    accountNumber: '',
+                    bankName: '',
+                    amount: '',
+                    description: '',
+                    cotCode: '',
+                    taxCode: '',
+                    imfCode: ''
+                }">
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm dark:shadow-gray-900/25 border border-gray-200 dark:border-gray-700 p-6">
+                        <div x-show="step === 1">
+                            <div class="flex items-center space-x-4 mb-8">
+                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">1</div>
+                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">2</div>
+                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
+                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">4</div>
+                            </div>
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Transfer Details</h2>
+                            <form class="space-y-6">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Recipient Name</label>
+                                        <input type="text" placeholder="Enter recipient name" x-model="recipientName" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Account Number</label>
+                                        <input type="text" placeholder="Enter account number" x-model="accountNumber" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bank Name</label>
+                                        <select x-model="bankName" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                            <option value="">Select bank</option>
+                                            <option value="bank1">Bank of Example</option>
+                                            <option value="bank2">Example Bank</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amount</label>
+                                        <div class="relative">
+                                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
+                                            <input type="number" placeholder="0.00" x-model="amount" class="w-full pl-8 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description (Optional)</label>
+                                        <textarea rows="3" placeholder="Enter description" x-model="description" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"></textarea>
+                                    </div>
+                                </div>
+                                <div class="pt-4">
+                                    <button type="button" @click="step = 2" class="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                        Continue
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div x-show="step === 2">
+                            <div class="flex items-center space-x-4 mb-8">
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">1</div>
+                                <div class="h-1 flex-1 bg-primary-500"></div>
+                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">2</div>
+                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
+                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">4</div>
+                            </div>
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">COT Code Verification</h2>
+                            <p class="text-gray-600 dark:text-gray-400 mb-6">Please enter the Cost of Transfer (COT) code to proceed with the transfer.</p>
+                            <form class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">COT Code</label>
+                                    <input type="text" placeholder="Enter COT code" x-model="cotCode" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                </div>
+                                <div class="flex gap-4 pt-4">
+                                    <button type="button" @click="step = 1" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
+                                        Back
+                                    </button>
+                                    <button type="button" @click="step = 3" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                        Verify
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div x-show="step === 3">
+                            <div class="flex items-center space-x-4 mb-8">
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">1</div>
+                                <div class="h-1 flex-1 bg-primary-500"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">2</div>
+                                <div class="h-1 flex-1 bg-primary-500"></div>
+                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">3</div>
+                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">4</div>
+                            </div>
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Tax Code Verification</h2>
+                            <p class="text-gray-600 dark:text-gray-400 mb-6">Please enter the Tax code to proceed with the transfer.</p>
+                            <form class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tax Code</label>
+                                    <input type="text" placeholder="Enter Tax code" x-model="taxCode" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                </div>
+                                <div class="flex gap-4 pt-4">
+                                    <button type="button" @click="step = 2" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
+                                        Back
+                                    </button>
+                                    <button type="button" @click="step = 4" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                        Verify
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div x-show="step === 4">
+                            <div class="flex items-center space-x-4 mb-8">
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">1</div>
+                                <div class="h-1 flex-1 bg-primary-500"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">2</div>
+                                <div class="h-1 flex-1 bg-primary-500"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
+                                <div class="h-1 flex-1 bg-primary-500"></div>
+                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">4</div>
+                            </div>
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">IMF Code Verification</h2>
+                            <p class="text-gray-600 dark:text-gray-400 mb-6">Please enter the IMF code to proceed with the transfer.</p>
+                            <form class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">IMF Code</label>
+                                    <input type="text" placeholder="Enter IMF code" x-model="imfCode" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                </div>
+                                <div class="flex gap-4 pt-4">
+                                    <button type="button" @click="step = 3" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
+                                        Back
+                                    </button>
+                                    <button type="button" @click="step = 5" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                        Verify
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div x-show="step === 5">
+                            <div class="flex items-center space-x-4 mb-8">
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">1</div>
+                                <div class="h-1 flex-1 bg-primary-500"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">2</div>
+                                <div class="h-1 flex-1 bg-primary-500"></div>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
+                                <div class="h-1 flex-1 bg-primary-500"></div>
+                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">4</div>
+                            </div>
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Transfer Complete</h2>
+                            <div class="text-center py-8">
+                                <div class="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-6">
+                                    <i class="fa-solid fa-check text-green-600 dark:text-green-400 text-4xl"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Transfer Successful!</h3>
+                                <p class="text-gray-600 dark:text-gray-400 mb-8">Your transfer has been completed successfully.</p>
+                                <a href="dashboard.html" class="inline-flex items-center bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                    <i class="fa-solid fa-arrow-left mr-2"></i>
+                                    Back to Dashboard
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </main>
+            
+                    </div>
+                </main>
+            </div>
         </div>
     </div>
 </body>

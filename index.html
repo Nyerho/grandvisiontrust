@@ -1,47 +1,61 @@
+<!DOCTYPE html>
 <html lang="en" x-data="{ darkMode: false, mobileMenuOpen: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)" :class="{ 'dark': darkMode }">
-
-
 <head>
     <title>Home - GrandVisionTrust Bank</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="JAGkFj4qWARIVz9qSrUSXIjABWhqeMLd6Z5VD43Z">
     <meta name="robots" content="index, follow">
     <meta name="apple-mobile-web-app-title" content="GrandVisionTrust Bank">
     <meta name="application-name" content="GrandVisionTrust Bank">
     <meta name="description" content="Swift and Secure Money Transfer to any UK bank account will become a breeze with GrandVisionTrust Bank.">
     <link rel="shortcut icon" href="storage/app/public/photos/UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
-
-    <!-- Dark mode initialization -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAPBT1yStJbk4I_6sLvctlmGXu0lBotaiA",
+            authDomain: "grandvisiontrust.firebaseapp.com",
+            projectId: "grandvisiontrust",
+            storageBucket: "grandvisiontrust.firebasestorage.app",
+            messagingSenderId: "796538268477",
+            appId: "1:796538268477:web:78a8bab0eb8d36d6ca7354",
+            measurementId: "G-6XWG7HEG2V"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
     <script>
         const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
             (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
         if (isDarkMode) {
             document.documentElement.classList.add('dark');
         }
     </script>
-
     <script src="assets/tailwindcss.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
                     colors: {
                         primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            DEFAULT: '#0ea5e9',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
                             foreground: '#ffffff',
                         },
                         secondary: {
@@ -50,7 +64,6 @@
                             200: '#e2e8f0',
                             300: '#cbd5e1',
                             400: '#94a3b8',
-                            DEFAULT: '#64748b',
                             500: '#64748b',
                             600: '#475569',
                             700: '#334155',
@@ -64,7 +77,6 @@
                             200: '#fbcfe8',
                             300: '#f9a8d4',
                             400: '#f472b6',
-                            DEFAULT: '#ec4899',
                             500: '#ec4899',
                             600: '#db2777',
                             700: '#be185d',
@@ -84,11 +96,11 @@
                         },
                         border: '#e2e8f0',
                         input: '#e2e8f0',
-                        ring: '#0ea5e9',
+                        ring: '#10b981',
                         'gradient-pink-from': '#ec4899',
                         'gradient-purple-via': '#a855f7',
                         'gradient-indigo-to': '#4f46e5',
-                        'mobile-header-bg': '#1e293b',
+                        'mobile-header-bg': '#1f2937',
                         'mobile-header-text': '#f1f5f9',
                         'yellow-action': '#facc15',
                         'green-positive': '#22c55e',
@@ -108,11 +120,11 @@
                         pulse: {
                             '0%, 100%': {
                                 transform: 'scale(1)',
-                                boxShadow: '0 0 0 0 rgba(14, 165, 233, 0.4)'
+                                boxShadow: '0 0 0 0 rgba(16, 185, 129, 0.4)'
                             },
                             '50%': {
                                 transform: 'scale(1.05)',
-                                boxShadow: '0 0 0 10px rgba(14, 165, 233, 0)'
+                                boxShadow: '0 0 0 10px rgba(16, 185, 129, 0)'
                             },
                         },
                         shine: {
@@ -151,97 +163,59 @@
         }
     </script>
     <script defer src="assets/alpine.min.js"></script>
-
-
-
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Montserrat', sans-serif;
             background-color: #f8fafc;
             color: #1e293b;
         }
-
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
-
         ::-webkit-scrollbar-track {
             background: #e2e8f0;
         }
-
-        /* slate-200 */
-
         ::-webkit-scrollbar-thumb {
             background: #94a3b8;
             border-radius: 4px;
         }
-
-        /* slate-400 */
-
         ::-webkit-scrollbar-thumb:hover {
             background: #64748b;
         }
-
-        /* slate-500 */
-
         .dark ::-webkit-scrollbar-track {
             background: #374151;
         }
-
-        /* gray-700 */
-
         .dark ::-webkit-scrollbar-thumb {
             background: #6b7280;
         }
-
-        /* gray-500 */
-
         .dark ::-webkit-scrollbar-thumb:hover {
             background: #9ca3af;
         }
-
-        /* gray-400 */
-
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
-
         .custom-scrollbar::-webkit-scrollbar-track {
             background: transparent;
         }
-
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 3px;
         }
-
-        /* slate-300 */
-
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-
-        /* slate-400 */
-
         .dark .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #6b7280;
         }
-
-        /* gray-500 */
-
         .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #9ca3af;
         }
-
-        /* gray-400 */
-
         .shine-effect-container {
             position: relative;
             overflow: hidden;
         }
-
         .shine-effect {
             position: absolute;
             top: -50%;
@@ -253,48 +227,35 @@
             opacity: 0;
             transition: opacity 0.5s;
         }
-
         .shine-effect-container:hover .shine-effect {
             opacity: 1;
             animation: shine-once 1.5s ease-in-out;
         }
-
         .fade-in-section {
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
-
         .fade-in-section.is-visible {
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* Floating elements animation */
-
         .floating {
             animation: float 3s ease-in-out infinite;
         }
-
         .floating-slow {
             animation: float 6s ease-in-out infinite;
         }
-
         .floating-slower {
             animation: float 8s ease-in-out infinite;
         }
-
-        /* Interactive elements */
-
         .input-wrapper {
             position: relative;
             transition: all 0.3s ease;
         }
-
         .input-wrapper:focus-within {
             transform: translateY(-2px);
         }
-
         .input-icon {
             position: absolute;
             top: 50%;
@@ -303,45 +264,30 @@
             color: #94a3b8;
             transition: color 0.3s ease;
         }
-
         .input-wrapper:focus-within .input-icon {
             color: var(--primary-color);
         }
-
         input:focus+.input-toggle {
             color: var(--primary-color);
         }
-
         .dark .input-icon {
             color: #6b7280;
         }
-
-        /* Dark mode toggle button styling */
-
         .dark-mode-toggle {
             transition: all 0.3s ease;
         }
-
         .dark-mode-toggle:hover {
             transform: scale(1.1);
         }
-
-        /* Gradient backgrounds */
-
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-
         .gradient-primary {
-            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
-
         .gradient-secondary {
             background: linear-gradient(135deg, #64748b 0%, #475569 100%);
         }
-
-        /* Mobile Fixed Buttons */
-
         .mobile-fixed-buttons {
             position: fixed;
             bottom: 0;
@@ -351,7 +297,6 @@
             z-index: 50;
             display: flex;
         }
-
         @media (min-width: 1024px) {
             .mobile-fixed-buttons {
                 display: none;
@@ -359,44 +304,31 @@
         }
     </style>
 </head>
-
 <body class="font-sans bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-
-
-    <!-- Mobile Fixed Login/Register Buttons -->
     <div class="mobile-fixed-buttons">
         <a href="login.html" class="flex-1 px-6 py-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl text-primary-600 dark:text-primary-400 font-semibold shadow-lg border border-primary-200 dark:border-primary-700 hover:bg-primary-50 dark:hover:bg-gray-700 transition-colors text-center">
-            <i class="fa-solid fa-sign-in-alt mr-2"></i>
+            <i class="fa-solid fa-right-to-bracket mr-2"></i>
             Login
         </a>
-        <a href="#register" class="flex-1 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold shadow-lg transition-colors text-center">
+        <a href="signup.html" class="flex-1 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold shadow-lg transition-colors text-center">
             <i class="fa-solid fa-user-plus mr-2"></i>
             Register
         </a>
     </div>
-
-
-
-    <!-- Navigation Header -->
-    <nav class="relative bg-gradient-to-r from-white via-primary-50 to-white dark:from-gray-900 dark:via-primary-900 dark:to-gray-900 backdrop-blur-xl border-b border-gradient-to-r from-transparent via-primary-200/50 to-transparent dark:border-primary-700/30 sticky top-0 z-50 shadow-lg shadow-primary-500/5">
-        <!-- Animated Background Pattern -->
+    <nav class="relative bg-gradient-to-r from-white via-primary-50 to-white dark:from-gray-900 dark:via-primary-900 dark:to-gray-900 backdrop-blur-xl border-b border-gradient-to-r from-transparent via-primary-200/50 to-transparent dark:border-primary-700/30 sticky top-0 z-50 shadow-xl shadow-primary-500/5">
         <div class="absolute inset-0 overflow-hidden">
             <div class="absolute -top-10 -left-10 w-20 h-20 bg-primary-200/20 dark:bg-primary-800/20 rounded-full blur-xl animate-pulse"></div>
-            <div class="absolute -top-5 right-1/4 w-16 h-16 bg-teal-200/20 dark:bg-teal-800/20 rounded-full blur-lg animate-pulse" style="animation-delay: 1s;"></div>
+            <div class="absolute -top-5 right-1/4 w-16 h-16 bg-emerald-200/20 dark:bg-emerald-800/20 rounded-full blur-lg animate-pulse" style="animation-delay: 1s;"></div>
             <div class="absolute -bottom-10 -right-10 w-24 h-24 bg-purple-200/20 dark:bg-purple-800/20 rounded-full blur-xl animate-pulse" style="animation-delay: 2s;"></div>
         </div>
-
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16 lg:h-18">
-                <!-- Logo with glow effect -->
                 <a href="index.html" class="flex items-center group">
                     <div class="relative">
                         <div class="absolute inset-0 bg-primary-400/20 rounded-xl blur-lg group-hover:bg-primary-400/30 transition-all duration-300"></div>
                         <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="relative h-10 lg:h-10 w-auto">
                     </div>
                 </a>
-
-                <!-- Desktop Navigation with modern styling -->
                 <div class="hidden lg:flex items-center space-x-1">
                     <a href="index.html" class="relative px-4 py-2 text-gray-700 dark:text-gray-300 font-medium transition-all duration-300 hover:text-primary-600 dark:hover:text-primary-400 group">
                         <span class="relative z-10">Home</span>
@@ -412,7 +344,6 @@
                             <i class="fa-solid fa-chevron-down ml-1 text-xs group-hover:rotate-180 transition-transform duration-300"></i>
                             <div class="absolute inset-0 bg-primary-50 dark:bg-primary-900/30 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300 origin-center"></div>
                         </button>
-                        <!-- Services Dropdown -->
                         <div class="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                             <div class="p-2">
                                 <a href="personal-banking.html" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-xl transition-all duration-300">
@@ -447,25 +378,16 @@
                         <div class="absolute inset-0 bg-primary-50 dark:bg-primary-900/30 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300 origin-center"></div>
                     </a>
                 </div>
-
-                <!-- Desktop Action Buttons with enhanced styling -->
                 <div class="hidden lg:flex items-center space-x-3">
-
-
-                    <!-- Dark Mode Toggle with animation -->
                     <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)" class="relative p-3 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 text-gray-600 dark:text-gray-300 hover:from-primary-50 hover:to-primary-100 dark:hover:from-primary-900/30 dark:hover:to-primary-800/30 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 group">
-                        <i class="fa-solid fa-sun text-lg group-hover:rotate-180 transition-transform duration-500" x-show="darkMode"></i>
                         <i class="fa-solid fa-moon text-lg group-hover:rotate-12 transition-transform duration-300" x-show="!darkMode"></i>
+                        <i class="fa-solid fa-sun text-yellow-500 group-hover:rotate-180 transition-transform duration-500" x-show="darkMode"></i>
                     </button>
-
-                    <!-- Login Button with hover effects -->
                     <a href="login.html" class="relative px-4 py-2.5 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold transition-all duration-300 group">
                         <span class="relative z-10">Login</span>
                         <div class="absolute inset-0 bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/30 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300"></div>
                     </a>
-
-                    <!-- Open Account Button with premium styling -->
-                    <a href="#open-account" class="relative px-6 py-2.5 bg-gradient-to-r from-primary-600 via-primary-500 to-primary-600 hover:from-primary-700 hover:via-primary-600 hover:to-primary-700 text-white font-semibold rounded-2xl transition-all duration-300 shadow-lg shadow-primary-600/25 hover:shadow-xl hover:shadow-primary-600/40 hover:-translate-y-0.5 group overflow-hidden">
+                    <a href="signup.html" class="relative px-6 py-2.5 bg-gradient-to-r from-primary-600 via-primary-500 to-primary-600 hover:from-primary-700 hover:via-primary-600 hover:to-primary-700 text-white font-semibold rounded-2xl transition-all duration-300 shadow-lg shadow-primary-600/25 hover:shadow-xl hover:shadow-primary-600/40 hover:-translate-y-0.5 group overflow-hidden">
                         <span class="relative z-10 flex items-center">
                             <i class="fa-solid fa-sparkles mr-2 group-hover:animate-spin"></i>
                             Open Account
@@ -473,27 +395,19 @@
                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                     </a>
                 </div>
-
-                <!-- Mobile Menu Button with modern design -->
                 <button @click="mobileMenuOpen = !mobileMenuOpen" class="lg:hidden relative p-3 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 text-gray-600 dark:text-gray-300 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
                     <i class="fa-solid fa-bars text-lg transition-transform duration-300" x-show="!mobileMenuOpen" :class="{'rotate-180': mobileMenuOpen}"></i>
                     <i class="fa-solid fa-times text-lg transition-transform duration-300" x-show="mobileMenuOpen" :class="{'rotate-180': !mobileMenuOpen}"></i>
                 </button>
             </div>
         </div>
-
-        <!-- Enhanced Mobile Menu -->
-        <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-1 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-1 translate-y-0"
+        <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-1 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-1 translate-y-0"
             x-transition:leave-end="opacity-0 -translate-y-4" class="lg:hidden absolute top-full left-0 right-0 bg-gradient-to-br from-white via-primary-50 to-white dark:from-gray-900 dark:via-primary-900 dark:to-gray-900 backdrop-blur-xl border-t border-primary-200/70 dark:border-primary-700/50 shadow-2xl shadow-primary-500/20">
-
-            <!-- Mobile menu background pattern -->
             <div class="absolute inset-0 overflow-hidden">
                 <div class="absolute top-0 left-1/4 w-32 h-32 bg-primary-200/20 dark:bg-primary-800/20 rounded-full blur-2xl"></div>
-                <div class="absolute bottom-0 right-1/4 w-24 h-24 bg-teal-200/20 dark:bg-teal-800/20 rounded-full blur-xl"></div>
+                <div class="absolute bottom-0 right-1/4 w-24 h-24 bg-emerald-200/20 dark:bg-emerald-800/20 rounded-full blur-xl"></div>
             </div>
-
             <div class="relative px-6 py-6 space-y-2">
-                <!-- Navigation Links with enhanced styling -->
                 <a href="index.html" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-all duration-300 rounded-2xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-primary-100 dark:hover:from-primary-900/30 dark:hover:to-primary-800/30 hover:shadow-lg hover:translate-x-2 group">
                     <i class="fa-solid fa-home mr-4 text-primary-500 group-hover:scale-110 transition-transform duration-300"></i>
                     <span>Home</span>
@@ -504,8 +418,6 @@
                     <span>About</span>
                     <i class="fa-solid fa-chevron-right ml-auto text-xs opacity-0 group-hover:opacity-100 transition-all duration-300"></i>
                 </a>
-
-                <!-- Services Submenu -->
                 <div x-data="{ servicesOpen: false }" class="space-y-2">
                     <button @click="servicesOpen = !servicesOpen" class="flex items-center w-full px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-all duration-300 rounded-2xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-primary-100 dark:hover:from-primary-900/30 dark:hover:to-primary-800/30 hover:shadow-lg hover:translate-x-2 group">
                         <i class="fa-solid fa-cogs mr-4 text-purple-500 group-hover:scale-110 transition-transform duration-300"></i>
@@ -539,24 +451,17 @@
                         </a>
                     </div>
                 </div>
-
                 <a href="#contact" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-all duration-300 rounded-2xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-primary-100 dark:hover:from-primary-900/30 dark:hover:to-primary-800/30 hover:shadow-lg hover:translate-x-2 group">
                     <i class="fa-solid fa-envelope mr-4 text-orange-500 group-hover:scale-110 transition-transform duration-300"></i>
                     <span>Contact</span>
                     <i class="fa-solid fa-chevron-right ml-auto text-xs opacity-0 group-hover:opacity-100 transition-all duration-300"></i>
                 </a>
-
-                <!-- Additional Mobile Links -->
                 <a href="#mobile-app" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-all duration-300 rounded-2xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-primary-100 dark:hover:from-primary-900/30 dark:hover:to-primary-800/30 hover:shadow-lg hover:translate-x-2 group">
-                    <i class="fa-solid fa-mobile-alt mr-4 text-indigo-500 group-hover:scale-110 transition-transform duration-300"></i>
+                    <i class="fa-solid fa-mobile-screen mr-4 text-indigo-500 group-hover:scale-110 transition-transform duration-300"></i>
                     <span>Mobile App</span>
                     <i class="fa-solid fa-chevron-right ml-auto text-xs opacity-0 group-hover:opacity-100 transition-all duration-300"></i>
                 </a>
-
-                <!-- Enhanced Dark Mode Toggle for Mobile -->
                 <div class="pt-4 mt-4 border-t border-primary-700/50">
-
-
                     <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)" class="flex items-center w-full px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-all duration-300 rounded-2xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-primary-100 dark:hover:from-primary-900/30 dark:hover:to-primary-800/30 hover:shadow-lg hover:translate-x-2 group">
                         <div class="flex items-center justify-center w-8 h-8 mr-4 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 dark:from-blue-500 dark:to-purple-600 group-hover:scale-110 transition-transform duration-300">
                             <i class="fa-solid fa-sun text-white text-sm group-hover:rotate-180 transition-transform duration-500" x-show="darkMode"></i>
@@ -569,127 +474,85 @@
             </div>
         </div>
     </nav>
-
-    <!-- Hero Section -->
     <section class="relative h-screen min-h-[500px] lg:min-h-[600px] flex items-center justify-center overflow-hidden bg-primary-900">
-        <!-- Background Image -->
         <div class="absolute inset-0">
             <img src="images/home/metro.jpg" alt="Modern banking experience" class="w-full h-full object-cover object-[75%_25%] md:object-center" loading="eager" onload="this.style.opacity=1" style="opacity: 0; transition: opacity 0.3s ease;">
-            <!-- Mobile Fallback Background -->
             <div class="absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900 lg:hidden"></div>
-            <!-- Overlay -->
             <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30 lg:from-black/70 lg:via-black/50 lg:to-transparent"></div>
         </div>
-
-        <!-- Content Container -->
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div class="flex items-center min-h-[400px] lg:min-h-[500px]">
-                <!-- Hero Content -->
                 <div class="text-white w-full lg:w-1/2 text-center lg:text-left">
-                    <!-- Mobile Logo Icon -->
                     <div class="lg:hidden flex justify-center mb-6">
-                        <div class="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/20">
+                        <div class="w-16 h-16 bg-white/15 backdrop-blur rounded-2xl flex items-center justify-center border border-white/20">
                             <i class="fa-solid fa-university text-2xl text-white"></i>
                         </div>
                     </div>
-
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 lg:mb-6">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-4 lg:mb-6">
                         GrandVisionTrust Bank
                     </h1>
-
-                    <!-- Mobile Tagline -->
                     <p class="lg:hidden text-primary-100 text-lg font-medium mb-6">Your Digital Banking Partner</p>
-                    <P class="lg:hidden">We do banking differently. We believe that people come first, and that everyone deserves a great experience every step of the way.</P>
-                    <br>
-
-                    <!-- Desktop Description -->
+                    <p class="lg:hidden text-primary-100 text-base mb-8">We do banking differently. We believe that people come first, and that everyone deserves a great experience every step of the way.</p>
                     <p class="hidden lg:block text-xl text-gray-200 mb-8 max-w-2xl leading-relaxed">
                         We do banking differently. We believe that people come first, and that everyone deserves a great experience every step of the way.
                     </p>
-
-                    <!-- Mobile Features 
-                <div class="lg:hidden space-y-3 mb-8">
-                    <div class="flex items-center justify-center text-white bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20">
-                        <i class="fa-solid fa-shield-halved text-primary-400 mr-3"></i>
-                        <span class="text-sm font-medium">Secure & Protected Banking</span>
-                    </div>
-                    <div class="flex items-center justify-center text-white bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20">
-                        <i class="fa-solid fa-mobile-alt text-teal-400 mr-3"></i>
-                        <span class="text-sm font-medium">Mobile Banking 24/7</span>
-                    </div>
-                    <div class="flex items-center justify-center text-white bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20">
-                        <i class="fa-solid fa-headset text-purple-400 mr-3"></i>
-                        <span class="text-sm font-medium">Expert Support Always</span>
-                    </div>
-                </div> -->
-
-                    <!-- CTA Buttons -->
                     <div class="flex flex-col sm:flex-row gap-3 lg:gap-4 mb-8 lg:mb-12">
-                        <a href="#open-account" class="inline-flex items-center justify-center px-6 lg:px-8 py-3 lg:py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl lg:rounded-2xl transition-all duration-300 shadow-2xl shadow-primary-600/30 hover:shadow-primary-600/50 hover:-translate-y-1 hover:scale-105">
-                        <i class="fa-solid fa-user-plus mr-2 lg:mr-3"></i>
-                        Open Account Today
-                    </a>
+                        <a href="signup.html" class="inline-flex items-center justify-center px-6 lg:px-8 py-3 lg:py-4 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold rounded-xl lg:rounded-2xl transition-all duration-300 shadow-2xl shadow-primary-600/30 hover:shadow-primary-600/50 hover:-translate-y-1 hover:scale-105">
+                            <i class="fa-solid fa-user-plus mr-2 lg:mr-3"></i>
+                            Open Account Today
+                        </a>
                         <a href="login.html" class="inline-flex items-center justify-center px-6 lg:px-8 py-3 lg:py-4 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-semibold rounded-xl lg:rounded-2xl transition-all duration-300 border border-white/30 hover:border-white/50 hover:-translate-y-1">
-                        <i class="fa-solid fa-sign-in-alt mr-2 lg:mr-3"></i>
-                        Login to Banking
-                    </a>
+                            <i class="fa-solid fa-right-to-bracket mr-2 lg:mr-3"></i>
+                            Login to Banking
+                        </a>
                     </div>
-
-                    <!-- Mobile Stats -->
                     <div class="lg:hidden grid grid-cols-2 gap-4 pt-6 border-t border-white/20">
                         <div class="text-center">
-                            <p class="text-xl font-bold text-white">50K+</p>
+                            <p class="text-2xl font-bold text-white">50K+</p>
                             <p class="text-xs text-primary-100">Happy Customers</p>
                         </div>
                         <div class="text-center">
-                            <p class="text-xl font-bold text-white">$2.5B+</p>
+                            <p class="text-2xl font-bold text-white">$2.5B+</p>
                             <p class="text-xs text-primary-100">Assets Managed</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Bottom Info Cards - Hidden on Mobile -->
         <div class="hidden lg:block absolute bottom-0 left-0 right-0 z-20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid lg:grid-cols-3 gap-4 pb-8">
-                    <!-- Routing Number Card -->
-                    <div class="bg-primary-600 hover:bg-primary-700 transition-all duration-300 rounded-2xl p-6 text-white shadow-2xl hover:shadow-primary-600/30 hover:-translate-y-2 group">
+                    <div class="bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 transition-all duration-300 rounded-2xl p-6 text-white shadow-2xl hover:shadow-primary-600/30 hover:-translate-y-2 group">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-primary-100 text-sm font-medium mb-1">ROUTING #</p>
                                 <p class="text-2xl font-bold">251480576</p>
                             </div>
-                            <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div class="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <i class="fa-solid fa-university text-xl"></i>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Branch Hours Card -->
-                    <div class="bg-teal-500 hover:bg-teal-600 transition-all duration-300 rounded-2xl p-6 text-white shadow-2xl hover:shadow-teal-500/30 hover:-translate-y-2 group">
+                    <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300 rounded-2xl p-6 text-white shadow-2xl hover:shadow-emerald-500/30 hover:-translate-y-2 group">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-teal-100 text-sm font-medium mb-1">BRANCH HOURS</p>
+                                <p class="text-emerald-100 text-sm font-medium mb-1">BRANCH HOURS</p>
                                 <p class="text-lg font-bold">Mon-Fri: 9AM-5PM</p>
-                                <p class="text-sm text-teal-100">Sat: 9AM-1PM</p>
+                                <p class="text-sm text-emerald-100">Sat: 9AM-1PM</p>
                             </div>
-                            <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div class="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <i class="fa-solid fa-clock text-xl"></i>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Contact Card -->
-                    <div class="bg-purple-600 hover:bg-purple-700 transition-all duration-300 rounded-2xl p-6 text-white shadow-2xl hover:shadow-purple-600/30 hover:-translate-y-2 group">
+                    <div class="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 transition-all duration-300 rounded-2xl p-6 text-white shadow-2xl hover:shadow-purple-600/30 hover:-translate-y-2 group">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-purple-100 text-sm font-medium mb-1">24/7 SUPPORT</p>
                                 <p class="text-lg font-bold">1-800-BANKING</p>
                                 <p class="text-sm text-purple-100">Always here to help</p>
                             </div>
-                            <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div class="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <i class="fa-solid fa-phone text-xl"></i>
                             </div>
                         </div>
@@ -697,1439 +560,103 @@
                 </div>
             </div>
         </div>
-
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-30">
-            <div class="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-                <div class="w-1 h-3 bg-white/70 rounded-full mt-2 animate-bounce"></div>
-            </div>
-        </div>
     </section>
-
-    <!-- Rates Section -->
-    <section class="relative py-16 lg:py-20 bg-gradient-to-br from-slate-50 via-white to-primary-50 dark:from-gray-900 dark:via-gray-800 dark:to-primary-900/20 overflow-hidden">
-        <!-- Background Elements -->
-        <div class="absolute inset-0 opacity-30">
-            <div class="absolute top-20 left-10 w-72 h-72 bg-primary-200 dark:bg-primary-800 rounded-full blur-3xl animate-pulse"></div>
-            <div class="absolute bottom-20 right-10 w-96 h-96 bg-teal-200 dark:bg-teal-800 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        </div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Section Header -->
-            <div class="text-center mb-12 lg:mb-16">
-                <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-100 to-primary-200 dark:from-primary-900/50 dark:to-primary-800/50 text-primary-700 dark:text-primary-300 rounded-full text-sm font-semibold mb-4 shadow-lg backdrop-blur-sm border border-primary-200/50 dark:border-primary-700/50">
-                    <i class="fa-solid fa-chart-line mr-2 animate-pulse"></i> GrandVisionTrust Bank Rates
-                </div>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-primary-800 to-gray-900 dark:from-white dark:via-primary-300 dark:to-white bg-clip-text text-transparent mb-4">
-                    GrandVisionTrust Bank Member Care
-                </h2>
-                <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                    Discover competitive rates designed to help your money grow faster
-                </p>
-            </div>
-
-            <!-- Rates Grid -->
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                <!-- High Yield Savings -->
-                <div class="group relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border border-gray-200/50 dark:border-gray-700/50 hover:border-primary-300/50 dark:hover:border-primary-600/50 overflow-hidden">
-                    <!-- Card Glow Effect -->
-                    <div class="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/50 dark:to-primary-800/50 rounded-2xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
-                            <i class="fa-solid fa-piggy-bank text-xl text-primary-600 dark:text-primary-400"></i>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary-600 to-blue-600 dark:from-primary-400 dark:to-blue-400 bg-clip-text text-transparent mb-2">3.75%</div>
-                            <div class="text-sm text-gray-500 dark:text-gray-400 mb-3 font-medium">APY*</div>
-                            <div class="font-bold text-gray-900 dark:text-white mb-2 text-sm">HIGH YIELD SAVINGS</div>
-                            <div class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">High Yield Savings Rate</div>
-                        </div>
-                        <div class="mt-4 text-center">
-                            <span class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 text-blue-700 dark:text-blue-400 rounded-full text-xs font-bold shadow-sm">
-                            <i class="fa-solid fa-star mr-1 animate-pulse"></i>
-                            FEATURED
-                        </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Certificate -->
-                <div class="group relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border border-gray-200/50 dark:border-gray-700/50 hover:border-teal-300/50 dark:hover:border-teal-600/50 overflow-hidden">
-                    <!-- Card Glow Effect -->
-                    <div class="absolute inset-0 bg-gradient-to-br from-teal-500/10 via-transparent to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-100 to-teal-200 dark:from-teal-900/50 dark:to-teal-800/50 rounded-2xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
-                            <i class="fa-solid fa-certificate text-xl text-teal-600 dark:text-teal-400"></i>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-teal-600 to-green-600 dark:from-teal-400 dark:to-green-400 bg-clip-text text-transparent mb-2">3.65%</div>
-                            <div class="text-sm text-gray-500 dark:text-gray-400 mb-3 font-medium">APY*</div>
-                            <div class="font-bold text-gray-900 dark:text-white mb-2 text-sm">18 MONTH CERTIFICATE</div>
-                            <div class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">GrandVisionTrust Bank Certificate Rates</div>
-                        </div>
-                        <div class="mt-4 text-center">
-                            <span class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-teal-100 to-teal-200 dark:from-teal-900/30 dark:to-teal-800/30 text-teal-700 dark:text-teal-400 rounded-full text-xs font-bold shadow-sm">
-                            <i class="fa-solid fa-coins mr-1"></i>
-                            SAVINGS
-                        </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Credit Card -->
-                <div class="group relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border border-gray-200/50 dark:border-gray-700/50 hover:border-purple-300/50 dark:hover:border-purple-600/50 overflow-hidden">
-                    <!-- Card Glow Effect -->
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/50 dark:to-purple-800/50 rounded-2xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
-                            <i class="fa-solid fa-credit-card text-xl text-purple-600 dark:text-purple-400"></i>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent mb-2">4.00%</div>
-                            <div class="text-sm text-gray-500 dark:text-gray-400 mb-3 font-medium">APR*</div>
-                            <div class="font-bold text-gray-900 dark:text-white mb-2 text-sm">CREDIT CARDS</div>
-                            <div class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">GrandVisionTrust Bank Credit Card Rates</div>
-                        </div>
-                        <div class="mt-4 text-center">
-                            <span class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 text-purple-700 dark:text-purple-400 rounded-full text-xs font-bold shadow-sm">
-                            <i class="fa-solid fa-credit-card mr-1"></i>
-                            CREDIT
-                        </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Loans -->
-                <div class="group relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border border-gray-200/50 dark:border-gray-700/50 hover:border-orange-300/50 dark:hover:border-orange-600/50 overflow-hidden">
-                    <!-- Card Glow Effect -->
-                    <div class="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900/50 dark:to-orange-800/50 rounded-2xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
-                            <i class="fa-solid fa-hand-holding-dollar text-xl text-orange-600 dark:text-orange-400"></i>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-orange-600 to-red-600 dark:from-orange-400 dark:to-red-400 bg-clip-text text-transparent mb-2">15.49%</div>
-                            <div class="text-sm text-gray-500 dark:text-gray-400 mb-3 font-medium">APR*</div>
-                            <div class="font-bold text-gray-900 dark:text-white mb-2 text-sm">LOANS</div>
-                            <div class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">GrandVisionTrust Bank Standard Loan Rates</div>
-                        </div>
-                        <div class="mt-4 text-center">
-                            <span class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-orange-100 to-orange-200 dark:from-orange-900/30 dark:to-orange-800/30 text-orange-700 dark:text-orange-400 rounded-full text-xs font-bold shadow-sm">
-                            <i class="fa-solid fa-percentage mr-1"></i>
-                            MORTGAGE
-                        </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Disclaimer -->
-            <div class="text-center mt-8 lg:mt-12">
-                <div class="inline-flex items-center px-4 py-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full shadow-lg border border-gray-200/50 dark:border-gray-700/50">
-                    <i class="fa-solid fa-info-circle text-primary-600 dark:text-primary-400 mr-2"></i>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">
-                        *Annual Percentage Yield. Rates subject to change. Terms and conditions apply.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Services Section -->
-    <section id="services" class="relative py-16 lg:py-20 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 dark:from-primary-800 dark:via-primary-900 dark:to-gray-900 overflow-hidden">
-        <!-- Background Effects -->
-        <div class="absolute inset-0">
-            <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1),transparent_50%)]"></div>
-            <div class="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.05),transparent_50%)]"></div>
-            <!-- Floating Elements -->
-            <div class="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full blur-xl animate-float"></div>
-            <div class="absolute bottom-20 right-20 w-48 h-48 bg-white/5 rounded-full blur-2xl animate-float-delayed"></div>
-        </div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12 lg:mb-16">
-                <div class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm text-white/90 rounded-full text-sm font-semibold mb-4 border border-white/20">
-                    <i class="fa-solid fa-concierge-bell mr-2 animate-pulse"></i> Our Services
-                </div>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-                    How Can We Help You Today?
-                </h2>
-                <p class="text-xl text-primary-100 max-w-2xl mx-auto">
-                    Comprehensive banking solutions tailored to your needs
-                </p>
-            </div>
-
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                <!-- Deposit Accounts -->
-                <a href="personal-banking.html" class="group relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 text-center transition-all duration-500 hover:bg-white/10 hover:-translate-y-2 border border-white/10 hover:border-white/20 hover:shadow-2xl hover:shadow-white/10 block">
-                    <div class="flex items-center justify-center w-20 h-20 bg-gradient-to-br from-white/20 to-white/10 rounded-2xl mb-6 mx-auto group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg backdrop-blur-sm border border-white/20 group-hover:border-white/30">
-                        <i class="fa-solid fa-university text-2xl text-white group-hover:text-primary-100"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary-100 transition-colors">Personal Banking</h3>
-                    <p class="text-primary-100 leading-relaxed group-hover:text-white/90 transition-colors">Everyday checking, savings, digital banking, and support designed for real life.</p>
-                    <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto"></div>
-                    </div>
-                </a>
-
-                <!-- Credit Cards -->
-                <a href="cards.html" class="group relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 text-center transition-all duration-500 hover:bg-white/10 hover:-translate-y-2 border border-white/10 hover:border-white/20 hover:shadow-2xl hover:shadow-white/10 block">
-                    <div class="flex items-center justify-center w-20 h-20 bg-gradient-to-br from-white/20 to-white/10 rounded-2xl mb-6 mx-auto group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg backdrop-blur-sm border border-white/20 group-hover:border-white/30">
-                        <i class="fa-solid fa-credit-card text-2xl text-white group-hover:text-primary-100"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary-100 transition-colors">Cards</h3>
-                    <p class="text-primary-100 leading-relaxed group-hover:text-white/90 transition-colors">Debit and credit options with modern controls, security alerts, and online payment tools.</p>
-                    <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto"></div>
-                    </div>
-                </a>
-
-                <!-- Loans -->
-                <a href="loans-credit.html" class="group relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 text-center transition-all duration-500 hover:bg-white/10 hover:-translate-y-2 border border-white/10 hover:border-white/20 hover:shadow-2xl hover:shadow-white/10 block">
-                    <div class="flex items-center justify-center w-20 h-20 bg-gradient-to-br from-white/20 to-white/10 rounded-2xl mb-6 mx-auto group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg backdrop-blur-sm border border-white/20 group-hover:border-white/30">
-                        <i class="fa-solid fa-home text-2xl text-white group-hover:text-primary-100"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary-100 transition-colors">Loans &amp; Credit</h3>
-                    <p class="text-primary-100 leading-relaxed group-hover:text-white/90 transition-colors">Explore personal, auto, and home lending options with flexible repayment plans.</p>
-                    <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto"></div>
-                    </div>
-                </a>
-
-                <!-- Business Banking -->
-                <a href="business-banking.html" class="group relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 text-center transition-all duration-500 hover:bg-white/10 hover:-translate-y-2 border border-white/10 hover:border-white/20 hover:shadow-2xl hover:shadow-white/10 block">
-                    <div class="flex items-center justify-center w-20 h-20 bg-gradient-to-br from-white/20 to-white/10 rounded-2xl mb-6 mx-auto group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg backdrop-blur-sm border border-white/20 group-hover:border-white/30">
-                        <i class="fa-solid fa-briefcase text-2xl text-white group-hover:text-primary-100"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary-100 transition-colors">Business Banking</h3>
-                    <p class="text-primary-100 leading-relaxed group-hover:text-white/90 transition-colors">Comprehensive banking solutions designed to help your business thrive and grow.</p>
-                    <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto"></div>
-                    </div>
-                </a>
-
-                <!-- Wealth & Retire -->
-                <div class="group relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 text-center transition-all duration-500 hover:bg-white/10 hover:-translate-y-2 border border-white/10 hover:border-white/20 hover:shadow-2xl hover:shadow-white/10">
-                    <div class="flex items-center justify-center w-20 h-20 bg-gradient-to-br from-white/20 to-white/10 rounded-2xl mb-6 mx-auto group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg backdrop-blur-sm border border-white/20 group-hover:border-white/30">
-                        <i class="fa-solid fa-chart-pie text-2xl text-white group-hover:text-primary-100"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary-100 transition-colors">Wealth & Retire</h3>
-                    <p class="text-primary-100 leading-relaxed group-hover:text-white/90 transition-colors">Plan for your future with our expert investment and retirement planning services.</p>
-                    <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto"></div>
-                    </div>
-                </div>
-
-                <!-- Grants & Aid -->
-                <a href="grants-aid.html" class="group relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 text-center transition-all duration-500 hover:bg-white/10 hover:-translate-y-2 border border-white/10 hover:border-white/20 hover:shadow-2xl hover:shadow-white/10 block">
-                    <div class="flex items-center justify-center w-20 h-20 bg-gradient-to-br from-white/20 to-white/10 rounded-2xl mb-6 mx-auto group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg backdrop-blur-sm border border-white/20 group-hover:border-white/30">
-                        <i class="fa-solid fa-hand-holding-dollar text-2xl text-white group-hover:text-primary-100"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary-100 transition-colors">Grants &amp; Aid</h3>
-                    <p class="text-primary-100 leading-relaxed group-hover:text-white/90 transition-colors">Explore relief programs, checklists, and next steps.</p>
-                    <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto"></div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Feature Section 1 -->
-    <section class="relative py-16 lg:py-20 bg-gradient-to-br from-white via-gray-50 to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-green-900/20 overflow-hidden">
-        <!-- Background Elements -->
-        <div class="absolute inset-0 opacity-20">
-            <div class="absolute top-10 right-10 w-64 h-64 bg-green-200 dark:bg-green-800 rounded-full blur-3xl animate-pulse"></div>
-            <div class="absolute bottom-10 left-10 w-80 h-80 bg-primary-200 dark:bg-primary-800 rounded-full blur-3xl animate-pulse delay-500"></div>
-        </div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <!-- Image -->
-                <div class="order-2 lg:order-1">
-                    <div class="relative group">
-                        <div class="absolute -inset-4 bg-gradient-to-r from-green-500/20 to-primary-500/20 rounded-3xl blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <div class="relative rounded-3xl aspect-[4/3] overflow-hidden shadow-2xl group-hover:shadow-3xl transition-all duration-500 border border-white/20 dark:border-gray-700/50">
-                            <img src="images/home/feature.jpg" alt="Happy family with financial security" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                            <!-- Overlay -->
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Content -->
-                <div class="order-1 lg:order-2 space-y-6">
-                    <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900/50 dark:to-green-800/50 text-green-700 dark:text-green-300 rounded-full text-sm font-bold mb-6 shadow-lg backdrop-blur-sm border border-green-200/50 dark:border-green-700/50">
-                        <i class="fa-solid fa-dollar-sign mr-2 animate-pulse"></i> Get $200* With a Checking Account Built for You
-                    </div>
-                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-green-700 to-gray-900 dark:from-white dark:via-green-300 dark:to-white bg-clip-text text-transparent leading-tight">
-                        Start Building Your Financial Strength
-                    </h2>
-                    <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                        For a limited time, get a $200 when you open any new account, and what helps you reach your financial goals. You can open a new account online or in person at any of our locations.
-                    </p>
-
-                    <!-- Benefits List -->
-                    <div class="space-y-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center">
-                                <i class="fa-solid fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                            </div>
-                            <span class="text-gray-700 dark:text-gray-300 font-medium">No minimum balance required</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center">
-                                <i class="fa-solid fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                            </div>
-                            <span class="text-gray-700 dark:text-gray-300 font-medium">Free online and mobile banking</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center">
-                                <i class="fa-solid fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                            </div>
-                            <span class="text-gray-700 dark:text-gray-300 font-medium">24/7 customer support</span>
-                        </div>
-                    </div>
-
-                    <a href="#open-account" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-bold rounded-2xl transition-all duration-300 shadow-2xl hover:shadow-primary-500/25 hover:-translate-y-1 hover:scale-105 group">
-                    <i class="fa-solid fa-arrow-right mr-3 group-hover:translate-x-1 transition-transform"></i>
-                    Open Account Now
-                </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Feature Section 2 -->
-    <section id="about" class="relative py-16 lg:py-20 bg-gradient-to-br from-slate-50 via-primary-50 to-teal-50 dark:from-gray-800 dark:via-primary-900/20 dark:to-teal-900/20 overflow-hidden">
-        <!-- Background Elements -->
-        <div class="absolute inset-0 opacity-20">
-            <div class="absolute top-20 left-20 w-72 h-72 bg-teal-200 dark:bg-teal-800 rounded-full blur-3xl animate-float"></div>
-            <div class="absolute bottom-20 right-20 w-96 h-96 bg-primary-200 dark:bg-primary-800 rounded-full blur-3xl animate-float-delayed"></div>
-        </div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <!-- Content -->
-                <div class="space-y-6">
-                    <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-100 to-teal-100 dark:from-primary-900/50 dark:to-teal-900/50 text-primary-700 dark:text-primary-300 rounded-full text-sm font-bold mb-4 shadow-lg backdrop-blur-sm border border-primary-200/50 dark:border-primary-700/50">
-                        <i class="fa-solid fa-handshake mr-2 animate-pulse"></i> Member-Focused Banking
-                    </div>
-
-                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-primary-700 to-teal-700 dark:from-white dark:via-primary-300 dark:to-teal-300 bg-clip-text text-transparent leading-tight">
-                        Building Strength Together
-                    </h2>
-
-                    <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                        GrandVisionTrust Bank is a full-service bank built on the foundation of providing our customers with every step of their financial journey. We're committed to helping our customers achieve their financial goals through personalized service and competitive
-                        rates.
-                    </p>
-
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <section class="mb-16">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white mb-4">Banking built for you</h2>
+                    <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed mb-6">Experience banking that adapts to your life. Manage your accounts, send money, and access support whenever you need it.</p>
                     <div class="space-y-4">
-                        <div class="group flex items-start space-x-4 p-4 rounded-2xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:shadow-lg">
-                            <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/50 dark:to-primary-800/50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                <i class="fa-solid fa-chart-line text-primary-600 dark:text-primary-400"></i>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-shield-halved text-primary-600 dark:text-primary-400 text-xl"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-gray-900 dark:text-white mb-1">Competitive Rates</h4>
-                                <p class="text-gray-600 dark:text-gray-300">Better rates on savings, loans, and credit cards designed to maximize your financial growth.</p>
+                                <h3 class="font-bold text-gray-900 dark:text-white text-lg">Secure & Protected</h3>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">Your data is encrypted and protected with enterprise-grade security.</p>
                             </div>
                         </div>
-
-                        <div class="group flex items-start space-x-4 p-4 rounded-2xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:shadow-lg">
-                            <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-teal-100 to-teal-200 dark:from-teal-900/50 dark:to-teal-800/50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                <i class="fa-solid fa-users text-teal-600 dark:text-teal-400"></i>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-mobile-screen text-emerald-600 dark:text-emerald-400 text-xl"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-gray-900 dark:text-white mb-1">Member-Focused</h4>
-                                <p class="text-gray-600 dark:text-gray-300">We're owned by our members, not shareholders. Your success is our priority.</p>
+                                <h3 class="font-bold text-gray-900 dark:text-white text-lg">Mobile Banking</h3>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">Bank on the go with our easy-to-use mobile platform.</p>
                             </div>
                         </div>
-
-                        <div class="group flex items-start space-x-4 p-4 rounded-2xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-300 hover:shadow-lg">
-                            <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/50 dark:to-purple-800/50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                <i class="fa-solid fa-heart text-purple-600 dark:text-purple-400"></i>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-headset text-purple-600 dark:text-purple-400 text-xl"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-gray-900 dark:text-white mb-1">Community Committed</h4>
-                                <p class="text-gray-600 dark:text-gray-300">Supporting local communities and causes that matter to our members.</p>
+                                <h3 class="font-bold text-gray-900 dark:text-white text-lg">Expert Support</h3>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">Our support team is available 24/7 to assist you.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Enhanced Image Grid -->
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-4">
-                        <div class="group relative rounded-2xl aspect-square overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500">
-                            <div class="absolute -inset-1 bg-gradient-to-r from-primary-500/20 to-teal-500/20 rounded-2xl blur opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <div class="relative rounded-2xl overflow-hidden">
-                                <img src="images/home/feature.jpg" alt="Team collaboration in banking" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-primary-200/30 to-emerald-200/30 dark:from-primary-800/20 dark:to-emerald-800/20 rounded-3xl blur-3xl"></div>
+                    <div class="relative bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-2xl p-8">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="bg-gradient-to-br from-primary-50 to-emerald-50 dark:from-primary-900/30 dark:to-emerald-900/30 rounded-2xl p-6 border border-primary-100 dark:border-primary-700">
+                                <div class="text-4xl font-black text-primary-700 dark:text-primary-400 mb-1">$0</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300 font-semibold">Account Balance</div>
                             </div>
-                        </div>
-                        <div class="group relative rounded-2xl aspect-[4/3] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500">
-                            <div class="absolute -inset-1 bg-gradient-to-r from-teal-500/20 to-purple-500/20 rounded-2xl blur opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <div class="relative rounded-2xl overflow-hidden">
-                                <img src="images/home/metro.jpg" alt="Professional banking consultant" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="space-y-4 pt-8">
-                        <div class="group relative rounded-2xl aspect-[4/3] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500">
-                            <div class="absolute -inset-1 bg-gradient-to-r from-purple-500/20 to-primary-500/20 rounded-2xl blur opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <div class="relative rounded-2xl overflow-hidden">
-                                <img src="images/home/feature.jpg" alt="Modern banking technology" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            </div>
-                        </div>
-                        <div class="group relative rounded-2xl aspect-square overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500">
-                            <div class="absolute -inset-1 bg-gradient-to-r from-primary-500/20 to-teal-500/20 rounded-2xl blur opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <div class="relative rounded-2xl overflow-hidden">
-                                <img src="images/home/metro.jpg" alt="Community banking support" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <div class="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/30 dark:to-blue-900/30 rounded-2xl p-6 border border-purple-100 dark:border-purple-700">
+                                <div class="text-4xl font-black text-purple-700 dark:text-purple-400 mb-1">0</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300 font-semibold">Transactions</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="py-12 lg:py-16 bg-white dark:bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-3">Hear From Our Customers</h2>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 text-center">
-                    <div class="flex justify-center mb-3">
-                        <div class="flex space-x-1">
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-300 mb-4 italic text-sm">
-                        "I am impressed with the customer service and speed of payout."
-                    </p>
-                    <div class="flex items-center justify-center">
-                        <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mr-3">
-                            <i class="fa-solid fa-user text-primary-600 dark:text-primary-400"></i>
-                        </div>
-                        <div class="text-left">
-                            <div class="font-semibold text-gray-900 dark:text-white text-sm">Sarah Morris</div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">Verified Customer</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 text-center">
-                    <div class="flex justify-center mb-3">
-                        <div class="flex space-x-1">
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-300 mb-4 italic text-sm">
-                        "Excellent service and competitive rates. Highly recommended!"
-                    </p>
-                    <div class="flex items-center justify-center">
-                        <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mr-3">
-                            <i class="fa-solid fa-user text-primary-600 dark:text-primary-400"></i>
-                        </div>
-                        <div class="text-left">
-                            <div class="font-semibold text-gray-900 dark:text-white text-sm">John Davis</div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">Business Owner</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 text-center">
-                    <div class="flex justify-center mb-3">
-                        <div class="flex space-x-1">
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                            <i class="fa-solid fa-star text-yellow-400"></i>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-300 mb-4 italic text-sm">
-                        "The mobile app is fantastic and customer support is top-notch."
-                    </p>
-                    <div class="flex items-center justify-center">
-                        <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mr-3">
-                            <i class="fa-solid fa-user text-primary-600 dark:text-primary-400"></i>
-                        </div>
-                        <div class="text-left">
-                            <div class="font-semibold text-gray-900 dark:text-white text-sm">Emily Johnson</div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">Personal Banking</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-12 lg:py-16 bg-primary-50 dark:bg-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-4 gap-6">
-                <!-- Contact Info -->
-                <div class="text-center lg:text-left">
-                    <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center mx-auto lg:mx-0 mb-3">
-                        <i class="fa-solid fa-clock text-lg text-primary-600 dark:text-primary-400"></i>
-                    </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2 text-sm">Banking Hours</h3>
-                    <p class="text-gray-600 dark:text-gray-300 text-xs">
-                        Mon-Fri: 9AM-5PM<br> Sat: 9AM-1PM<br> Sun: Closed
-                    </p>
-                </div>
-
-                <div class="text-center lg:text-left">
-                    <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center mx-auto lg:mx-0 mb-3">
-                        <i class="fa-solid fa-phone text-lg text-primary-600 dark:text-primary-400"></i>
-                    </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2 text-sm">Phone Banking</h3>
-                    <p class="text-gray-600 dark:text-gray-300 text-xs">
-                        Available 24/7<br> Call: 1-800-BANKING<br> International: +1-555-0123
-                    </p>
-                </div>
-
-                <div class="text-center lg:text-left">
-                    <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center mx-auto lg:mx-0 mb-3">
-                        <i class="fa-solid fa-envelope text-lg text-primary-600 dark:text-primary-400"></i>
-                    </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2 text-sm">Email Support</h3>
-                    <p class="text-gray-600 dark:text-gray-300 text-xs">
-                        Response within 24hrs<br> careline@grandvisiontrustbank.com
-                    </p>
-                </div>
-
-                <div class="text-center lg:text-left">
-                    <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center mx-auto lg:mx-0 mb-3">
-                        <i class="fa-solid fa-map-marker-alt text-lg text-primary-600 dark:text-primary-400"></i>
-                    </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2 text-sm">Visit Us</h3>
-                    <p class="text-gray-600 dark:text-gray-300 text-xs">
-                        123 Banking Street<br> Financial District<br> New York, NY 10001
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="grants" class="py-12 lg:py-16 bg-white dark:bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
-                <div class="max-w-2xl">
-                    <div class="inline-flex items-center px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-full text-sm font-bold mb-4">
-                        <i class="fa-solid fa-hand-holding-dollar mr-2"></i>
-                        Grants & Aid
-                    </div>
-                    <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white mb-3">Support programs built for real life</h2>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        Explore locally managed support programs and financial relief options, including eligibility steps and required documents.
-                    </p>
-                </div>
-                <div class="w-full lg:max-w-md rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6">
-                    <div class="font-bold text-gray-900 dark:text-white mb-4">Programs</div>
-                    <div class="space-y-3 text-sm">
-                        <div class="flex items-start gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-300">
-                                <i class="fa-solid fa-house"></i>
-                            </div>
-                            <div>
-                                <div class="font-semibold text-gray-900 dark:text-white">Housing Assistance</div>
-                                <div class="text-gray-600 dark:text-gray-300">Rent relief, utility support, and documentation checklist.</div>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-300">
-                                <i class="fa-solid fa-briefcase"></i>
-                            </div>
-                            <div>
-                                <div class="font-semibold text-gray-900 dark:text-white">Small Business Aid</div>
-                                <div class="text-gray-600 dark:text-gray-300">Payroll bridge support and application steps.</div>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-300">
-                                <i class="fa-solid fa-graduation-cap"></i>
-                            </div>
-                            <div>
-                                <div class="font-semibold text-gray-900 dark:text-white">Education Grants</div>
-                                <div class="text-gray-600 dark:text-gray-300">Tuition support with proof-of-enrollment requirements.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#open-account" class="mt-5 inline-flex items-center justify-center w-full px-4 py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold transition-colors">
-                        Talk to a specialist
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="open-account" class="py-12 lg:py-16 bg-gradient-to-br from-primary-50 via-white to-slate-50 dark:from-gray-900 dark:via-gray-900 dark:to-primary-900/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-8 items-start">
-                <div>
-                    <div class="inline-flex items-center px-4 py-2 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full text-sm font-bold mb-4">
-                        <i class="fa-solid fa-sparkles mr-2"></i>
-                        Open Account
-                    </div>
-                    <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white mb-3">Open your account</h2>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        Start an account opening request and continue in Online Banking.
-                    </p>
-                    <div class="mt-6 grid sm:grid-cols-2 gap-4">
-                        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-5 bg-white dark:bg-gray-800">
-                            <div class="font-bold text-gray-900 dark:text-white mb-1">Personal Checking</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-300">Everyday spending with digital tools.</div>
-                        </div>
-                        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-5 bg-white dark:bg-gray-800">
-                            <div class="font-bold text-gray-900 dark:text-white mb-1">Savings</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-300">Flexible saving goals and round-ups.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="rounded-3xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/80 backdrop-blur-xl p-6 sm:p-8 shadow-xl">
-                    <div class="text-lg font-extrabold text-gray-900 dark:text-white mb-1">Start application</div>
-                    <div class="text-sm text-gray-500 dark:text-gray-300 mb-6">Submit your details to get started</div>
-
-                    <form x-data="{ submitted: false, async submit(e) { try { this.submitted = true; const fd = new FormData(e.target); const firstName = String(fd.get('firstName') || ''); const lastName = String(fd.get('lastName') || ''); const email = String(fd.get('email') || ''); const accountType = String(fd.get('accountType') || ''); const res = await fetch('/api/applications/open-account', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ firstName, lastName, email, accountType }) }); if (!res.ok) { throw new Error('submit_failed'); } window.location.href = 'login.html'; } catch (err) { this.submitted = false; alert('Unable to submit right now. Please try again.'); } } }" @submit.prevent="submit($event)" class="space-y-4">
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">First name</label>
-                                <input name="firstName" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Last name</label>
-                                <input name="lastName" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Email</label>
-                            <input name="email" type="email" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Account type</label>
-                            <select name="accountType" class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                                <option>Personal Checking</option>
-                                <option>Savings</option>
-                                <option>Business Checking</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="w-full rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold py-3.5 shadow-lg shadow-primary-600/20 transition-all">
-                            <span x-show="!submitted">Continue</span>
-                            <span x-show="submitted">Submitting…</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="mobile-app" class="py-12 lg:py-16 bg-white dark:bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-8 items-center">
-                <div>
-                    <div class="inline-flex items-center px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full text-sm font-bold mb-4">
-                        <i class="fa-solid fa-mobile-alt mr-2"></i>
-                        Mobile App
-                    </div>
-                    <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white mb-3">Bank anywhere, securely</h2>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        Use Online Banking from your phone with modern security and real-time alerts.
-                    </p>
-                    <div class="mt-6 grid sm:grid-cols-2 gap-4">
-                        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-5 bg-gray-50 dark:bg-gray-800">
-                            <div class="font-bold text-gray-900 dark:text-white mb-1">Biometric sign-in</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-300">Face/Touch unlock support.</div>
-                        </div>
-                        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-5 bg-gray-50 dark:bg-gray-800">
-                            <div class="font-bold text-gray-900 dark:text-white mb-1">Instant alerts</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-300">Spending and security notifications.</div>
-                        </div>
-                        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-5 bg-gray-50 dark:bg-gray-800">
-                            <div class="font-bold text-gray-900 dark:text-white mb-1">Transfers</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-300">Local and international payments.</div>
-                        </div>
-                        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-5 bg-gray-50 dark:bg-gray-800">
-                            <div class="font-bold text-gray-900 dark:text-white mb-1">Card controls</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-300">Freeze/unfreeze and limits.</div>
-                        </div>
-                    </div>
-                    <a href="login.html" class="mt-7 inline-flex items-center px-6 py-3 rounded-2xl bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white font-extrabold shadow-lg shadow-primary-600/20 transition-all">
-                        Go to Online Banking
-                    </a>
-                </div>
-                <div class="rounded-3xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-slate-50 to-white dark:from-gray-800 dark:to-gray-900 p-8 shadow-xl">
-                    <div class="text-sm font-bold text-gray-700 dark:text-gray-200 mb-4">Quick links</div>
-                    <div class="space-y-3 text-sm">
-                        <a href="#atm" class="block rounded-2xl border border-gray-200 dark:border-gray-700 p-4 hover:bg-white dark:hover:bg-gray-800 transition-colors">
-                            <div class="font-semibold text-gray-900 dark:text-white">ATM Locations</div>
-                            <div class="text-gray-600 dark:text-gray-300">How to find nearby cash points.</div>
-                        </a>
-                        <a href="#security" class="block rounded-2xl border border-gray-200 dark:border-gray-700 p-4 hover:bg-white dark:hover:bg-gray-800 transition-colors">
-                            <div class="font-semibold text-gray-900 dark:text-white">Security Center</div>
-                            <div class="text-gray-600 dark:text-gray-300">Tips for safe banking.</div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="atm" class="py-12 lg:py-16 bg-primary-50 dark:bg-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-start justify-between gap-8 flex-col lg:flex-row">
-                <div class="max-w-2xl">
-                    <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white mb-3">ATM Locations</h2>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        Find nearby ATMs and branch cash points.
-                    </p>
-                </div>
-                <div class="w-full lg:max-w-xl rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6">
-                    <div class="text-sm font-bold text-gray-900 dark:text-white mb-4">ATM locations</div>
-                    <div class="space-y-3 text-sm text-gray-700 dark:text-gray-200">
-                        <div class="flex items-start justify-between gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-800">
-                            <div>
-                                <div class="font-semibold">Financial District ATM</div>
-                                <div class="text-gray-600 dark:text-gray-300">123 Banking Street, New York, NY</div>
-                            </div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">24/7</div>
-                        </div>
-                        <div class="flex items-start justify-between gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-800">
-                            <div>
-                                <div class="font-semibold">Uptown Branch ATM</div>
-                                <div class="text-gray-600 dark:text-gray-300">88 Grand Ave, New York, NY</div>
-                            </div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">6am–11pm</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="security" class="py-12 lg:py-16 bg-white dark:bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-3xl">
-                <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white mb-3">Security Center</h2>
-                <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                    Practical tips for safer banking.
-                </p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="rounded-3xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6">
-                    <div class="w-12 h-12 rounded-2xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-700 dark:text-primary-300 mb-4">
-                        <i class="fa-solid fa-lock"></i>
-                    </div>
-                    <div class="font-extrabold text-gray-900 dark:text-white mb-2">Protect passwords</div>
-                    <div class="text-sm text-gray-600 dark:text-gray-300">Use unique passwords and a password manager.</div>
-                </div>
-                <div class="rounded-3xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6">
-                    <div class="w-12 h-12 rounded-2xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-700 dark:text-teal-300 mb-4">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
-                    <div class="font-extrabold text-gray-900 dark:text-white mb-2">Watch for scams</div>
-                    <div class="text-sm text-gray-600 dark:text-gray-300">Never share verification codes or passwords.</div>
-                </div>
-                <div class="rounded-3xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6">
-                    <div class="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-700 dark:text-purple-300 mb-4">
-                        <i class="fa-solid fa-bell"></i>
-                    </div>
-                    <div class="font-extrabold text-gray-900 dark:text-white mb-2">Enable alerts</div>
-                    <div class="text-sm text-gray-600 dark:text-gray-300">Get notified of transfers and card activity.</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="register" class="py-12 lg:py-16 bg-gradient-to-br from-slate-50 via-white to-primary-50 dark:from-gray-900 dark:via-gray-900 dark:to-primary-900/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-8 items-start">
-                <div>
-                    <div class="inline-flex items-center px-4 py-2 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full text-sm font-bold mb-4">
-                        <i class="fa-solid fa-user-plus mr-2"></i>
-                        Register
-                    </div>
-                    <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white mb-3">Register for online banking</h2>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        Create your secure Online Banking profile, set your password, and choose a 4-digit PIN.
-                    </p>
-                </div>
-
-                <div class="rounded-3xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/80 backdrop-blur-xl p-6 sm:p-8 shadow-xl">
-                    <div class="text-lg font-extrabold text-gray-900 dark:text-white mb-1">Create profile</div>
-                    <div class="text-sm text-gray-500 dark:text-gray-300 mb-6">Provide your details for identity verification and secure access</div>
-
-                    <form x-data="{ loading: false, error: '', async submit(e) { try { this.error = ''; this.loading = true; const fd = new FormData(e.target); const firstName = String(fd.get('firstName') || '').trim(); const lastName = String(fd.get('lastName') || '').trim(); const email = String(fd.get('email') || '').trim(); const phone = String(fd.get('phone') || '').trim(); const dob = String(fd.get('dob') || '').trim(); const ssnLast4 = String(fd.get('ssnLast4') || '').trim(); const address1 = String(fd.get('address1') || '').trim(); const address2 = String(fd.get('address2') || '').trim(); const city = String(fd.get('city') || '').trim(); const state = String(fd.get('state') || '').trim(); const postalCode = String(fd.get('postalCode') || '').trim(); const country = String(fd.get('country') || '').trim(); const accountType = String(fd.get('accountType') || '').trim(); const idType = String(fd.get('idType') || '').trim(); const idNumber = String(fd.get('idNumber') || '').trim(); const employmentStatus = String(fd.get('employmentStatus') || '').trim(); const annualIncome = String(fd.get('annualIncome') || '').trim(); const password = String(fd.get('password') || ''); const confirmPassword = String(fd.get('confirmPassword') || ''); const pin = String(fd.get('pin') || ''); const confirmPin = String(fd.get('confirmPin') || ''); if (password !== confirmPassword) { this.error = 'Passwords do not match.'; this.loading = false; return; } if (pin !== confirmPin) { this.error = 'PIN codes do not match.'; this.loading = false; return; } const res = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ firstName, lastName, email, phone, dob, ssnLast4, address1, address2, city, state, postalCode, country, accountType, idType, idNumber, employmentStatus, annualIncome, password, pin }) }); if (!res.ok) { const data = await res.json().catch(() => null); throw new Error(String(data?.error || 'register_failed')); } window.location.href = 'login.html?registered=1'; } catch (err) { this.loading = false; this.error = 'Unable to register right now. Please check your details and try again.'; } } }" @submit.prevent="submit($event)" class="space-y-4">
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">First name</label>
-                                <input name="firstName" autocomplete="given-name" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Last name</label>
-                                <input name="lastName" autocomplete="family-name" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                        </div>
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Email</label>
-                                <input name="email" type="email" autocomplete="email" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Phone</label>
-                                <input name="phone" type="tel" autocomplete="tel" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                        </div>
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Date of birth</label>
-                                <input name="dob" type="date" autocomplete="bday" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">SSN last 4</label>
-                                <input name="ssnLast4" inputmode="numeric" pattern="\\d{4}" maxlength="4" autocomplete="off" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Address line 1</label>
-                            <input name="address1" autocomplete="address-line1" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Address line 2 (optional)</label>
-                            <input name="address2" autocomplete="address-line2" class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                        </div>
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">City</label>
-                                <input name="city" autocomplete="address-level2" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">State / Province</label>
-                                <input name="state" autocomplete="address-level1" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                        </div>
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Postal code</label>
-                                <input name="postalCode" autocomplete="postal-code" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Country</label>
-                                <input name="country" autocomplete="country-name" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40" value="United States">
-                            </div>
-                        </div>
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Account type</label>
-                                <select name="accountType" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                                    <option value="" selected>Select account type</option>
-                                    <option value="checking">Checking</option>
-                                    <option value="savings">Savings</option>
-                                    <option value="checking_savings">Checking + Savings</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Annual income</label>
-                                <select name="annualIncome" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                                    <option value="" selected>Select range</option>
-                                    <option value="under_25k">Under $25,000</option>
-                                    <option value="25k_50k">$25,000 – $50,000</option>
-                                    <option value="50k_100k">$50,000 – $100,000</option>
-                                    <option value="100k_250k">$100,000 – $250,000</option>
-                                    <option value="over_250k">Over $250,000</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">ID type</label>
-                                <select name="idType" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                                    <option value="" selected>Select ID type</option>
-                                    <option value="drivers_license">Driver’s license</option>
-                                    <option value="state_id">State ID</option>
-                                    <option value="passport">Passport</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">ID number</label>
-                                <input name="idNumber" autocomplete="off" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Employment status</label>
-                            <select name="employmentStatus" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                                <option value="" selected>Select status</option>
-                                <option value="employed">Employed</option>
-                                <option value="self_employed">Self-employed</option>
-                                <option value="student">Student</option>
-                                <option value="retired">Retired</option>
-                                <option value="unemployed">Unemployed</option>
-                            </select>
-                        </div>
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Password</label>
-                                <input name="password" type="password" autocomplete="new-password" minlength="8" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Confirm password</label>
-                                <input name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                        </div>
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">4-digit PIN</label>
-                                <input name="pin" type="password" inputmode="numeric" pattern="\\d{4}" maxlength="4" autocomplete="off" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Confirm PIN</label>
-                                <input name="confirmPin" type="password" inputmode="numeric" pattern="\\d{4}" maxlength="4" autocomplete="off" required class="mt-2 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900/40">
-                            </div>
-                        </div>
-                        <label class="inline-flex items-start gap-3 text-sm text-gray-600 dark:text-gray-300">
-                            <input name="agree" type="checkbox" required class="mt-1 rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-200 dark:focus:ring-primary-900/50">
-                            <span>I confirm the information provided is accurate and I agree to the terms for Online Banking.</span>
-                        </label>
-                        <div x-show="error" class="rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-800 dark:text-red-200" x-text="error"></div>
-                        <button type="submit" class="w-full rounded-2xl bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white font-extrabold py-3.5 shadow-lg shadow-primary-600/20 transition-all">
-                            <span x-show="!loading">Create account</span>
-                            <span x-show="loading">Creating…</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="privacy" class="py-12 lg:py-16 bg-white dark:bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-3xl">
-                <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white mb-3">Privacy Policy</h2>
-                <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                    We protect your personal data with appropriate administrative, technical, and physical safeguards.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="terms" class="py-12 lg:py-16 bg-primary-50 dark:bg-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-3xl">
-                <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white mb-3">Terms of Service</h2>
-                <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                    Use of this website and Online Banking is subject to applicable terms, acceptable use policies, and account agreements.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="accessibility" class="py-12 lg:py-16 bg-white dark:bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-3xl">
-                <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white mb-3">Accessibility</h2>
-                <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                    We aim to provide keyboard-friendly navigation, readable contrast, and responsive layouts.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="sitemap" class="py-12 lg:py-16 bg-primary-50 dark:bg-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-3xl">
-                <h2 class="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white mb-6">Sitemap</h2>
-                <div class="grid sm:grid-cols-2 gap-4">
-                    <a href="#about" class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">About</a>
-                    <a href="#services" class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Services</a>
-                    <a href="#contact" class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Contact</a>
-                    <a href="#open-account" class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold">Open Account</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Enhanced Footer -->
-    <footer class="relative bg-gradient-to-br from-slate-900 via-primary-900 to-slate-900 dark:from-gray-900 dark:via-primary-900 dark:to-gray-900 text-white py-16 mb-20 lg:mb-0 overflow-hidden">
-        <!-- Animated background elements -->
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute -top-20 -left-20 w-40 h-40 bg-primary-600/20 rounded-full blur-3xl animate-pulse"></div>
-            <div class="absolute top-1/2 -right-20 w-32 h-32 bg-teal-500/20 rounded-full blur-2xl animate-pulse" style="animation-delay: 1s;"></div>
-            <div class="absolute -bottom-20 left-1/3 w-36 h-36 bg-purple-600/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
-
-            <!-- Floating geometric shapes -->
-            <div class="absolute top-10 right-1/4 w-4 h-4 bg-white/10 rotate-45 animate-bounce" style="animation-delay: 0.5s;"></div>
-            <div class="absolute bottom-1/4 left-1/4 w-3 h-3 bg-primary-300/30 rounded-full animate-bounce" style="animation-delay: 1.5s;"></div>
-            <div class="absolute top-1/3 left-1/2 w-2 h-2 bg-teal-400/40 rotate-45 animate-bounce" style="animation-delay: 2.5s;"></div>
-        </div>
-
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Main Footer Content -->
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-                <!-- Company Info with enhanced styling -->
+        </section>
+    </main>
+    <footer class="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid lg:grid-cols-4 gap-8">
                 <div class="lg:col-span-1">
-                    <div class="group mb-6">
-                        <a href="index.html" class="relative inline-block">
-                            <div class="absolute inset-0 bg-white/20 rounded-2xl blur-lg group-hover:bg-white/30 transition-all duration-300"></div>
-                            <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="relative h-10 w-auto">
-                        </a>
-                    </div>
-                    <p class="text-primary-100 mb-6 text-sm leading-relaxed">
-                        Building financial strength together with personalized banking solutions for every member. Your trusted partner in financial growth.
-                    </p>
-
-                    <!-- Enhanced Social Links -->
-                    <div class="flex space-x-3">
-                        <a href="#" class="group relative w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-700 hover:from-blue-600 hover:to-blue-700 rounded-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1 shadow-lg hover:shadow-xl">
-                            <i class="fa-brands fa-facebook-f text-sm group-hover:scale-110 transition-transform duration-300"></i>
-                            <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </a>
-                        <a href="#" class="group relative w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-700 hover:from-sky-500 hover:to-sky-600 rounded-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1 shadow-lg hover:shadow-xl">
-                            <i class="fa-brands fa-twitter text-sm group-hover:scale-110 transition-transform duration-300"></i>
-                            <div class="absolute inset-0 bg-gradient-to-br from-sky-400 to-sky-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </a>
-                        <a href="#" class="group relative w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-700 hover:from-blue-700 hover:to-blue-800 rounded-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1 shadow-lg hover:shadow-xl">
-                            <i class="fa-brands fa-linkedin-in text-sm group-hover:scale-110 transition-transform duration-300"></i>
-                            <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </a>
-                        <a href="#" class="group relative w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-700 hover:from-pink-600 hover:to-pink-700 rounded-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1 shadow-lg hover:shadow-xl">
-                            <i class="fa-brands fa-instagram text-sm group-hover:scale-110 transition-transform duration-300"></i>
-                            <div class="absolute inset-0 bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </a>
-                    </div>
+                    <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust Bank" class="h-12 w-auto mb-4">
+                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">Your trusted partner for modern banking solutions.</p>
                 </div>
-
-                <!-- Quick Links with modern styling -->
                 <div>
-                    <h4 class="font-bold mb-6 text-white flex items-center">
-                        <div class="w-1 h-6 bg-gradient-to-b from-primary-400 to-primary-600 rounded-full mr-3"></div>
-                        Quick Links
-                    </h4>
-                    <ul class="space-y-3">
-                        <li><a href="#about" class="group flex items-center text-primary-100 hover:text-white transition-all duration-300 text-sm">
-                            <i class="fa-solid fa-chevron-right text-xs mr-3 text-primary-400 group-hover:translate-x-1 transition-transform duration-300"></i>
-                            <span class="group-hover:translate-x-1 transition-transform duration-300">About Us</span>
-                        </a></li>
-                        <li><a href="#services" class="group flex items-center text-primary-100 hover:text-white transition-all duration-300 text-sm">
-                            <i class="fa-solid fa-chevron-right text-xs mr-3 text-primary-400 group-hover:translate-x-1 transition-transform duration-300"></i>
-                            <span class="group-hover:translate-x-1 transition-transform duration-300">Services</span>
-                        </a></li>
-                        <li><a href="grants-aid.html" class="group flex items-center text-primary-100 hover:text-white transition-all duration-300 text-sm">
-                            <i class="fa-solid fa-chevron-right text-xs mr-3 text-primary-400 group-hover:translate-x-1 transition-transform duration-300"></i>
-                            <span class="group-hover:translate-x-1 transition-transform duration-300">Grants & Aid</span>
-                        </a></li>
-                        <li><a href="#contact" class="group flex items-center text-primary-100 hover:text-white transition-all duration-300 text-sm">
-                            <i class="fa-solid fa-chevron-right text-xs mr-3 text-primary-400 group-hover:translate-x-1 transition-transform duration-300"></i>
-                            <span class="group-hover:translate-x-1 transition-transform duration-300">Contact</span>
-                        </a></li>
+                    <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Home</a></li>
+                        <li><a href="#about" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">About</a></li>
+                        <li><a href="login.html" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Login</a></li>
                     </ul>
                 </div>
-
-                <!-- Services -->
                 <div>
-                    <h4 class="font-bold mb-6 text-white flex items-center">
-                        <div class="w-1 h-6 bg-gradient-to-b from-teal-400 to-teal-600 rounded-full mr-3"></div>
-                        Services
-                    </h4>
-                    <ul class="space-y-3">
-                        <li><a href="personal-banking.html" class="group flex items-center text-primary-100 hover:text-white transition-all duration-300 text-sm">
-                            <i class="fa-solid fa-chevron-right text-xs mr-3 text-teal-400 group-hover:translate-x-1 transition-transform duration-300"></i>
-                            <span class="group-hover:translate-x-1 transition-transform duration-300">Personal Banking</span>
-                        </a></li>
-                        <li><a href="business-banking.html" class="group flex items-center text-primary-100 hover:text-white transition-all duration-300 text-sm">
-                            <i class="fa-solid fa-chevron-right text-xs mr-3 text-teal-400 group-hover:translate-x-1 transition-transform duration-300"></i>
-                            <span class="group-hover:translate-x-1 transition-transform duration-300">Business Banking</span>
-                        </a></li>
-                        <li><a href="loans-credit.html" class="group flex items-center text-primary-100 hover:text-white transition-all duration-300 text-sm">
-                            <i class="fa-solid fa-chevron-right text-xs mr-3 text-teal-400 group-hover:translate-x-1 transition-transform duration-300"></i>
-                            <span class="group-hover:translate-x-1 transition-transform duration-300">Loans & Credit</span>
-                        </a></li>
-                        <li><a href="cards.html" class="group flex items-center text-primary-100 hover:text-white transition-all duration-300 text-sm">
-                            <i class="fa-solid fa-chevron-right text-xs mr-3 text-teal-400 group-hover:translate-x-1 transition-transform duration-300"></i>
-                            <span class="group-hover:translate-x-1 transition-transform duration-300">Cards</span>
-                        </a></li>
-                        <li><a href="tax-refund.html" class="group flex items-center text-primary-100 hover:text-white transition-all duration-300 text-sm">
-                            <i class="fa-solid fa-chevron-right text-xs mr-3 text-teal-400 group-hover:translate-x-1 transition-transform duration-300"></i>
-                            <span class="group-hover:translate-x-1 transition-transform duration-300">Tax Refund</span>
-                        </a></li>
+                    <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Services</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="personal-banking.html" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Personal Banking</a></li>
+                        <li><a href="business-banking.html" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Business Banking</a></li>
+                        <li><a href="loans-credit.html" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Loans & Credit</a></li>
                     </ul>
                 </div>
-
-                <!-- Member Services -->
                 <div>
-                    <h4 class="font-bold mb-6 text-white flex items-center">
-                        <div class="w-1 h-6 bg-gradient-to-b from-purple-400 to-purple-600 rounded-full mr-3"></div>
-                        Member Services
-                    </h4>
-                    <ul class="space-y-3">
-                        <li><a href="login.html" class="group flex items-center text-primary-100 hover:text-white transition-all duration-300 text-sm">
-                            <i class="fa-solid fa-chevron-right text-xs mr-3 text-purple-400 group-hover:translate-x-1 transition-transform duration-300"></i>
-                            <span class="group-hover:translate-x-1 transition-transform duration-300">Online Banking</span>
-                        </a></li>
-                        <li><a href="#mobile-app" class="group flex items-center text-primary-100 hover:text-white transition-all duration-300 text-sm">
-                            <i class="fa-solid fa-chevron-right text-xs mr-3 text-purple-400 group-hover:translate-x-1 transition-transform duration-300"></i>
-                            <span class="group-hover:translate-x-1 transition-transform duration-300">Mobile App</span>
-                        </a></li>
-                        <li><a href="#atm" class="group flex items-center text-primary-100 hover:text-white transition-all duration-300 text-sm">
-                            <i class="fa-solid fa-chevron-right text-xs mr-3 text-purple-400 group-hover:translate-x-1 transition-transform duration-300"></i>
-                            <span class="group-hover:translate-x-1 transition-transform duration-300">ATM Locations</span>
-                        </a></li>
-                        <li><a href="#security" class="group flex items-center text-primary-100 hover:text-white transition-all duration-300 text-sm">
-                            <i class="fa-solid fa-chevron-right text-xs mr-3 text-purple-400 group-hover:translate-x-1 transition-transform duration-300"></i>
-                            <span class="group-hover:translate-x-1 transition-transform duration-300">Security Center</span>
-                        </a></li>
+                    <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Contact</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li class="text-gray-600 dark:text-gray-300">support@grandvisiontrust.com</li>
+                        <li class="text-gray-600 dark:text-gray-300">1-800-BANKING</li>
                     </ul>
                 </div>
             </div>
-
-            <!-- Bottom Footer with enhanced styling -->
-            <div class="border-t border-primary-700/50 pt-8">
-                <div class="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
-                    <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6">
-                        <p class="text-primary-100 text-sm">
-                            © 2001 GrandVisionTrust Bank. All rights reserved.
-                        </p>
-                        <div class="flex items-center space-x-2 text-primary-200 text-xs">
-                            <i class="fa-solid fa-shield-alt text-green-400"></i>
-                            <span>FDIC Insured</span>
-                            <span class="text-primary-400">•</span>
-                            <i class="fa-solid fa-lock text-blue-400"></i>
-                            <span>256-bit SSL</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap justify-center lg:justify-end space-x-6">
-                        <a href="#privacy" class="text-primary-100 hover:text-white text-sm transition-colors duration-300 hover:underline">Privacy Policy</a>
-                        <a href="#terms" class="text-primary-100 hover:text-white text-sm transition-colors duration-300 hover:underline">Terms of Service</a>
-                        <a href="#accessibility" class="text-primary-100 hover:text-white text-sm transition-colors duration-300 hover:underline">Accessibility</a>
-                        <a href="#sitemap" class="text-primary-100 hover:text-white text-sm transition-colors duration-300 hover:underline">Sitemap</a>
-                    </div>
+            <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    © GrandVisionTrust Bank. All rights reserved.
+                </div>
+                <div class="flex gap-6 text-sm">
+                    <a href="index.html#services" class="font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Services</a>
+                    <a href="dashboard.html" class="font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Dashboard</a>
+                    <a href="#contact" class="font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Contact</a>
                 </div>
             </div>
         </div>
     </footer>
-
-    <!-- Mobile Fixed Login/Register Buttons -->
-    <div class="mobile-fixed-buttons">
-        <a href="login.html" class="flex-1 px-6 py-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl text-primary-600 dark:text-primary-400 font-semibold shadow-lg border border-primary-200 dark:border-primary-700 hover:bg-primary-50 dark:hover:bg-gray-700 transition-colors text-center">
-            <i class="fa-solid fa-sign-in-alt mr-2"></i>
-            Login
-        </a>
-        <a href="#register" class="flex-1 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold shadow-lg transition-colors text-center">
-            <i class="fa-solid fa-user-plus mr-2"></i>
-            Register
-        </a>
-    </div>
-
-    <!-- Additional Scripts -->
-    <script>
-        // Intersection Observer for fade-in animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                }
-            });
-        }, observerOptions);
-
-        // Observe all fade-in sections
-        document.querySelectorAll('.fade-in-section').forEach(el => {
-            observer.observe(el);
-        });
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-    </script>
-
-    <!-- Language Translation Script -->
-    <script type="text/javascript">
-        let currentLanguage = 'en';
-
-        function changeLanguage(langCode) {
-            if (langCode === currentLanguage) return;
-
-            currentLanguage = langCode;
-            updateFlagDisplay(langCode);
-
-            // Store language preference
-            localStorage.setItem('selectedLanguage', langCode);
-
-            if (langCode === 'en') {
-                location.reload();
-            } else {
-                translatePage(langCode);
-            }
-        }
-
-        function updateFlagDisplay(langCode) {
-            const flags = {
-                'en': '🇺🇸',
-                'es': '🇪🇸',
-                'fr': '🇫🇷',
-                'de': '🇩🇪',
-                'it': '🇮🇹',
-                'pt': '🇵🇹'
-            };
-
-            // Update desktop flag
-            const desktopFlag = document.querySelector('.relative.group button span');
-            if (desktopFlag && flags[langCode]) {
-                desktopFlag.textContent = flags[langCode];
-            }
-
-            // Update mobile flag  
-            const mobileFlag = document.querySelector('[x-data*="languageOpen"] .bg-gradient-to-br span');
-            if (mobileFlag && flags[langCode]) {
-                mobileFlag.textContent = flags[langCode];
-            }
-        }
-
-        // Simple client-side translation using MyMemory API (free)
-        async function translatePage(langCode) {
-            if (langCode === 'en') {
-                location.reload();
-                return;
-            }
-
-            try {
-                // Show loading indicator
-                showTranslationLoading();
-
-                // Get all translatable text elements
-                const textElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span:not(.no-translate), button:not(.no-translate), a:not(.no-translate), div:not(.no-translate)');
-                const textsToTranslate = [];
-
-                textElements.forEach(element => {
-                    const text = element.textContent.trim();
-                    // Skip if empty, is a number, contains only symbols, or is marked as no-translate
-                    if (text &&
-                        text.length > 1 &&
-                        !element.classList.contains('no-translate') &&
-                        !element.closest('.no-translate') &&
-                        !/^[\d\s\$\€\£\¥\+\-\*\/\=\(\)\[\]\{\}\<\>\|\\\^\~\`\!\@\#\%\&\_\?\.\,\;\:\"\']+$/.test(text) &&
-                        !element.querySelector('input, select, textarea, img, svg') &&
-                        element.children.length === 0) {
-
-                        textsToTranslate.push({
-                            element: element,
-                            originalText: text
-                        });
-                    }
-                });
-
-                // Translate in batches to avoid API limits
-                const batchSize = 10;
-                for (let i = 0; i < textsToTranslate.length; i += batchSize) {
-                    const batch = textsToTranslate.slice(i, i + batchSize);
-                    await translateBatch(batch, langCode);
-
-                    // Small delay between batches
-                    if (i + batchSize < textsToTranslate.length) {
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                    }
-                }
-
-                hideTranslationLoading();
-
-            } catch (error) {
-                console.error('Translation error:', error);
-                hideTranslationLoading();
-                alert('Translation service is currently unavailable. Please try again later.');
-            }
-        }
-
-        async function translateBatch(batch, langCode) {
-            for (const item of batch) {
-                try {
-                    const translatedText = await translateText(item.originalText, langCode);
-                    if (translatedText && translatedText !== item.originalText) {
-                        item.element.textContent = translatedText;
-                    }
-                } catch (error) {
-                    console.error('Error translating text:', error);
-                    // Continue with next item if one fails
-                }
-            }
-        }
-
-        async function translateText(text, targetLang) {
-            return translateBasic(text, targetLang);
-        }
-
-        function translateBasic(text, targetLang) {
-            // Basic dictionary for common banking terms
-            const dictionary = {
-                'es': {
-                    'Home': 'Inicio',
-                    'About': 'Acerca de',
-                    'Services': 'Servicios',
-                    'Contact': 'Contacto',
-                    'Login': 'Iniciar Sesión',
-                    'Register': 'Registrarse',
-                    'Open Account': 'Abrir Cuenta',
-                    'Banking': 'Banca',
-                    'Personal Banking': 'Banca Personal',
-                    'Business Banking': 'Banca Empresarial',
-                    'Loans': 'Préstamos',
-                    'Cards': 'Tarjetas',
-                    'Language': 'Idioma'
-                },
-                'fr': {
-                    'Home': 'Accueil',
-                    'About': 'À propos',
-                    'Services': 'Services',
-                    'Contact': 'Contact',
-                    'Login': 'Connexion',
-                    'Register': 'S\'inscrire',
-                    'Open Account': 'Ouvrir un Compte',
-                    'Banking': 'Banque',
-                    'Personal Banking': 'Banque Personnelle',
-                    'Business Banking': 'Banque d\'Entreprise',
-                    'Loans': 'Prêts',
-                    'Cards': 'Cartes',
-                    'Language': 'Langue'
-                },
-                'de': {
-                    'Home': 'Startseite',
-                    'About': 'Über uns',
-                    'Services': 'Dienstleistungen',
-                    'Contact': 'Kontakt',
-                    'Login': 'Anmelden',
-                    'Register': 'Registrieren',
-                    'Open Account': 'Konto Eröffnen',
-                    'Banking': 'Banking',
-                    'Personal Banking': 'Privatkundengeschäft',
-                    'Business Banking': 'Firmenkundengeschäft',
-                    'Loans': 'Kredite',
-                    'Cards': 'Karten',
-                    'Language': 'Sprache'
-                },
-                'it': {
-                    'Home': 'Casa',
-                    'About': 'Chi siamo',
-                    'Services': 'Servizi',
-                    'Contact': 'Contatto',
-                    'Login': 'Accedi',
-                    'Register': 'Registrati',
-                    'Open Account': 'Apri Conto',
-                    'Banking': 'Banking',
-                    'Personal Banking': 'Banking Personale',
-                    'Business Banking': 'Banking Aziendale',
-                    'Loans': 'Prestiti',
-                    'Cards': 'Carte',
-                    'Language': 'Lingua'
-                },
-                'pt': {
-                    'Home': 'Início',
-                    'About': 'Sobre',
-                    'Services': 'Serviços',
-                    'Contact': 'Contato',
-                    'Login': 'Entrar',
-                    'Register': 'Registrar',
-                    'Open Account': 'Abrir Conta',
-                    'Banking': 'Bancário',
-                    'Personal Banking': 'Banco Pessoal',
-                    'Business Banking': 'Banco Empresarial',
-                    'Loans': 'Empréstimos',
-                    'Cards': 'Cartões',
-                    'Language': 'Idioma'
-                }
-            };
-
-            return dictionary[targetLang] && dictionary[targetLang][text] ? dictionary[targetLang][text] : text;
-        }
-
-        function getLanguageName(code) {
-            const names = {
-                'es': 'Spanish',
-                'fr': 'French',
-                'de': 'German',
-                'it': 'Italian',
-                'pt': 'Portuguese'
-            };
-            return names[code] || code;
-        }
-
-        function showTranslationLoading() {
-            // Create loading overlay
-            const overlay = document.createElement('div');
-            overlay.id = 'translation-loading';
-            overlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-            overlay.innerHTML = `
-                 <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center">
-                     <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
-                     <p class="text-gray-700 dark:text-gray-300">Translating page...</p>
-                 </div>
-             `;
-            document.body.appendChild(overlay);
-        }
-
-        function hideTranslationLoading() {
-            const overlay = document.getElementById('translation-loading');
-            if (overlay) {
-                overlay.remove();
-            }
-        }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load saved language preference
-            const savedLanguage = localStorage.getItem('selectedLanguage');
-            if (savedLanguage && savedLanguage !== 'en') {
-                currentLanguage = savedLanguage;
-                updateFlagDisplay(savedLanguage);
-            }
-        });
-
-        // Update the changeLanguage function to use the new approach
-        window.changeLanguage = function(langCode) {
-            currentLanguage = langCode;
-            updateFlagDisplay(langCode);
-            localStorage.setItem('selectedLanguage', langCode);
-
-            if (langCode === 'en') {
-                location.reload();
-            } else {
-                translatePage(langCode);
-            }
-        };
-    </script>
-
 </body>
-
+</html>

@@ -33,6 +33,9 @@ db.exec(`
     password_hash TEXT NOT NULL,
     pin_hash TEXT,
     profile_json TEXT,
+    balance_cents INTEGER NOT NULL DEFAULT 0,
+    is_verified INTEGER NOT NULL DEFAULT 0,
+    is_active INTEGER NOT NULL DEFAULT 1,
     created_at TEXT NOT NULL
   );
 
@@ -41,6 +44,7 @@ db.exec(`
     type TEXT NOT NULL,
     payload_json TEXT NOT NULL,
     status TEXT NOT NULL,
+    admin_notes TEXT,
     created_at TEXT NOT NULL
   );
 
@@ -53,8 +57,19 @@ db.exec(`
     currency TEXT NOT NULL,
     status TEXT NOT NULL,
     meta_json TEXT NOT NULL,
+    transfer_code TEXT,
     created_at TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS admin_logs (
+    id TEXT PRIMARY KEY,
+    admin_id TEXT NOT NULL,
+    action TEXT NOT NULL,
+    target_type TEXT,
+    target_id TEXT,
+    details_json TEXT,
+    created_at TEXT NOT NULL
   );
 `);
 
@@ -64,6 +79,25 @@ if (!userColumns.has('pin_hash')) {
 }
 if (!userColumns.has('profile_json')) {
   db.exec('ALTER TABLE users ADD COLUMN profile_json TEXT');
+}
+if (!userColumns.has('balance_cents')) {
+  db.exec('ALTER TABLE users ADD COLUMN balance_cents INTEGER NOT NULL DEFAULT 0');
+}
+if (!userColumns.has('is_verified')) {
+  db.exec('ALTER TABLE users ADD COLUMN is_verified INTEGER NOT NULL DEFAULT 0');
+}
+if (!userColumns.has('is_active')) {
+  db.exec('ALTER TABLE users ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1');
+}
+
+const appColumns = new Set(db.prepare("PRAGMA table_info(applications)").all().map((r) => r.name));
+if (!appColumns.has('admin_notes')) {
+  db.exec('ALTER TABLE applications ADD COLUMN admin_notes TEXT');
+}
+
+const txColumns = new Set(db.prepare("PRAGMA table_info(transactions)").all().map((r) => r.name));
+if (!txColumns.has('transfer_code')) {
+  db.exec('ALTER TABLE transactions ADD COLUMN transfer_code TEXT');
 }
 
 const app = express();
@@ -771,7 +805,7 @@ app.get('/api/transactions', requireApiAuth, (req, res) => {
       status: r.status,
       createdAt: r.created_at,
       meta: JSON.parse(r.meta_json),
-    }))
+    })
   );
 });
 
@@ -795,7 +829,7 @@ app.post('/api/transfers/local', requireSameOrigin, requireApiAuth, (req, res) =
 
   db.prepare(
     'INSERT INTO transactions (id, user_id, kind, description, amount_cents, currency, status, meta_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-  ).run(id, req.session.userId, 'transfer_local', description, -Math.abs(amountCents), 'USD', 'submitted', JSON.stringify(meta), now);
+  ).run(id, req.session.userId, 'transfer_local', description, -Math.abs(amountCents), 'USD', 'pending', JSON.stringify(meta), now);
 
   res.json({ ok: true, transactionId: id });
 });
@@ -822,13 +856,175 @@ app.post('/api/transfers/international', requireSameOrigin, requireApiAuth, (req
 
   db.prepare(
     'INSERT INTO transactions (id, user_id, kind, description, amount_cents, currency, status, meta_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-  ).run(id, req.session.userId, 'transfer_international', description, -Math.abs(amountCents), 'USD', 'submitted', JSON.stringify(meta), now);
+  ).run(id, req.session.userId, 'transfer_international', description, -Math.abs(amountCents), 'USD', 'pending', JSON.stringify(meta), now);
 
   res.json({ ok: true, transactionId: id });
 });
 
+// Admin API Endpoints
+app.get('/api/admin/users', requireSameOrigin, requireApiAuth, (req, res) => {
+  // For demo, we'll allow any authenticated user to access admin features
+  const rows = db.prepare('SELECT id, email, full_name, balance_cents, is_verified, is_active, created_at FROM users ORDER BY created_at DESC').all();
+  res.json(rows.map(r => ({
+    id: r.id,
+    email: r.email,
+    fullName: r.full_name,
+    balanceCents: r.balance_cents,
+    isVerified: Boolean(r.is_verified),
+    isActive: Boolean(r.is_active),
+    createdAt: r.created_at
+  })));
+});
+
+app.put('/api/admin/users/:id', requireSameOrigin, requireApiAuth, (req, res) => {
+  const id = req.params.id;
+  const fullName = typeof req.body?.fullName === 'string' ? req.body.fullName.trim() : '';
+  const email = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+  const balanceCents = typeof req.body?.balanceCents === 'number' ? req.body.balanceCents : null;
+  const isVerified = typeof req.body?.isVerified === 'boolean' ? req.body.isVerified : null;
+  const isActive = typeof req.body?.isActive === 'boolean' ? req.body.isActive : null;
+
+  const updates = [];
+  const params = [];
+
+  if (fullName) {
+    updates.push('full_name = ?');
+    params.push(fullName);
+  }
+  if (email) {
+    updates.push('email = ?');
+    params.push(email);
+  }
+  if (balanceCents !== null) {
+    updates.push('balance_cents = ?');
+    params.push(balanceCents);
+  }
+  if (isVerified !== null) {
+    updates.push('is_verified = ?');
+    params.push(isVerified ? 1 : 0);
+  }
+  if (isActive !== null) {
+    updates.push('is_active = ?');
+    params.push(isActive ? 1 : 0);
+  }
+
+  if (updates.length === 0) {
+    res.status(400).json({ error: 'no_updates' });
+    return;
+  }
+
+  params.push(id);
+
+  const stmt = db.prepare(`UPDATE users SET ${updates.join(', ')} WHERE id = ?`);
+  stmt.run(...params);
+
+  // Log admin action
+  const logId = nanoid();
+  db.prepare('INSERT INTO admin_logs (id, admin_id, action, target_type, target_id, details_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)').run(
+    logId,
+    req.session.userId,
+    'update_user',
+    'user',
+    id,
+    JSON.stringify(req.body),
+    new Date().toISOString()
+  );
+
+  res.json({ ok: true });
+});
+
+app.get('/api/admin/applications', requireSameOrigin, requireApiAuth, (req, res) => {
+  const rows = db.prepare('SELECT id, type, payload_json, status, admin_notes, created_at FROM applications ORDER BY created_at DESC').all();
+  res.json(rows.map(r => ({
+    id: r.id,
+    type: r.type,
+    payload: JSON.parse(r.payload_json),
+    status: r.status,
+    adminNotes: r.admin_notes,
+    createdAt: r.created_at
+  })));
+});
+
+app.put('/api/admin/applications/:id', requireSameOrigin, requireApiAuth, (req, res) => {
+  const id = req.params.id;
+  const status = typeof req.body?.status === 'string' ? req.body.status.trim() : '';
+  const adminNotes = typeof req.body?.adminNotes === 'string' ? req.body.adminNotes.trim() : null;
+
+  if (!status) {
+    res.status(400).json({ error: 'invalid_input' });
+    return;
+  }
+
+  const updates = ['status = ?'];
+  const params = [status];
+
+  if (adminNotes !== null) {
+    updates.push('admin_notes = ?');
+    params.push(adminNotes);
+  }
+
+  params.push(id);
+
+  const stmt = db.prepare(`UPDATE applications SET ${updates.join(', ')} WHERE id = ?`);
+  stmt.run(...params);
+
+  res.json({ ok: true });
+});
+
+app.get('/api/admin/transactions', requireSameOrigin, requireApiAuth, (req, res) => {
+  const rows = db.prepare('SELECT t.*, u.full_name FROM transactions t JOIN users u ON t.user_id = u.id ORDER BY t.created_at DESC LIMIT 100').all();
+  res.json(rows.map(r => ({
+    id: r.id,
+    userId: r.user_id,
+    userFullName: r.full_name,
+    kind: r.kind,
+    description: r.description,
+    amountCents: r.amount_cents,
+    currency: r.currency,
+    status: r.status,
+    transferCode: r.transfer_code,
+    meta: JSON.parse(r.meta_json),
+    createdAt: r.created_at
+  })));
+});
+
+app.put('/api/admin/transactions/:id', requireSameOrigin, requireApiAuth, (req, res) => {
+  const id = req.params.id;
+  const status = typeof req.body?.status === 'string' ? req.body.status.trim() : '';
+  const transferCode = typeof req.body?.transferCode === 'string' ? req.body.transferCode.trim() : null;
+
+  if (!status) {
+    res.status(400).json({ error: 'invalid_input' });
+    return;
+  }
+
+  const updates = ['status = ?'];
+  const params = [status];
+
+  if (transferCode !== null) {
+    updates.push('transfer_code = ?');
+    params.push(transferCode);
+  }
+
+  params.push(id);
+
+  const stmt = db.prepare(`UPDATE transactions SET ${updates.join(', ')} WHERE id = ?`);
+  stmt.run(...params);
+
+  // If we're approving a transfer, update user balance
+  if (status === 'completed') {
+    const tx = db.prepare('SELECT user_id, amount_cents FROM transactions WHERE id = ?').get(id);
+    if (tx) {
+      // Debit the user's balance (since amount_cents is negative for outgoing transfers)
+      db.prepare('UPDATE users SET balance_cents = balance_cents + ? WHERE id = ?').run(tx.amount_cents, tx.user_id);
+    }
+  }
+
+  res.json({ ok: true });
+});
+
 app.use(
-  ['/dashboard.html', '/dashboard-transactions.html', '/dashboard-cards.html', '/dashboard-local-transfer.html', '/dashboard-international-transfer.html', '/dashboard-deposit.html', '/dashboard-currency-swap.html', '/dashboard-grants.html', '/dashboard-settings.html', '/dashboard-support.html'],
+  ['/dashboard.html', '/dashboard-transactions.html', '/dashboard-cards.html', '/dashboard-local-transfer.html', '/dashboard-international-transfer.html', '/dashboard-deposit.html', '/dashboard-currency-swap.html', '/dashboard-grants.html', '/dashboard-settings.html', '/dashboard-support.html', '/admin.html'],
   requireAuth
 );
 
