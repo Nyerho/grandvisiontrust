@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "better-sqlite3": "^12.11.1",
     "cookie-session": "^2.1.0",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
     "helmet": "^7.2.0",
-    "nanoid": "^3.3.15"
+    "nanoid": "^3.3.15",
+    "sql.js": "^1.14.1"
   }
 }

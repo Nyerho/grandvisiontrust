@@ -1,3 +1,8 @@
 
 const app = require('../server');
-module.exports = app;
+
+// Export a Vercel-compatible handler that waits for DB initialization
+module.exports = async (req, res) => {
+  await require('../server').initPromise;
+  return app(req, res);
+};

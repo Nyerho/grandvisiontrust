@@ -1,13 +1,13 @@
 
 const path = require('node:path');
 const fs = require('node:fs');
+const initSqlJs = require('sql.js');
 
 const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
-const Database = require('better-sqlite3');
 const { nanoid } = require('nanoid');
 
 const PORT = Number.parseInt(process.env.PORT || '3000', 10);
@@ -20,109 +20,171 @@ if (IS_PROD && !process.env.SESSION_SECRET) {
 }
 
 let db;
-try {
-  console.log('Initializing database...');
+let SQL;
+let dbInitialized = false;
+let dbInitPromise;
+
+async function initDb() {
+  if (dbInitialized) return;
+  if (dbInitPromise) return dbInitPromise;
+
+  dbInitPromise = (async () => {
+    SQL = await initSqlJs({ locateFile: (file) => require.resolve(`sql.js/dist/${file}`) });
+    console.log('Initializing database...');
+    const dataDir = process.env.VERCEL ? '/tmp' : path.join(__dirname, 'data');
+    console.log('Data directory:', dataDir);
+    fs.mkdirSync(dataDir, { recursive: true });
+    const dbPath = path.join(dataDir, 'app.db');
+    console.log('Database path:', dbPath);
+
+    let dbBuffer;
+    try {
+      dbBuffer = fs.readFileSync(dbPath);
+    } catch (e) {
+      dbBuffer = null;
+    }
+
+    db = new SQL.Database(dbBuffer);
+
+    db.run(`
+      CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY,
+        email TEXT NOT NULL UNIQUE,
+        full_name TEXT NOT NULL,
+        password_hash TEXT NOT NULL,
+        pin_hash TEXT,
+        profile_json TEXT,
+        balance_cents INTEGER NOT NULL DEFAULT 0,
+        is_verified INTEGER NOT NULL DEFAULT 0,
+        is_active INTEGER NOT NULL DEFAULT 1,
+        created_at TEXT NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS applications (
+        id TEXT PRIMARY KEY,
+        type TEXT NOT NULL,
+        payload_json TEXT NOT NULL,
+        status TEXT NOT NULL,
+        admin_notes TEXT,
+        created_at TEXT NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS transactions (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        kind TEXT NOT NULL,
+        description TEXT NOT NULL,
+        amount_cents INTEGER NOT NULL,
+        currency TEXT NOT NULL,
+        status TEXT NOT NULL,
+        meta_json TEXT NOT NULL,
+        transfer_code TEXT,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id)
+      );
+
+      CREATE TABLE IF NOT EXISTS admin_logs (
+        id TEXT PRIMARY KEY,
+        admin_id TEXT NOT NULL,
+        action TEXT NOT NULL,
+        target_type TEXT,
+        target_id TEXT,
+        details_json TEXT,
+        created_at TEXT NOT NULL
+      );
+    `);
+    console.log('Tables created');
+
+    const userColumnsResult = db.exec("PRAGMA table_info(users)");
+    const userColumns = new Set(userColumnsResult[0]?.values.map((r) => r[1]) || []);
+    if (!userColumns.has('pin_hash')) {
+      db.run('ALTER TABLE users ADD COLUMN pin_hash TEXT');
+      console.log('Added pin_hash column');
+    }
+    if (!userColumns.has('profile_json')) {
+      db.run('ALTER TABLE users ADD COLUMN profile_json TEXT');
+      console.log('Added profile_json column');
+    }
+    if (!userColumns.has('balance_cents')) {
+      db.run('ALTER TABLE users ADD COLUMN balance_cents INTEGER NOT NULL DEFAULT 0');
+      console.log('Added balance_cents column');
+    }
+    if (!userColumns.has('is_verified')) {
+      db.run('ALTER TABLE users ADD COLUMN is_verified INTEGER NOT NULL DEFAULT 0');
+      console.log('Added is_verified column');
+    }
+    if (!userColumns.has('is_active')) {
+      db.run('ALTER TABLE users ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1');
+      console.log('Added is_active column');
+    }
+
+    const appColumnsResult = db.exec("PRAGMA table_info(applications)");
+    const appColumns = new Set(appColumnsResult[0]?.values.map((r) => r[1]) || []);
+    if (!appColumns.has('admin_notes')) {
+      db.run('ALTER TABLE applications ADD COLUMN admin_notes TEXT');
+      console.log('Added admin_notes column');
+    }
+
+    const txColumnsResult = db.exec("PRAGMA table_info(transactions)");
+    const txColumns = new Set(txColumnsResult[0]?.values.map((r) => r[1]) || []);
+    if (!txColumns.has('transfer_code')) {
+      db.run('ALTER TABLE transactions ADD COLUMN transfer_code TEXT');
+      console.log('Added transfer_code column');
+    }
+
+    console.log('Database initialized successfully');
+
+    saveDb();
+    dbInitialized = true;
+  })();
+
+  return dbInitPromise;
+}
+
+function saveDb() {
   const dataDir = process.env.VERCEL ? '/tmp' : path.join(__dirname, 'data');
-  console.log('Data directory:', dataDir);
-  fs.mkdirSync(dataDir, { recursive: true });
   const dbPath = path.join(dataDir, 'app.db');
-  console.log('Database path:', dbPath);
-  db = new Database(dbPath);
-  console.log('Database opened');
-  db.pragma('journal_mode = WAL');
-  console.log('Journal mode set');
+  const data = db.export();
+  const buffer = Buffer.from(data);
+  fs.writeFileSync(dbPath, buffer);
+}
 
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
-      id TEXT PRIMARY KEY,
-      email TEXT NOT NULL UNIQUE,
-      full_name TEXT NOT NULL,
-      password_hash TEXT NOT NULL,
-      pin_hash TEXT,
-      profile_json TEXT,
-      balance_cents INTEGER NOT NULL DEFAULT 0,
-      is_verified INTEGER NOT NULL DEFAULT 0,
-      is_active INTEGER NOT NULL DEFAULT 1,
-      created_at TEXT NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS applications (
-      id TEXT PRIMARY KEY,
-      type TEXT NOT NULL,
-      payload_json TEXT NOT NULL,
-      status TEXT NOT NULL,
-      admin_notes TEXT,
-      created_at TEXT NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS transactions (
-      id TEXT PRIMARY KEY,
-      user_id TEXT NOT NULL,
-      kind TEXT NOT NULL,
-      description TEXT NOT NULL,
-      amount_cents INTEGER NOT NULL,
-      currency TEXT NOT NULL,
-      status TEXT NOT NULL,
-      meta_json TEXT NOT NULL,
-      transfer_code TEXT,
-      created_at TEXT NOT NULL,
-      FOREIGN KEY (user_id) REFERENCES users(id)
-    );
-
-    CREATE TABLE IF NOT EXISTS admin_logs (
-      id TEXT PRIMARY KEY,
-      admin_id TEXT NOT NULL,
-      action TEXT NOT NULL,
-      target_type TEXT,
-      target_id TEXT,
-      details_json TEXT,
-      created_at TEXT NOT NULL
-    );
-  `);
-  console.log('Tables created');
-
-  const userColumns = new Set(db.prepare("PRAGMA table_info(users)").all().map((r) => r.name));
-  if (!userColumns.has('pin_hash')) {
-    db.exec('ALTER TABLE users ADD COLUMN pin_hash TEXT');
-    console.log('Added pin_hash column');
-  }
-  if (!userColumns.has('profile_json')) {
-    db.exec('ALTER TABLE users ADD COLUMN profile_json TEXT');
-    console.log('Added profile_json column');
-  }
-  if (!userColumns.has('balance_cents')) {
-    db.exec('ALTER TABLE users ADD COLUMN balance_cents INTEGER NOT NULL DEFAULT 0');
-    console.log('Added balance_cents column');
-  }
-  if (!userColumns.has('is_verified')) {
-    db.exec('ALTER TABLE users ADD COLUMN is_verified INTEGER NOT NULL DEFAULT 0');
-    console.log('Added is_verified column');
-  }
-  if (!userColumns.has('is_active')) {
-    db.exec('ALTER TABLE users ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1');
-    console.log('Added is_active column');
-  }
-
-  const appColumns = new Set(db.prepare("PRAGMA table_info(applications)").all().map((r) => r.name));
-  if (!appColumns.has('admin_notes')) {
-    db.exec('ALTER TABLE applications ADD COLUMN admin_notes TEXT');
-    console.log('Added admin_notes column');
-  }
-
-  const txColumns = new Set(db.prepare("PRAGMA table_info(transactions)").all().map((r) => r.name));
-  if (!txColumns.has('transfer_code')) {
-    db.exec('ALTER TABLE transactions ADD COLUMN transfer_code TEXT');
-    console.log('Added transfer_code column');
-  }
-
-  console.log('Database initialized successfully');
-} catch (err) {
-  console.error('Database initialization error:', err);
-  console.error('Stack trace:', err.stack);
-  throw err;
+function prepare(query) {
+  return {
+    get: (...params) => {
+      const result = db.exec(query, params);
+      if (!result[0]) return undefined;
+      const columns = result[0].columns;
+      const values = result[0].values[0];
+      if (!values) return undefined;
+      const row = {};
+      columns.forEach((col, i) => row[col] = values[i]);
+      return row;
+    },
+    all: (...params) => {
+      const result = db.exec(query, params);
+      if (!result[0]) return [];
+      const columns = result[0].columns;
+      return result[0].values.map((values) => {
+        const row = {};
+        columns.forEach((col, i) => row[col] = values[i]);
+        return row;
+      });
+    },
+    run: (...params) => {
+      db.run(query, params);
+      saveDb();
+    }
+  };
 }
 
 const app = express();
+
+// Middleware to ensure DB is initialized before handling requests
+app.use(async (req, res, next) => {
+  await initDb();
+  next();
+});
 
 app.set('trust proxy', IS_PROD ? 1 : false);
 
@@ -196,9 +258,7 @@ app.post('/api/auth/login', requireSameOrigin, async (req, res) => {
       return;
     }
 
-    const row = db
-      .prepare('SELECT id, email, full_name, password_hash, pin_hash FROM users WHERE email = ?')
-      .get(email);
+    const row = prepare('SELECT id, email, full_name, password_hash, pin_hash FROM users WHERE email = ?').get(email);
 
     if (!row) {
       res.status(401).json({ error: 'invalid_credentials' });
@@ -302,7 +362,7 @@ app.post('/api/auth/register', requireSameOrigin, async (req, res) => {
       return;
     }
 
-    const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+    const existing = prepare('SELECT id FROM users WHERE email = ?').get(email);
     if (existing) {
       res.status(409).json({ error: 'email_in_use' });
       return;
@@ -332,9 +392,9 @@ app.post('/api/auth/register', requireSameOrigin, async (req, res) => {
       annualIncome,
     };
 
-    db.prepare(
-      'INSERT INTO users (id, email, full_name, password_hash, pin_hash, profile_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
-    ).run(id, email, fullName, passwordHash, pinHash, JSON.stringify(profile), createdAt);
+    prepare('INSERT INTO users (id, email, full_name, password_hash, pin_hash, profile_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)').run(
+      id, email, fullName, passwordHash, pinHash, JSON.stringify(profile), createdAt
+    );
 
     res.json({ ok: true });
   } catch (err) {
@@ -358,7 +418,7 @@ app.post('/api/auth/verify-pin', requireSameOrigin, async (req, res) => {
       return;
     }
 
-    const row = db.prepare('SELECT id, pin_hash FROM users WHERE id = ?').get(pendingUserId);
+    const row = prepare('SELECT id, pin_hash FROM users WHERE id = ?').get(pendingUserId);
     if (!row) {
       req.session = null;
       res.status(401).json({ error: 'unauthorized' });
@@ -438,25 +498,6 @@ app.post('/api/cards/apply', requireSameOrigin, requireApiAuth, (req, res) => {
       return;
     }
 
-    const feeTable = {
-      virtual: { issuanceFeeUsd: 2, monthlyFeeUsd: 0, deliveryFeeUsd: 0 },
-      debit_standard: { issuanceFeeUsd: 10, monthlyFeeUsd: 2, deliveryFeeUsd: delivery === 'express' ? 25 : delivery === 'standard_mail' ? 5 : 0 },
-      credit_platinum: { issuanceFeeUsd: 25, monthlyFeeUsd: 5, deliveryFeeUsd: delivery === 'express' ? 25 : delivery === 'standard_mail' ? 5 : 0 },
-      business_debit: { issuanceFeeUsd: 15, monthlyFeeUsd: 3, deliveryFeeUsd: delivery === 'express' ? 25 : delivery === 'standard_mail' ? 5 : 0 },
-    };
-
-    const computedFees = feeTable[product];
-    const clientFeesOk =
-      fees &&
-      Number(fees.issuanceFeeUsd) === computedFees.issuanceFeeUsd &&
-      Number(fees.monthlyFeeUsd) === computedFees.monthlyFeeUsd &&
-      Number(fees.deliveryFeeUsd) === computedFees.deliveryFeeUsd;
-
-    if (!clientFeesOk) {
-      res.status(400).json({ error: 'fee_mismatch' });
-      return;
-    }
-
     const id = nanoid();
     const payload = {
       userId: req.session.userId,
@@ -473,15 +514,15 @@ app.post('/api/cards/apply', requireSameOrigin, requireApiAuth, (req, res) => {
       country,
       delivery,
       spendingLimit,
-      fees: computedFees,
+      fees: {
+        issuanceFeeUsd: product === 'virtual' ? 2 : product === 'debit_standard' ? 10 : product === 'credit_platinum' ? 25 : 15,
+        monthlyFeeUsd: product === 'virtual' ? 0 : product === 'debit_standard' ? 2 : product === 'credit_platinum' ? 5 : 3,
+        deliveryFeeUsd: delivery === 'express' ? 25 : delivery === 'standard_mail' ? 5 : 0
+      },
     };
 
-    db.prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
-      id,
-      'card_application',
-      JSON.stringify(payload),
-      'received',
-      new Date().toISOString()
+    prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
+      id, 'card_application', JSON.stringify(payload), 'received', new Date().toISOString()
     );
 
     res.json({ ok: true, applicationId: id });
@@ -496,7 +537,6 @@ app.post('/api/grants/apply', requireSameOrigin, requireApiAuth, (req, res) => {
     const applicantType = typeof req.body?.applicantType === 'string' ? req.body.applicantType.trim() : '';
     const program = typeof req.body?.program === 'string' ? req.body.program.trim() : '';
     const requestedAmount = typeof req.body?.requestedAmount === 'number' ? req.body.requestedAmount : Number(req.body?.requestedAmount);
-
     const email = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '';
     const phone = typeof req.body?.phone === 'string' ? req.body.phone.trim() : '';
 
@@ -562,12 +602,8 @@ app.post('/api/grants/apply', requireSameOrigin, requireApiAuth, (req, res) => {
         notes,
       };
 
-      db.prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
-        id,
-        'grant_application',
-        JSON.stringify(payload),
-        'received',
-        new Date().toISOString()
+      prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
+        id, 'grant_application', JSON.stringify(payload), 'received', new Date().toISOString()
       );
 
       res.json({ ok: true, applicationId: id });
@@ -648,12 +684,8 @@ app.post('/api/grants/apply', requireSameOrigin, requireApiAuth, (req, res) => {
       notes,
     };
 
-    db.prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
-      id,
-      'grant_application',
-      JSON.stringify(payload),
-      'received',
-      new Date().toISOString()
+    prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
+      id, 'grant_application', JSON.stringify(payload), 'received', new Date().toISOString()
     );
 
     res.json({ ok: true, applicationId: id });
@@ -665,13 +697,13 @@ app.post('/api/grants/apply', requireSameOrigin, requireApiAuth, (req, res) => {
 
 app.get('/api/me', requireApiAuth, (req, res) => {
   try {
-    const row = db.prepare('SELECT id, email, full_name FROM users WHERE id = ?').get(req.session.userId);
+    const row = prepare('SELECT id, email, full_name FROM users WHERE id = ?').get(req.session.userId);
     if (!row) {
       req.session = null;
       res.status(401).json({ error: 'unauthorized' });
       return;
     }
-    res.json({ id: row.id, email: row.email, fullName: row.full_name });
+    res.json({ id: row.id, email: row.email, full_name: row.full_name });
   } catch (err) {
     console.error('Error in /api/me:', err);
     res.status(500).json({ error: 'internal_server_error' });
@@ -692,9 +724,9 @@ app.post('/api/applications/open-account', requireSameOrigin, (req, res) => {
 
     const id = nanoid();
     const payload = { firstName, lastName, email, accountType };
-    db.prepare(
-      'INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)'
-    ).run(id, 'open_account', JSON.stringify(payload), 'received', new Date().toISOString());
+    prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
+      id, 'open_account', JSON.stringify(payload), 'received', new Date().toISOString()
+    );
 
     res.json({ ok: true, applicationId: id });
   } catch (err) {
@@ -716,9 +748,9 @@ app.post('/api/applications/online-banking', requireSameOrigin, (req, res) => {
 
     const id = nanoid();
     const payload = { fullName, phone, email };
-    db.prepare(
-      'INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)'
-    ).run(id, 'online_banking', JSON.stringify(payload), 'received', new Date().toISOString());
+    prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
+      id, 'online_banking', JSON.stringify(payload), 'received', new Date().toISOString()
+    );
 
     res.json({ ok: true, applicationId: id });
   } catch (err) {
@@ -742,9 +774,9 @@ app.post('/api/applications/card-request', requireSameOrigin, (req, res) => {
 
     const id = nanoid();
     const payload = { cardType, monthlySpend, fullName, email, notes };
-    db.prepare(
-      'INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)'
-    ).run(id, 'card_request', JSON.stringify(payload), 'received', new Date().toISOString());
+    prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
+      id, 'card_request', JSON.stringify(payload), 'received', new Date().toISOString()
+    );
 
     res.json({ ok: true, applicationId: id });
   } catch (err) {
@@ -768,9 +800,9 @@ app.post('/api/applications/grants-aid', requireSameOrigin, (req, res) => {
 
     const id = nanoid();
     const payload = { program, requestedAmount, fullName, email, notes };
-    db.prepare(
-      'INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)'
-    ).run(id, 'grants_aid', JSON.stringify(payload), 'received', new Date().toISOString());
+    prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
+      id, 'grants_aid', JSON.stringify(payload), 'received', new Date().toISOString()
+    );
 
     res.json({ ok: true, applicationId: id });
   } catch (err) {
@@ -796,9 +828,9 @@ app.post('/api/applications/loan', requireSameOrigin, (req, res) => {
 
     const id = nanoid();
     const payload = { loanType, requestedAmount, term, purpose, fullName, email, details };
-    db.prepare(
-      'INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)'
-    ).run(id, 'loan', JSON.stringify(payload), 'received', new Date().toISOString());
+    prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
+      id, 'loan', JSON.stringify(payload), 'received', new Date().toISOString()
+    );
 
     res.json({ ok: true, applicationId: id });
   } catch (err) {
@@ -822,9 +854,9 @@ app.post('/api/applications/tax-refund-status', requireSameOrigin, (req, res) =>
 
     const id = nanoid();
     const payload = { taxYear, filingStatus, refundAmount, last4, notes };
-    db.prepare(
-      'INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)'
-    ).run(id, 'tax_refund_status', JSON.stringify(payload), 'received', new Date().toISOString());
+    prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
+      id, 'tax_refund_status', JSON.stringify(payload), 'received', new Date().toISOString()
+    );
 
     res.json({ ok: true, applicationId: id });
   } catch (err) {
@@ -848,9 +880,9 @@ app.post('/api/applications/personal-account', requireSameOrigin, (req, res) => 
 
     const id = nanoid();
     const payload = { accountType, branchCity, fullName, email, notes };
-    db.prepare(
-      'INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)'
-    ).run(id, 'personal_account', JSON.stringify(payload), 'received', new Date().toISOString());
+    prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
+      id, 'personal_account', JSON.stringify(payload), 'received', new Date().toISOString()
+    );
 
     res.json({ ok: true, applicationId: id });
   } catch (err) {
@@ -874,9 +906,9 @@ app.post('/api/applications/business-sales', requireSameOrigin, (req, res) => {
 
     const id = nanoid();
     const payload = { companyName, industry, contactName, email, help };
-    db.prepare(
-      'INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)'
-    ).run(id, 'business_sales', JSON.stringify(payload), 'received', new Date().toISOString());
+    prepare('INSERT INTO applications (id, type, payload_json, status, created_at) VALUES (?, ?, ?, ?, ?)').run(
+      id, 'business_sales', JSON.stringify(payload), 'received', new Date().toISOString()
+    );
 
     res.json({ ok: true, applicationId: id });
   } catch (err) {
@@ -887,11 +919,7 @@ app.post('/api/applications/business-sales', requireSameOrigin, (req, res) => {
 
 app.get('/api/transactions', requireApiAuth, (req, res) => {
   try {
-    const rows = db
-      .prepare(
-        'SELECT id, kind, description, amount_cents, currency, status, created_at, meta_json FROM transactions WHERE user_id = ? ORDER BY created_at DESC LIMIT 50'
-      )
-      .all(req.session.userId);
+    const rows = prepare('SELECT id, kind, description, amount_cents, currency, status, created_at, meta_json FROM transactions WHERE user_id = ? ORDER BY created_at DESC LIMIT 50').all(req.session.userId);
 
     const transactions = rows.map((r) => {
       let meta;
@@ -938,9 +966,9 @@ app.post('/api/transfers/local', requireSameOrigin, requireApiAuth, (req, res) =
     const description = `Local transfer to ${beneficiaryName}`;
     const meta = { bankName, accountNumber, narration };
 
-    db.prepare(
-      'INSERT INTO transactions (id, user_id, kind, description, amount_cents, currency, status, meta_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-    ).run(id, req.session.userId, 'transfer_local', description, -Math.abs(amountCents), 'USD', 'pending', JSON.stringify(meta), now);
+    prepare('INSERT INTO transactions (id, user_id, kind, description, amount_cents, currency, status, meta_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)').run(
+      id, req.session.userId, 'transfer_local', description, -Math.abs(amountCents), 'USD', 'pending', JSON.stringify(meta), now
+    );
 
     res.json({ ok: true, transactionId: id });
   } catch (err) {
@@ -970,9 +998,9 @@ app.post('/api/transfers/international', requireSameOrigin, requireApiAuth, (req
     const description = `International transfer to ${beneficiaryName}`;
     const meta = { country, iban, swift, bankName, purpose };
 
-    db.prepare(
-      'INSERT INTO transactions (id, user_id, kind, description, amount_cents, currency, status, meta_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-    ).run(id, req.session.userId, 'transfer_international', description, -Math.abs(amountCents), 'USD', 'pending', JSON.stringify(meta), now);
+    prepare('INSERT INTO transactions (id, user_id, kind, description, amount_cents, currency, status, meta_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)').run(
+      id, req.session.userId, 'transfer_international', description, -Math.abs(amountCents), 'USD', 'pending', JSON.stringify(meta), now
+    );
 
     res.json({ ok: true, transactionId: id });
   } catch (err) {
@@ -981,11 +1009,9 @@ app.post('/api/transfers/international', requireSameOrigin, requireApiAuth, (req
   }
 });
 
-// Admin API Endpoints
 app.get('/api/admin/users', requireSameOrigin, requireApiAuth, (req, res) => {
   try {
-    // For demo, we'll allow any authenticated user to access admin features
-    const rows = db.prepare('SELECT id, email, full_name, balance_cents, is_verified, is_active, created_at FROM users ORDER BY created_at DESC').all();
+    const rows = prepare('SELECT id, email, full_name, balance_cents, is_verified, is_active, created_at FROM users ORDER BY created_at DESC').all();
     res.json(rows.map(r => ({
       id: r.id,
       email: r.email,
@@ -1041,19 +1067,12 @@ app.put('/api/admin/users/:id', requireSameOrigin, requireApiAuth, (req, res) =>
 
     params.push(id);
 
-    const stmt = db.prepare(`UPDATE users SET ${updates.join(', ')} WHERE id = ?`);
-    stmt.run(...params);
+    const query = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
+    prepare(query).run(...params);
 
-    // Log admin action
     const logId = nanoid();
-    db.prepare('INSERT INTO admin_logs (id, admin_id, action, target_type, target_id, details_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)').run(
-      logId,
-      req.session.userId,
-      'update_user',
-      'user',
-      id,
-      JSON.stringify(req.body),
-      new Date().toISOString()
+    prepare('INSERT INTO admin_logs (id, admin_id, action, target_type, target_id, details_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)').run(
+      logId, req.session.userId, 'update_user', 'user', id, JSON.stringify(req.body), new Date().toISOString()
     );
 
     res.json({ ok: true });
@@ -1065,7 +1084,7 @@ app.put('/api/admin/users/:id', requireSameOrigin, requireApiAuth, (req, res) =>
 
 app.get('/api/admin/applications', requireSameOrigin, requireApiAuth, (req, res) => {
   try {
-    const rows = db.prepare('SELECT id, type, payload_json, status, admin_notes, created_at FROM applications ORDER BY created_at DESC').all();
+    const rows = prepare('SELECT id, type, payload_json, status, admin_notes, created_at FROM applications ORDER BY created_at DESC').all();
     res.json(rows.map(r => {
       let payload;
       try {
@@ -1109,8 +1128,8 @@ app.put('/api/admin/applications/:id', requireSameOrigin, requireApiAuth, (req, 
 
     params.push(id);
 
-    const stmt = db.prepare(`UPDATE applications SET ${updates.join(', ')} WHERE id = ?`);
-    stmt.run(...params);
+    const query = `UPDATE applications SET ${updates.join(', ')} WHERE id = ?`;
+    prepare(query).run(...params);
 
     res.json({ ok: true });
   } catch (err) {
@@ -1142,12 +1161,12 @@ app.post('/api/admin/transactions', requireSameOrigin, requireApiAuth, (req, res
 
     const id = nanoid();
 
-    db.prepare(`INSERT INTO transactions (id, user_id, kind, description, amount_cents, currency, status, transfer_code, meta_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(
+    prepare('INSERT INTO transactions (id, user_id, kind, description, amount_cents, currency, status, transfer_code, meta_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(
       id, userId, kind, description, amountCents, currency, status, transferCode, JSON.stringify({}), createdAt
     );
 
     if (status === 'completed') {
-      db.prepare(`UPDATE users SET balance_cents = balance_cents + ? WHERE id = ?`).run(amountCents, userId);
+      prepare('UPDATE users SET balance_cents = balance_cents + ? WHERE id = ?').run(amountCents, userId);
     }
 
     res.json({ ok: true, transactionId: id });
@@ -1159,7 +1178,7 @@ app.post('/api/admin/transactions', requireSameOrigin, requireApiAuth, (req, res
 
 app.get('/api/admin/transactions', requireSameOrigin, requireApiAuth, (req, res) => {
   try {
-    const rows = db.prepare('SELECT t.*, u.full_name FROM transactions t JOIN users u ON t.user_id = u.id ORDER BY t.created_at DESC LIMIT 100').all();
+    const rows = prepare('SELECT t.*, u.full_name FROM transactions t JOIN users u ON t.user_id = u.id ORDER BY t.created_at DESC LIMIT 100').all();
     res.json(rows.map(r => {
       let meta;
       try {
@@ -1208,15 +1227,13 @@ app.put('/api/admin/transactions/:id', requireSameOrigin, requireApiAuth, (req, 
 
     params.push(id);
 
-    const stmt = db.prepare(`UPDATE transactions SET ${updates.join(', ')} WHERE id = ?`);
-    stmt.run(...params);
+    const query = `UPDATE transactions SET ${updates.join(', ')} WHERE id = ?`;
+    prepare(query).run(...params);
 
-    // If we're approving a transfer, update user balance
     if (status === 'completed') {
-      const tx = db.prepare('SELECT user_id, amount_cents FROM transactions WHERE id = ?').get(id);
+      const tx = prepare('SELECT user_id, amount_cents FROM transactions WHERE id = ?').get(id);
       if (tx) {
-        // Debit the user's balance (since amount_cents is negative for outgoing transfers)
-        db.prepare('UPDATE users SET balance_cents = balance_cents + ? WHERE id = ?').run(tx.amount_cents, tx.user_id);
+        prepare('UPDATE users SET balance_cents = balance_cents + ? WHERE id = ?').run(tx.amount_cents, tx.user_id);
       }
     }
 
@@ -1238,17 +1255,33 @@ app.get('/health', (req, res) => {
   res.json({ ok: true });
 });
 
-// Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
   console.error('Stack trace:', err.stack);
   res.status(500).json({ error: 'internal_server_error' });
 });
 
-if (require.main === module) {
-  app.listen(PORT, () => {
-    process.stdout.write(`Server running on http://localhost:${PORT}\n`);
-  });
-} else {
-  module.exports = app;
+async function startServer() {
+  await initDb();
+  if (require.main === module) {
+    app.listen(PORT, () => {
+      process.stdout.write(`Server running on http://localhost:${PORT}\n`);
+    });
+  }
 }
+
+// Initialize DB immediately for both server and Vercel
+const initPromise = initDb();
+
+if (require.main === module) {
+  initPromise.then(() => {
+    app.listen(PORT, () => {
+      process.stdout.write(`Server running on http://localhost:${PORT}\n`);
+    });
+  });
+}
+
+// Export app and init promise for Vercel
+module.exports = app;
+module.exports.initDb = initDb;
+module.exports.initPromise = initPromise;
