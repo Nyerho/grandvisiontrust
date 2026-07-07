@@ -92,6 +92,12 @@ async function initDb() {
         details_json TEXT,
         created_at TEXT NOT NULL
       );
+
+      CREATE TABLE IF NOT EXISTS admin_settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+      );
     `);
     console.log('Tables created');
 
@@ -131,6 +137,25 @@ async function initDb() {
       db.run('ALTER TABLE transactions ADD COLUMN transfer_code TEXT');
       console.log('Added transfer_code column');
     }
+
+    // Initialize default settings
+    const defaultSettings = {
+      btc_address: '',
+      eth_address: '',
+      usdt_address: '',
+      bank_name: 'GrandVisionTrust Bank',
+      routing_number: '251480576',
+      swift_code: 'GVTBUS33',
+      support_email: 'support@grandvisiontrust.com',
+      support_phone: '1-800-BANKING'
+    };
+
+    Object.entries(defaultSettings).forEach(([key, value]) => {
+      const existing = prepare('SELECT * FROM admin_settings WHERE key = ?').get(key);
+      if (!existing) {
+        prepare('INSERT INTO admin_settings (key, value, updated_at) VALUES (?, ?, ?)').run(key, value, new Date().toISOString());
+      }
+    });
 
     console.log('Database initialized successfully');
 
@@ -1027,6 +1052,39 @@ app.get('/api/admin/users', requireSameOrigin, requireApiAuth, (req, res) => {
     })));
   } catch (err) {
     console.error('Error in /api/admin/users:', err);
+    res.status(500).json({ error: 'internal_server_error' });
+  }
+});
+
+// Admin Settings Endpoints
+app.get('/api/admin/settings', requireSameOrigin, requireApiAuth, (req, res) => {
+  try {
+    const rows = prepare('SELECT key, value FROM admin_settings').all();
+    const settings = {};
+    rows.forEach(r => {
+      settings[r.key] = r.value;
+    });
+    res.json(settings);
+  } catch (err) {
+    console.error('Error in /api/admin/settings:', err);
+    res.status(500).json({ error: 'internal_server_error' });
+  }
+});
+
+app.put('/api/admin/settings', requireSameOrigin, requireApiAuth, (req, res) => {
+  try {
+    const updates = req.body;
+    const now = new Date().toISOString();
+    
+    for (const [key, value] of Object.entries(updates)) {
+      prepare('INSERT OR REPLACE INTO admin_settings (key, value, updated_at) VALUES (?, ?, ?)').run(
+        key, String(value), now
+      );
+    }
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('Error in /api/admin/settings (PUT):', err);
     res.status(500).json({ error: 'internal_server_error' });
   }
 });

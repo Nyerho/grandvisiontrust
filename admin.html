@@ -1,15 +1,124 @@
+
 <!DOCTYPE html>
 <html lang="en" x-data="{
-    darkMode: false,
-    sidebarOpen: false,
-    activeTab: 'users',
-    showEditUserModal: false,
-    showAddTransactionModal: false,
-    users: [],
-    transactions: [],
-    applications: [],
-    currentUser: null,
-    newTransaction: {
+  darkMode: false,
+  sidebarOpen: false,
+  activeTab: 'users',
+  showEditUserModal: false,
+  showAddTransactionModal: false,
+  users: [],
+  transactions: [],
+  applications: [],
+  settings: {
+    btc_address: '',
+    eth_address: '',
+    usdt_address: '',
+    bank_name: '',
+    routing_number: '',
+    swift_code: '',
+    support_email: '',
+    support_phone: ''
+  },
+  currentUser: null,
+  newTransaction: {
+    userId: '',
+    kind: 'deposit',
+    description: '',
+    amount: 0,
+    currency: 'USD',
+    status: 'completed',
+    transferCode: '',
+    createdAt: new Date().toISOString()
+  },
+  loading: true,
+  searchUser: '',
+  searchTransaction: '',
+  async init() {
+    this.loading = true;
+    await Promise.all([this.fetchData(), this.fetchSettings()]);
+    this.loading = false;
+  },
+  async fetchData() {
+    try {
+      const [usersRes, transactionsRes, applicationsRes] = await Promise.all([
+        fetch('/api/admin/users'),
+        fetch('/api/admin/transactions'),
+        fetch('/api/admin/applications')
+      ]);
+      
+      this.users = await usersRes.json();
+      this.transactions = await transactionsRes.json();
+      this.applications = await applicationsRes.json();
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  },
+  async fetchSettings() {
+    try {
+      const res = await fetch('/api/admin/settings');
+      this.settings = await res.json();
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+    }
+  },
+  async saveSettings() {
+    try {
+      await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.settings)
+      });
+      alert('Settings saved successfully!');
+    } catch (error) {
+      console.error('Error saving settings:', error);
+    }
+  },
+  openEditUser(user) {
+    this.currentUser = { ...user, balance: user.balanceCents / 100 };
+    this.showEditUserModal = true;
+  },
+  async saveUser() {
+    try {
+      const updates = {};
+      if (this.currentUser.fullName) updates.fullName = this.currentUser.fullName;
+      if (this.currentUser.email) updates.email = this.currentUser.email;
+      if (this.currentUser.balance !== undefined) updates.balanceCents = Math.round(this.currentUser.balance * 100);
+      if (this.currentUser.isVerified !== undefined) updates.isVerified = this.currentUser.isVerified;
+      if (this.currentUser.isActive !== undefined) updates.isActive = this.currentUser.isActive;
+
+      await fetch(`/api/admin/users/${this.currentUser.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      });
+      
+      this.showEditUserModal = false;
+      await this.fetchData();
+    } catch (error) {
+      console.error('Error saving user:', error);
+    }
+  },
+  async updateTransactionStatus(id, status, transferCode = null) {
+    try {
+      await fetch(`/api/admin/transactions/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status, transferCode })
+      });
+      await this.fetchData();
+    } catch (error) {
+      console.error('Error updating transaction:', error);
+    }
+  },
+  async addTransaction() {
+    try {
+      await fetch('/api/admin/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.newTransaction)
+      });
+      this.showAddTransactionModal = false;
+      this.newTransaction = {
         userId: '',
         kind: 'deposit',
         description: '',
@@ -18,108 +127,30 @@
         status: 'completed',
         transferCode: '',
         createdAt: new Date().toISOString()
-    },
-    loading: true,
-    searchUser: '',
-    searchTransaction: '',
-    async init() {
-        this.loading = true;
-        await this.fetchData();
-        this.loading = false;
-    },
-    async fetchData() {
-        try {
-            const [usersRes, transactionsRes, applicationsRes] = await Promise.all([
-                fetch('/api/admin/users'),
-                fetch('/api/admin/transactions'),
-                fetch('/api/admin/applications')
-            ]);
-            
-            this.users = await usersRes.json();
-            this.transactions = await transactionsRes.json();
-            this.applications = await applicationsRes.json();
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    },
-    openEditUser(user) {
-        this.currentUser = { ...user, balance: user.balanceCents / 100 };
-        this.showEditUserModal = true;
-    },
-    async saveUser() {
-        try {
-            const updates = {};
-            if (this.currentUser.fullName) updates.fullName = this.currentUser.fullName;
-            if (this.currentUser.email) updates.email = this.currentUser.email;
-            if (this.currentUser.balance !== undefined) updates.balanceCents = Math.round(this.currentUser.balance * 100);
-            if (this.currentUser.isVerified !== undefined) updates.isVerified = this.currentUser.isVerified;
-            if (this.currentUser.isActive !== undefined) updates.isActive = this.currentUser.isActive;
-
-            await fetch(`/api/admin/users/${this.currentUser.id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updates)
-            });
-            
-            this.showEditUserModal = false;
-            await this.fetchData();
-        } catch (error) {
-            console.error('Error saving user:', error);
-        }
-    },
-    async updateTransactionStatus(id, status, transferCode = null) {
-        try {
-            await fetch(`/api/admin/transactions/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status, transferCode })
-            });
-            await this.fetchData();
-        } catch (error) {
-            console.error('Error updating transaction:', error);
-        }
-    },
-    async addTransaction() {
-        try {
-            await fetch('/api/admin/transactions', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(this.newTransaction)
-            });
-            this.showAddTransactionModal = false;
-            this.newTransaction = {
-                userId: '',
-                kind: 'deposit',
-                description: '',
-                amount: 0,
-                currency: 'USD',
-                status: 'completed',
-                transferCode: '',
-                createdAt: new Date().toISOString()
-            };
-            await this.fetchData();
-        } catch (error) {
-            console.error('Error adding transaction:', error);
-        }
-    },
-    filteredUsers() {
-        return this.users.filter(u => 
-            u.fullName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
-            u.email.toLowerCase().includes(this.searchUser.toLowerCase())
-        );
-    },
-    filteredTransactions() {
-        return this.transactions.filter(t => 
-            t.description.toLowerCase().includes(this.searchTransaction.toLowerCase()) ||
-            t.userFullName.toLowerCase().includes(this.searchTransaction.toLowerCase())
-        );
-    },
-    formatCurrency(cents) {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
-    },
-    formatDate(dateStr) {
-        return new Date(dateStr).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+      };
+      await this.fetchData();
+    } catch (error) {
+      console.error('Error adding transaction:', error);
     }
+  },
+  filteredUsers() {
+    return this.users.filter(u => 
+      u.fullName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
+      u.email.toLowerCase().includes(this.searchUser.toLowerCase())
+    );
+  },
+  filteredTransactions() {
+    return this.transactions.filter(t => 
+      t.description.toLowerCase().includes(this.searchTransaction.toLowerCase()) ||
+      t.userFullName.toLowerCase().includes(this.searchTransaction.toLowerCase())
+    );
+  },
+  formatCurrency(cents) {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
+  },
+  formatDate(dateStr) {
+    return new Date(dateStr).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+  }
 }">
 <head>
     <meta charset="UTF-8">
@@ -137,7 +168,6 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #6b7280; }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
@@ -161,6 +191,10 @@
                 <button @click="activeTab = 'applications'" :class="activeTab === 'applications' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all">
                     <i class="fa-solid fa-file-invoice text-lg"></i>
                     <span>Applications</span>
+                </button>
+                <button @click="activeTab = 'settings'" :class="activeTab === 'settings' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all">
+                    <i class="fa-solid fa-gear text-lg"></i>
+                    <span>Settings</span>
                 </button>
             </nav>
             <div class="p-4 border-t border-gray-200 dark:border-gray-700">
@@ -235,7 +269,7 @@
                                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                                             <td class="px-6 py-4">
                                                 <div class="flex items-center space-x-3">
-                                                    <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold" x-text="user.fullName.split(' ').map(n => n[0]).join('').substring(0, 2)"></div>
+                                                    <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold" x-text="user.fullName.split(' ').map(n => n[0]).join('').substring(0,2)"></div>
                                                     <div>
                                                         <p class="font-semibold" x-text="user.fullName"></p>
                                                     </div>
@@ -334,6 +368,73 @@
                                 <p class="text-xs text-gray-400" x-text="formatDate(app.createdAt)"></p>
                             </div>
                         </template>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div x-show="activeTab === 'settings' && !loading">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                                <h3 class="text-lg font-bold">Crypto Addresses</h3>
+                            </div>
+                            <div class="p-6 space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">BTC Address</label>
+                                    <input type="text" x-model="settings.btc_address" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">ETH Address</label>
+                                    <input type="text" x-model="settings.eth_address" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">USDT Address</label>
+                                    <input type="text" x-model="settings.usdt_address" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                                <h3 class="text-lg font-bold">Bank Account Details</h3>
+                            </div>
+                            <div class="p-6 space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Bank Name</label>
+                                    <input type="text" x-model="settings.bank_name" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Routing Number</label>
+                                    <input type="text" x-model="settings.routing_number" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">SWIFT Code</label>
+                                    <input type="text" x-model="settings.swift_code" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden md:col-span-2">
+                            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                                <h3 class="text-lg font-bold">Support Contact Details</h3>
+                            </div>
+                            <div class="p-6 space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Support Email</label>
+                                    <input type="email" x-model="settings.support_email" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Support Phone</label>
+                                    <input type="text" x-model="settings.support_phone" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="md:col-span-2 flex justify-end">
+                            <button @click="saveSettings()" class="px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-medium hover:from-green-600 hover:to-green-700">
+                                Save Settings
+                            </button>
+                        </div>
                     </div>
                 </div>
             </main>

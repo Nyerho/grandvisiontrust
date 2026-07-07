@@ -163,6 +163,25 @@
         }
     </script>
     <script defer src="assets/alpine.min.js"></script>
+    <script>
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-section').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -560,7 +579,79 @@
             </div>
         </div>
     </section>
-    <section class="py-12 lg:py-20 bg-gray-900 text-white">
+    <section class="py-12 lg:py-20 bg-gray-900 text-white" x-data="{ 
+        activeAccount: 'savings', 
+        accounts: { 
+            savings: { 
+                category: 'High Yield Savings', 
+                title: 'Trust Star Savings', 
+                minDeposit: '$0', 
+                monthlyFee: '$0', 
+                insured: true, 
+                features: [
+                    '3.75% APY — industry-leading rate', 
+                    'No minimum balance required', 
+                    'Instant transfers & mobile banking', 
+                    'Automatic savings goals & round-ups', 
+                    'NCUA insured up to $250,000'
+                ],
+                learnMoreLink: 'personal-banking.html',
+                gradientFrom: 'primary-600',
+                gradientTo: 'teal-500'
+            }, 
+            checking: { 
+                category: 'Checking Accounts', 
+                title: 'Trust Star Checking', 
+                minDeposit: '$0', 
+                monthlyFee: '$0', 
+                insured: true, 
+                features: [
+                    '$300 bonus when you set up direct deposit', 
+                    'No overdraft fees with optional coverage', 
+                    'Free debit card with 24/7 support', 
+                    'Bill pay & mobile check deposit', 
+                    'FDIC insured up to $250,000'
+                ],
+                learnMoreLink: 'personal-banking.html',
+                gradientFrom: 'blue-600',
+                gradientTo: 'indigo-500'
+            }, 
+            cds: { 
+                category: 'Certificates (CDs)', 
+                title: 'Trust Star CDs', 
+                minDeposit: '$500', 
+                monthlyFee: '$0', 
+                insured: true, 
+                features: [
+                    'Up to 4.00% APY with long-term CDs', 
+                    'Guaranteed returns for your future', 
+                    'Flexible terms from 3 months to 5 years', 
+                    'Early withdrawal options available', 
+                    'FDIC insured up to $250,000'
+                ],
+                learnMoreLink: 'personal-banking.html',
+                gradientFrom: 'purple-600',
+                gradientTo: 'pink-500'
+            }, 
+            business: { 
+                category: 'Business Banking', 
+                title: 'Trust Star Business', 
+                minDeposit: '$0', 
+                monthlyFee: '$15', 
+                insured: true, 
+                features: [
+                    'Tools for teams of all sizes', 
+                    'Multi-user access with permissions', 
+                    'Invoicing & expense tracking', 
+                    'Business debit cards & payroll', 
+                    'FDIC insured up to $250,000'
+                ],
+                learnMoreLink: 'business-banking.html',
+                gradientFrom: 'emerald-600',
+                gradientTo: 'teal-500'
+            } 
+        } 
+    }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
                 <div>
@@ -568,7 +659,11 @@
                     <h2 class="text-4xl lg:text-5xl font-black mb-6">Find your perfect account</h2>
                     <p class="text-gray-400 text-lg mb-8">Every account: zero hidden fees, 24/7 access, and our promise to put you first always.</p>
                     <div class="space-y-4">
-                        <div class="relative group cursor-pointer transition-all duration-300">
+                        <div 
+                            @click="activeAccount = 'savings'" 
+                            class="relative group cursor-pointer transition-all duration-300"
+                            :class="{ 'ring-2 ring-primary-500': activeAccount === 'savings' }"
+                        >
                             <div class="absolute -inset-1 bg-gradient-to-r from-primary-600 to-emerald-600 rounded-2xl blur opacity-30 group-hover:opacity-60 transition-opacity duration-300"></div>
                             <div class="relative bg-gray-800/90 border border-gray-700 rounded-2xl p-5 flex items-center justify-between group-hover:bg-gray-800 transition-colors">
                                 <div class="flex items-center gap-4">
@@ -583,7 +678,11 @@
                                 <i class="fa-solid fa-chevron-right text-primary-400 group-hover:translate-x-1 transition-transform"></i>
                             </div>
                         </div>
-                        <div class="relative group cursor-pointer transition-all duration-300">
+                        <div 
+                            @click="activeAccount = 'checking'" 
+                            class="relative group cursor-pointer transition-all duration-300"
+                            :class="{ 'ring-2 ring-blue-500': activeAccount === 'checking' }"
+                        >
                             <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-30 group-hover:opacity-60 transition-opacity duration-300"></div>
                             <div class="relative bg-gray-800/90 border border-gray-700 rounded-2xl p-5 flex items-center justify-between group-hover:bg-gray-800 transition-colors">
                                 <div class="flex items-center gap-4">
@@ -598,7 +697,11 @@
                                 <i class="fa-solid fa-chevron-right text-blue-400 group-hover:translate-x-1 transition-transform"></i>
                             </div>
                         </div>
-                        <div class="relative group cursor-pointer transition-all duration-300">
+                        <div 
+                            @click="activeAccount = 'cds'" 
+                            class="relative group cursor-pointer transition-all duration-300"
+                            :class="{ 'ring-2 ring-purple-500': activeAccount === 'cds' }"
+                        >
                             <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-30 group-hover:opacity-60 transition-opacity duration-300"></div>
                             <div class="relative bg-gray-800/90 border border-gray-700 rounded-2xl p-5 flex items-center justify-between group-hover:bg-gray-800 transition-colors">
                                 <div class="flex items-center gap-4">
@@ -613,7 +716,11 @@
                                 <i class="fa-solid fa-chevron-right text-purple-400 group-hover:translate-x-1 transition-transform"></i>
                             </div>
                         </div>
-                        <div class="relative group cursor-pointer transition-all duration-300">
+                        <div 
+                            @click="activeAccount = 'business'" 
+                            class="relative group cursor-pointer transition-all duration-300"
+                            :class="{ 'ring-2 ring-emerald-500': activeAccount === 'business' }"
+                        >
                             <div class="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl blur opacity-30 group-hover:opacity-60 transition-opacity duration-300"></div>
                             <div class="relative bg-gray-800/90 border border-gray-700 rounded-2xl p-5 flex items-center justify-between group-hover:bg-gray-800 transition-colors">
                                 <div class="flex items-center gap-4">
@@ -637,19 +744,19 @@
                             <img src="images/home/metro.jpg" alt="GrandVisionTrust Savings" class="w-full h-64 object-cover opacity-80">
                             <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 right-0 p-6">
-                                <p class="text-primary-400 text-sm font-semibold uppercase tracking-wider mb-2">High Yield Savings</p>
-                                <h3 class="text-3xl font-black mb-6">Trust Star Savings</h3>
+                                <p class="text-primary-400 text-sm font-semibold uppercase tracking-wider mb-2" x-text="accounts[activeAccount].category"></p>
+                                <h3 class="text-3xl font-black mb-6" x-text="accounts[activeAccount].title"></h3>
                             </div>
                         </div>
                         <div class="p-6">
                             <div class="grid grid-cols-3 gap-4 mb-6">
                                 <div class="text-center p-4 bg-gray-900/50 rounded-2xl border-b-2 border-gray-700">
                                     <p class="text-gray-400 text-xs font-medium mb-2">MIN. DEPOSIT</p>
-                                    <p class="text-2xl font-bold">$0</p>
+                                    <p class="text-2xl font-bold" x-text="accounts[activeAccount].minDeposit"></p>
                                 </div>
                                 <div class="text-center p-4 bg-gray-900/50 rounded-2xl border-b-2 border-gray-700">
                                     <p class="text-gray-400 text-xs font-medium mb-2">MONTHLY FEE</p>
-                                    <p class="text-2xl font-bold">$0</p>
+                                    <p class="text-2xl font-bold" x-text="accounts[activeAccount].monthlyFee"></p>
                                 </div>
                                 <div class="text-center p-4 bg-gray-900/50 rounded-2xl border-b-2 border-gray-700">
                                     <p class="text-gray-400 text-xs font-medium mb-2">NCUA INSURED</p>
@@ -657,40 +764,18 @@
                                 </div>
                             </div>
                             <ul class="space-y-3 mb-8">
-                                <li class="flex items-center gap-3 text-gray-300">
-                                    <div class="w-6 h-6 bg-primary-500/20 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fa-solid fa-check text-primary-400 text-xs"></i>
-                                    </div>
-                                    <span>3.75% APY — industry-leading rate</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-gray-300">
-                                    <div class="w-6 h-6 bg-primary-500/20 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fa-solid fa-check text-primary-400 text-xs"></i>
-                                    </div>
-                                    <span>No minimum balance required</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-gray-300">
-                                    <div class="w-6 h-6 bg-primary-500/20 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fa-solid fa-check text-primary-400 text-xs"></i>
-                                    </div>
-                                    <span>Instant transfers & mobile banking</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-gray-300">
-                                    <div class="w-6 h-6 bg-primary-500/20 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fa-solid fa-check text-primary-400 text-xs"></i>
-                                    </div>
-                                    <span>Automatic savings goals & round-ups</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-gray-300">
-                                    <div class="w-6 h-6 bg-primary-500/20 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fa-solid fa-check text-primary-400 text-xs"></i>
-                                    </div>
-                                    <span>NCUA insured up to $250,000</span>
-                                </li>
+                                <template x-for="feature in accounts[activeAccount].features" :key="feature">
+                                    <li class="flex items-center gap-3 text-gray-300">
+                                        <div class="w-6 h-6 bg-primary-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <i class="fa-solid fa-check text-primary-400 text-xs"></i>
+                                        </div>
+                                        <span x-text="feature"></span>
+                                    </li>
+                                </template>
                             </ul>
                             <div class="flex gap-3">
                                 <a href="signup.html" class="flex-1 bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 text-white font-bold py-4 rounded-xl text-center transition-all duration-300 hover:scale-105 hover:shadow-xl">Open Account</a>
-                                <a href="personal-banking.html" class="px-6 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white font-bold py-4 rounded-xl text-center transition-all duration-300">Learn More</a>
+                                <a :href="accounts[activeAccount].learnMoreLink" class="px-6 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white font-bold py-4 rounded-xl text-center transition-all duration-300">Learn More</a>
                             </div>
                         </div>
                     </div>
@@ -699,7 +784,7 @@
         </div>
     </section>
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <section class="mb-16">
+        <section class="mb-16 fade-in-section">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
                 <div>
                     <h2 class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white mb-4">Banking built for you</h2>
@@ -736,7 +821,7 @@
                 </div>
                 <div class="relative">
                     <div class="absolute inset-0 bg-gradient-to-br from-primary-200/30 to-emerald-200/30 dark:from-primary-800/20 dark:to-emerald-800/20 rounded-3xl blur-3xl"></div>
-                    <div class="relative bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-2xl p-8">
+                    <div class="relative bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-2xl p-8 floating">
                         <div class="grid grid-cols-2 gap-6">
                             <div class="bg-gradient-to-br from-primary-50 to-emerald-50 dark:from-primary-900/30 dark:to-emerald-900/30 rounded-2xl p-6 border border-primary-100 dark:border-primary-700">
                                 <div class="text-4xl font-black text-primary-700 dark:text-primary-400 mb-1">$0</div>
@@ -749,6 +834,142 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="mb-16 fade-in-section">
+            <div class="text-center mb-12">
+                <p class="text-primary-600 dark:text-primary-400 font-semibold uppercase tracking-wider mb-3">How It Works</p>
+                <h2 class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white">Get Started in 3 Simple Steps</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 border border-gray-200 dark:border-gray-700 text-center shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-2xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-6">1</div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Create Account</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Sign up in minutes with your basic information and start banking instantly.</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 border border-gray-200 dark:border-gray-700 text-center shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-6">2</div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Fund Your Account</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Deposit money via local transfer, international transfer, or crypto.</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 border border-gray-200 dark:border-gray-700 text-center shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-pink-500 rounded-2xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-6">3</div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Start Banking</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Send money, pay bills, apply for loans, and manage your finances with ease.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Grid -->
+        <section class="mb-16 fade-in-section">
+            <div class="text-center mb-12">
+                <p class="text-primary-600 dark:text-primary-400 font-semibold uppercase tracking-wider mb-3">Features</p>
+                <h2 class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white">Everything You Need in One Place</h2>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all hover:shadow-lg">
+                    <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center text-primary-600 dark:text-primary-400 text-2xl mb-4">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">Debit & Credit Cards</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm">Get virtual and physical cards for all your spending needs.</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:border-emerald-500 transition-all hover:shadow-lg">
+                    <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-2xl mb-4">
+                        <i class="fa-solid fa-exchange-alt"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">Fast Transfers</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm">Send money locally and internationally with ease.</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:border-blue-500 transition-all hover:shadow-lg">
+                    <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl mb-4">
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">Crypto Support</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm">Deposit and manage cryptocurrencies in your account.</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg">
+                    <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center text-purple-600 dark:text-purple-400 text-2xl mb-4">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">Grants & Loans</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm">Apply for financial aid and business loans quickly.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="mb-16 fade-in-section">
+            <div class="text-center mb-12">
+                <p class="text-primary-600 dark:text-primary-400 font-semibold uppercase tracking-wider mb-3">Testimonials</p>
+                <h2 class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white">What Our Customers Say</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 border border-gray-200 dark:border-gray-700 shadow-xl">
+                    <div class="flex items-center gap-1 text-yellow-500 mb-4">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6 italic">"GrandVisionTrust has completely changed how I manage my finances. Everything is so easy and secure!"</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">JD</div>
+                        <div>
+                            <p class="font-bold text-gray-900 dark:text-white">John Doe</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Happy Customer</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 border border-gray-200 dark:border-gray-700 shadow-xl">
+                    <div class="flex items-center gap-1 text-yellow-500 mb-4">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6 italic">"The fastest international transfers I've ever used. Highly recommend!"</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">SM</div>
+                        <div>
+                            <p class="font-bold text-gray-900 dark:text-white">Sarah Miller</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Business Owner</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 border border-gray-200 dark:border-gray-700 shadow-xl">
+                    <div class="flex items-center gap-1 text-yellow-500 mb-4">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-alt"></i>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6 italic">"24/7 support is amazing! They helped me with my grant application at 2 AM!"</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">MW</div>
+                        <div>
+                            <p class="font-bold text-gray-900 dark:text-white">Michael Wong</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Student</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="fade-in-section">
+            <div class="bg-gradient-to-r from-primary-600 via-primary-500 to-emerald-500 rounded-3xl p-8 md:p-12 text-center text-white shadow-2xl">
+                <h2 class="text-3xl lg:text-4xl font-black mb-4">Ready to Start Your Financial Journey?</h2>
+                <p class="text-lg mb-8 opacity-90">Join thousands of happy customers today and experience banking done right.</p>
+                <a href="signup.html" class="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-600 font-bold rounded-xl hover:bg-gray-100 transition-all hover:scale-105 shadow-lg">
+                    <i class="fa-solid fa-rocket mr-3 text-xl"></i>
+                    Open Your Free Account
+                </a>
             </div>
         </section>
     </main>
