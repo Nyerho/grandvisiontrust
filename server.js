@@ -182,8 +182,12 @@ const app = express();
 
 // Middleware to ensure DB is initialized before handling requests
 app.use(async (req, res, next) => {
-  await initDb();
-  next();
+  try {
+    await initDb();
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.set('trust proxy', IS_PROD ? 1 : false);
