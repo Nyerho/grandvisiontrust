@@ -8,3 +8,9 @@ Thumbs.db
 # Logs
 *.log
 server.log
+
+# Database
+data/
+*.db
+*.db-shm
+*.db-wal
