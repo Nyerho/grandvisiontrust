@@ -29,7 +29,7 @@ async function initDb() {
   if (dbInitPromise) return dbInitPromise;
 
   dbInitPromise = (async () => {
-    SQL = await initSqlJs({ locateFile: (file) => require.resolve(`sql.js/dist/${file}`) });
+    SQL = await initSqlJs({ locateFile: (file) => `node_modules/sql.js/dist/${file}` });
     console.log('Initializing database...');
     const dataDir = process.env.VERCEL ? '/tmp' : path.join(__dirname, 'data');
     console.log('Data directory:', dataDir);
