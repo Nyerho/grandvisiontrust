@@ -1351,6 +1351,20 @@ app.get('/health', (req, res) => {
   res.json({ ok: true });
 });
 
+// Catch-all to serve HTML files
+app.get('*', (req, res) => {
+  let filePath = path.join(__dirname, req.path);
+  if (!filePath.endsWith('.html')) {
+    filePath = path.join(__dirname, req.path + '.html');
+  }
+  
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send('Page not found');
+  }
+});
+
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
   console.error('Stack trace:', err.stack);
