@@ -1320,6 +1320,28 @@ app.use(
   requireAuth
 );
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/favicon.ico', (req, res) => {
+  const faviconPath = path.join(__dirname, 'storage', 'app', 'public', 'photos', 'UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png');
+  if (fs.existsSync(faviconPath)) {
+    res.sendFile(faviconPath);
+  } else {
+    res.status(204).end();
+  }
+});
+
+app.get('/favicon.png', (req, res) => {
+  const faviconPath = path.join(__dirname, 'storage', 'app', 'public', 'photos', 'UAPxbe0gRnpvS5ELxyILBcJJ8XV4UjJufYyb0FjL.png');
+  if (fs.existsSync(faviconPath)) {
+    res.sendFile(faviconPath);
+  } else {
+    res.status(204).end();
+  }
+});
+
 app.use(express.static(__dirname, { extensions: ['html'] }));
 
 app.get('/health', (req, res) => {
