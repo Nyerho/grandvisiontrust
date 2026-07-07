@@ -29,138 +29,145 @@ async function initDb() {
   if (dbInitPromise) return dbInitPromise;
 
   dbInitPromise = (async () => {
-    SQL = await initSqlJs();
-    console.log('Initializing database...');
-    const dataDir = process.env.VERCEL ? '/tmp' : path.join(__dirname, 'data');
-    console.log('Data directory:', dataDir);
-    fs.mkdirSync(dataDir, { recursive: true });
-    const dbPath = path.join(dataDir, 'app.db');
-    console.log('Database path:', dbPath);
-
-    let dbBuffer;
     try {
-      dbBuffer = fs.readFileSync(dbPath);
-    } catch (e) {
-      dbBuffer = null;
-    }
+      console.log('Initializing sql.js...');
+      SQL = await initSqlJs();
+      console.log('sql.js initialized');
+      console.log('Initializing database...');
+      const dataDir = process.env.VERCEL ? '/tmp' : path.join(__dirname, 'data');
+      console.log('Data directory:', dataDir);
+      fs.mkdirSync(dataDir, { recursive: true });
+      const dbPath = path.join(dataDir, 'app.db');
+      console.log('Database path:', dbPath);
 
-    db = new SQL.Database(dbBuffer);
-
-    db.run(`
-      CREATE TABLE IF NOT EXISTS users (
-        id TEXT PRIMARY KEY,
-        email TEXT NOT NULL UNIQUE,
-        full_name TEXT NOT NULL,
-        password_hash TEXT NOT NULL,
-        pin_hash TEXT,
-        profile_json TEXT,
-        balance_cents INTEGER NOT NULL DEFAULT 0,
-        is_verified INTEGER NOT NULL DEFAULT 0,
-        is_active INTEGER NOT NULL DEFAULT 1,
-        created_at TEXT NOT NULL
-      );
-
-      CREATE TABLE IF NOT EXISTS applications (
-        id TEXT PRIMARY KEY,
-        type TEXT NOT NULL,
-        payload_json TEXT NOT NULL,
-        status TEXT NOT NULL,
-        admin_notes TEXT,
-        created_at TEXT NOT NULL
-      );
-
-      CREATE TABLE IF NOT EXISTS transactions (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        kind TEXT NOT NULL,
-        description TEXT NOT NULL,
-        amount_cents INTEGER NOT NULL,
-        currency TEXT NOT NULL,
-        status TEXT NOT NULL,
-        meta_json TEXT NOT NULL,
-        transfer_code TEXT,
-        created_at TEXT NOT NULL,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-      );
-
-      CREATE TABLE IF NOT EXISTS admin_logs (
-        id TEXT PRIMARY KEY,
-        admin_id TEXT NOT NULL,
-        action TEXT NOT NULL,
-        target_type TEXT,
-        target_id TEXT,
-        details_json TEXT,
-        created_at TEXT NOT NULL
-      );
-
-      CREATE TABLE IF NOT EXISTS admin_settings (
-        key TEXT PRIMARY KEY,
-        value TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-      );
-    `);
-    console.log('Tables created');
-
-    const userColumnsResult = db.exec("PRAGMA table_info(users)");
-    const userColumns = new Set(userColumnsResult[0]?.values.map((r) => r[1]) || []);
-    if (!userColumns.has('pin_hash')) {
-      db.run('ALTER TABLE users ADD COLUMN pin_hash TEXT');
-      console.log('Added pin_hash column');
-    }
-    if (!userColumns.has('profile_json')) {
-      db.run('ALTER TABLE users ADD COLUMN profile_json TEXT');
-      console.log('Added profile_json column');
-    }
-    if (!userColumns.has('balance_cents')) {
-      db.run('ALTER TABLE users ADD COLUMN balance_cents INTEGER NOT NULL DEFAULT 0');
-      console.log('Added balance_cents column');
-    }
-    if (!userColumns.has('is_verified')) {
-      db.run('ALTER TABLE users ADD COLUMN is_verified INTEGER NOT NULL DEFAULT 0');
-      console.log('Added is_verified column');
-    }
-    if (!userColumns.has('is_active')) {
-      db.run('ALTER TABLE users ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1');
-      console.log('Added is_active column');
-    }
-
-    const appColumnsResult = db.exec("PRAGMA table_info(applications)");
-    const appColumns = new Set(appColumnsResult[0]?.values.map((r) => r[1]) || []);
-    if (!appColumns.has('admin_notes')) {
-      db.run('ALTER TABLE applications ADD COLUMN admin_notes TEXT');
-      console.log('Added admin_notes column');
-    }
-
-    const txColumnsResult = db.exec("PRAGMA table_info(transactions)");
-    const txColumns = new Set(txColumnsResult[0]?.values.map((r) => r[1]) || []);
-    if (!txColumns.has('transfer_code')) {
-      db.run('ALTER TABLE transactions ADD COLUMN transfer_code TEXT');
-      console.log('Added transfer_code column');
-    }
-
-    // Initialize default settings
-    const defaultSettings = {
-      btc_address: '',
-      eth_address: '',
-      usdt_address: '',
-      bank_name: 'GrandVisionTrust Bank',
-      routing_number: '251480576',
-      swift_code: 'GVTBUS33',
-      support_email: 'support@grandvisiontrust.com',
-      support_phone: '1-800-BANKING'
-    };
-
-    Object.entries(defaultSettings).forEach(([key, value]) => {
-      const existing = prepare('SELECT * FROM admin_settings WHERE key = ?').get(key);
-      if (!existing) {
-        prepare('INSERT INTO admin_settings (key, value, updated_at) VALUES (?, ?, ?)').run(key, value, new Date().toISOString());
+      let dbBuffer;
+      try {
+        dbBuffer = fs.readFileSync(dbPath);
+      } catch (e) {
+        dbBuffer = null;
       }
-    });
 
-    console.log('Database initialized successfully');
+      db = new SQL.Database(dbBuffer);
 
-    saveDb();
-    dbInitialized = true;
+      db.run(`
+        CREATE TABLE IF NOT EXISTS users (
+          id TEXT PRIMARY KEY,
+          email TEXT NOT NULL UNIQUE,
+          full_name TEXT NOT NULL,
+          password_hash TEXT NOT NULL,
+          pin_hash TEXT,
+          profile_json TEXT,
+          balance_cents INTEGER NOT NULL DEFAULT 0,
+          is_verified INTEGER NOT NULL DEFAULT 0,
+          is_active INTEGER NOT NULL DEFAULT 1,
+          created_at TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS applications (
+          id TEXT PRIMARY KEY,
+          type TEXT NOT NULL,
+          payload_json TEXT NOT NULL,
+          status TEXT NOT NULL,
+          admin_notes TEXT,
+          created_at TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS transactions (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL,
+          kind TEXT NOT NULL,
+          description TEXT NOT NULL,
+          amount_cents INTEGER NOT NULL,
+          currency TEXT NOT NULL,
+          status TEXT NOT NULL,
+          meta_json TEXT NOT NULL,
+          transfer_code TEXT,
+          created_at TEXT NOT NULL,
+          FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+
+        CREATE TABLE IF NOT EXISTS admin_logs (
+          id TEXT PRIMARY KEY,
+          admin_id TEXT NOT NULL,
+          action TEXT NOT NULL,
+          target_type TEXT,
+          target_id TEXT,
+          details_json TEXT,
+          created_at TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS admin_settings (
+          key TEXT PRIMARY KEY,
+          value TEXT NOT NULL,
+          updated_at TEXT NOT NULL
+        );
+      `);
+      console.log('Tables created');
+
+      const userColumnsResult = db.exec("PRAGMA table_info(users)");
+      const userColumns = new Set(userColumnsResult[0]?.values.map((r) => r[1]) || []);
+      if (!userColumns.has('pin_hash')) {
+        db.run('ALTER TABLE users ADD COLUMN pin_hash TEXT');
+        console.log('Added pin_hash column');
+      }
+      if (!userColumns.has('profile_json')) {
+        db.run('ALTER TABLE users ADD COLUMN profile_json TEXT');
+        console.log('Added profile_json column');
+      }
+      if (!userColumns.has('balance_cents')) {
+        db.run('ALTER TABLE users ADD COLUMN balance_cents INTEGER NOT NULL DEFAULT 0');
+        console.log('Added balance_cents column');
+      }
+      if (!userColumns.has('is_verified')) {
+        db.run('ALTER TABLE users ADD COLUMN is_verified INTEGER NOT NULL DEFAULT 0');
+        console.log('Added is_verified column');
+      }
+      if (!userColumns.has('is_active')) {
+        db.run('ALTER TABLE users ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1');
+        console.log('Added is_active column');
+      }
+
+      const appColumnsResult = db.exec("PRAGMA table_info(applications)");
+      const appColumns = new Set(appColumnsResult[0]?.values.map((r) => r[1]) || []);
+      if (!appColumns.has('admin_notes')) {
+        db.run('ALTER TABLE applications ADD COLUMN admin_notes TEXT');
+        console.log('Added admin_notes column');
+      }
+
+      const txColumnsResult = db.exec("PRAGMA table_info(transactions)");
+      const txColumns = new Set(txColumnsResult[0]?.values.map((r) => r[1]) || []);
+      if (!txColumns.has('transfer_code')) {
+        db.run('ALTER TABLE transactions ADD COLUMN transfer_code TEXT');
+        console.log('Added transfer_code column');
+      }
+
+      // Initialize default settings
+      const defaultSettings = {
+        btc_address: '',
+        eth_address: '',
+        usdt_address: '',
+        bank_name: 'GrandVisionTrust Bank',
+        routing_number: '251480576',
+        swift_code: 'GVTBUS33',
+        support_email: 'support@grandvisiontrust.com',
+        support_phone: '1-800-BANKING'
+      };
+
+      Object.entries(defaultSettings).forEach(([key, value]) => {
+        const existing = prepare('SELECT * FROM admin_settings WHERE key = ?').get(key);
+        if (!existing) {
+          prepare('INSERT INTO admin_settings (key, value, updated_at) VALUES (?, ?, ?)').run(key, value, new Date().toISOString());
+        }
+      });
+
+      console.log('Database initialized successfully');
+
+      saveDb();
+      dbInitialized = true;
+    } catch (err) {
+      console.error('Error initializing database:', err);
+      throw err;
+    }
   })();
 
   return dbInitPromise;
