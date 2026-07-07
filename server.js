@@ -1315,6 +1315,8 @@ app.put('/api/admin/transactions/:id', requireSameOrigin, requireApiAuth, (req, 
   }
 });
 
+app.use(express.static(__dirname, { extensions: ['html'] }));
+
 app.use(
   ['/dashboard.html', '/dashboard-transactions.html', '/dashboard-cards.html', '/dashboard-local-transfer.html', '/dashboard-international-transfer.html', '/dashboard-deposit.html', '/dashboard-currency-swap.html', '/dashboard-grants.html', '/dashboard-settings.html', '/dashboard-support.html', '/dashboard-paybills.html', '/admin.html'],
   requireAuth
@@ -1341,8 +1343,6 @@ app.get('/favicon.png', (req, res) => {
     res.status(204).end();
   }
 });
-
-app.use(express.static(__dirname, { extensions: ['html'] }));
 
 app.get('/health', (req, res) => {
   res.json({ ok: true });
