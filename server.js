@@ -31,7 +31,9 @@ async function initDb() {
   dbInitPromise = (async () => {
     try {
       console.log('Initializing sql.js...');
-      SQL = await initSqlJs();
+      const wasmPath = path.join(__dirname, 'node_modules', 'sql.js', 'dist', 'sql-wasm.wasm');
+      console.log('Wasm path:', wasmPath);
+      SQL = await initSqlJs({ locateFile: () => wasmPath });
       console.log('sql.js initialized');
       console.log('Initializing database...');
       const dataDir = process.env.VERCEL ? '/tmp' : path.join(__dirname, 'data');
