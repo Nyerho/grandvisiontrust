@@ -1315,6 +1315,9 @@ app.put('/api/admin/transactions/:id', requireSameOrigin, requireApiAuth, (req, 
   }
 });
 
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/storage', express.static(path.join(__dirname, 'storage')));
 app.use(express.static(__dirname, { extensions: ['html'] }));
 
 app.use(
