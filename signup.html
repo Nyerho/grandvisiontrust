@@ -430,6 +430,25 @@
     </footer>
 
     <script>
+        // Notification function
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-[100000] px-6 py-4 rounded-xl shadow-2xl transition-all duration-300 transform translate-x-full ${type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+                notification.classList.add('translate-x-0');
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('translate-x-0');
+                notification.classList.add('translate-x-full');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
         // SSN formatting
         document.getElementById('ssn').addEventListener('input', function (e) {
             let value = e.target.value.replace(/\D/g, '');
@@ -454,16 +473,35 @@
             e.target.value = value;
         });
 
+        // Get Alpine component
+        let alpineComponent;
+        document.addEventListener('alpine:init', () => {
+            // Wait for component to be ready
+        });
+
         async function submitRegistration() {
+            alpineComponent = document.querySelector('[x-data]').__x.$data;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
             if (password !== confirmPassword) {
-                alert('Passwords do not match!');
+                showNotification('Passwords do not match!', 'error');
                 return;
             }
 
-            window.Alpine.store('registrationData').loading = true;
+            // Validate KYC files
+            const governmentIdFile = document.getElementById('governmentId').files[0];
+            const proofOfAddressFile = document.getElementById('proofOfAddress').files[0];
+            if (!governmentIdFile) {
+                showNotification('Please upload your government-issued ID!', 'error');
+                return;
+            }
+            if (!proofOfAddressFile) {
+                showNotification('Please upload your proof of address!', 'error');
+                return;
+            }
+
+            alpineComponent.loading = true;
 
             try {
                 // Create user account
@@ -482,19 +520,13 @@
                 let governmentIdUrl = '';
                 let proofOfAddressUrl = '';
 
-                const governmentIdFile = document.getElementById('governmentId').files[0];
-                if (governmentIdFile) {
-                    const governmentIdRef = storage.ref('kyc/' + userId + '/governmentId/' + governmentIdFile.name);
-                    await governmentIdRef.put(governmentIdFile);
-                    governmentIdUrl = await governmentIdRef.getDownloadURL();
-                }
+                const governmentIdRef = storage.ref('kyc/' + userId + '/governmentId/' + governmentIdFile.name);
+                await governmentIdRef.put(governmentIdFile);
+                governmentIdUrl = await governmentIdRef.getDownloadURL();
 
-                const proofOfAddressFile = document.getElementById('proofOfAddress').files[0];
-                if (proofOfAddressFile) {
-                    const proofOfAddressRef = storage.ref('kyc/' + userId + '/proofOfAddress/' + proofOfAddressFile.name);
-                    await proofOfAddressRef.put(proofOfAddressFile);
-                    proofOfAddressUrl = await proofOfAddressRef.getDownloadURL();
-                }
+                const proofOfAddressRef = storage.ref('kyc/' + userId + '/proofOfAddress/' + proofOfAddressFile.name);
+                await proofOfAddressRef.put(proofOfAddressFile);
+                proofOfAddressUrl = await proofOfAddressRef.getDownloadURL();
 
                 // Save user data to Firestore
                 await db.collection('users').doc(userId).set({
@@ -527,19 +559,15 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                alert('Account created successfully! Your account is pending administrator review.');
-                window.location.href = 'login.html';
+                showNotification('Account created successfully! Your account is pending administrator review.', 'success');
+                setTimeout(() => window.location.href = 'login.html', 2000);
             } catch (error) {
                 console.error('Registration error:', error);
-                alert('Registration failed: ' + error.message);
+                showNotification('Registration failed: ' + error.message, 'error');
             } finally {
-                window.Alpine.store('registrationData').loading = false;
+                alpineComponent.loading = false;
             }
         }
-
-        document.addEventListener('alpine:init', () => {
-            Alpine.store('registrationData', { loading: false });
-        });
     </script>
 </body>
 </html>
