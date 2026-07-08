@@ -1,1 +1,0 @@
-chrome-extension://pbanhockgagggenencehbnadejlgchfc/js/contentScript.bundle.js

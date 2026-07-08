@@ -205,13 +205,19 @@
                     <a href="signup.html" class="font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">Sign up</a>
                 </p>
             </div>
-            <div class="flex justify-center">
+            <div class="flex justify-center mb-4">
                 <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode); if (darkMode) { document.documentElement.classList.add('dark'); } else { document.documentElement.classList.remove('dark'); }" class="flex items-center px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <i class="fas fa-moon mr-2" x-show="!darkMode"></i>
                     <i class="fas fa-sun mr-2" x-show="darkMode"></i>
                     <span x-show="!darkMode">Dark Mode</span>
                     <span x-show="darkMode">Light Mode</span>
                 </button>
+            </div>
+            <div class="flex justify-center">
+                <a href="admin.html" class="inline-flex items-center text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                    <i class="fa-solid fa-lock mr-2"></i>
+                    <span class="text-sm font-medium">Admin</span>
+                </a>
             </div>
         </div>
     </div>

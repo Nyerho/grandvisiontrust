@@ -1,56 +1,10 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // God admin has full access to everything
-    function isGodAdmin() {
-      // Check if the user has a custom claim of godAdmin set to true, or check against specific UIDs
-      return request.auth != null && (
-        request.auth.token.godAdmin == true || 
-        request.auth.uid in ['godAdminUid1', 'godAdminUid2'] // Replace with actual admin UIDs
-      );
-    }
-
-    function isAuthenticated() {
-      return request.auth != null;
-    }
-
-    function isOwner(userId) {
-      return request.auth != null && request.auth.uid == userId;
-    }
-
-    // Allow god admin full access to all documents
+    // For development purposes - allow all access
+    // WARNING: Remove these rules in production!
     match /{document=**} {
-      allow read, write: if isGodAdmin();
-    }
-
-    // Users collection - user can read/write their own document
-    match /users/{userId} {
-      allow read, write: if isOwner(userId);
-    }
-
-    // Accounts collection - user can access their own accounts
-    match /accounts/{accountId} {
-      allow read, write: if isOwner(resource.data.userId);
-    }
-
-    // Transactions collection - user can access their own transactions
-    match /transactions/{transactionId} {
-      allow read, write: if isOwner(resource.data.userId);
-    }
-
-    // Beneficiaries collection - user can access their own beneficiaries
-    match /beneficiaries/{beneficiaryId} {
-      allow read, write: if isOwner(resource.data.userId);
-    }
-
-    // Loans collection - user can access their own loans
-    match /loans/{loanId} {
-      allow read, write: if isOwner(resource.data.userId);
-    }
-
-    // Grants collection - user can access their own grants
-    match /grants/{grantId} {
-      allow read, write: if isOwner(resource.data.userId);
+      allow read, write: if true;
     }
   }
 }

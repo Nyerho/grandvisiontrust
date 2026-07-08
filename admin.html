@@ -4,10 +4,18 @@
     sidebarOpen: false,
     activeTab: 'users',
     showEditUserModal: false,
+    showAddTransactionModal: false,
+    showEditTransactionModal: false,
     users: [],
+    transactions: [],
+    loans: [],
     loading: true,
     searchUser: '',
     editingUser: null,
+    newTransaction: {},
+    editingTransaction: null,
+    authenticated: false,
+    adminPassword: '',
     initDarkMode() { if(this.darkMode) document.documentElement.classList.add('dark'); },
     toggleDarkMode() {
         this.darkMode = !this.darkMode;
@@ -43,8 +51,34 @@
             this.loading = false;
         }
     },
+    async fetchTransactions() {
+        try {
+            const snapshot = await db.collection('transactions').orderBy('createdAt', 'desc').get();
+            this.transactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        } catch (err) {
+            console.error(err);
+            this.showNotification('Failed to load transactions', 'error');
+        }
+    },
+    async fetchLoans() {
+        try {
+            const snapshot = await db.collection('loans').orderBy('createdAt', 'desc').get();
+            this.loans = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        } catch (err) {
+            console.error(err);
+            this.showNotification('Failed to load loans', 'error');
+        }
+    },
     openEditUser(user) {
-        this.editingUser = { ...user };
+        this.editingUser = {
+            ...user,
+            firstName: user.firstName || '',
+            lastName: user.lastName || '',
+            email: user.email || '',
+            kycStatus: user.kycStatus || 'not_submitted',
+            status: user.status || 'pending',
+            balance: user.balance || 0
+        };
         this.showEditUserModal = true;
     },
     async saveUser() {
@@ -55,6 +89,7 @@
                 email: this.editingUser.email,
                 kycStatus: this.editingUser.kycStatus,
                 status: this.editingUser.status,
+                balance: this.editingUser.balance || 0,
             });
             this.showEditUserModal = false;
             await this.fetchUsers();
@@ -64,16 +99,131 @@
             this.showNotification('Failed to update user', 'error');
         }
     },
+    openAddTransaction() {
+        this.newTransaction = {
+            userId: '',
+            type: 'deposit',
+            amount: 0,
+            status: 'pending',
+            description: '',
+        };
+        this.showAddTransactionModal = true;
+    },
+    async saveAddTransaction() {
+        try {
+            await db.collection('transactions').add({
+                ...this.newTransaction,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+            if (this.newTransaction.type === 'deposit' && this.newTransaction.status === 'completed' && this.newTransaction.userId) {
+                const userDoc = await db.collection('users').doc(this.newTransaction.userId).get();
+                const user = userDoc.data() || { balance: 0 };
+                await db.collection('users').doc(this.newTransaction.userId).update({
+                    balance: (user.balance || 0) + Number(this.newTransaction.amount)
+                });
+            } else if (this.newTransaction.type === 'withdrawal' && this.newTransaction.status === 'completed' && this.newTransaction.userId) {
+                const userDoc = await db.collection('users').doc(this.newTransaction.userId).get();
+                const user = userDoc.data() || { balance: 0 };
+                await db.collection('users').doc(this.newTransaction.userId).update({
+                    balance: (user.balance || 0) - Number(this.newTransaction.amount)
+                });
+            }
+            this.showAddTransactionModal = false;
+            await this.fetchTransactions();
+            await this.fetchUsers();
+            this.showNotification('Transaction added successfully!', 'success');
+        } catch (err) {
+            console.error(err);
+            this.showNotification('Failed to add transaction', 'error');
+        }
+    },
+    openEditTransaction(transaction) {
+        this.editingTransaction = {
+            ...transaction,
+            type: transaction.type || 'deposit',
+            amount: transaction.amount || 0,
+            status: transaction.status || 'pending',
+            description: transaction.description || ''
+        };
+        this.showEditTransactionModal = true;
+    },
+    async saveEditTransaction() {
+        try {
+            await db.collection('transactions').doc(this.editingTransaction.id).update({
+                type: this.editingTransaction.type,
+                amount: this.editingTransaction.amount,
+                status: this.editingTransaction.status,
+                description: this.editingTransaction.description,
+            });
+            this.showEditTransactionModal = false;
+            await this.fetchTransactions();
+            this.showNotification('Transaction updated successfully!', 'success');
+        } catch (err) {
+            console.error(err);
+            this.showNotification('Failed to update transaction', 'error');
+        }
+    },
+    async updateLoanStatus(loan, status) {
+        try {
+            await db.collection('loans').doc(loan.id).update({ status });
+            await this.fetchLoans();
+            this.showNotification(`Loan ${status} successfully!`, 'success');
+        } catch (err) {
+            console.error(err);
+            this.showNotification('Failed to update loan', 'error');
+        }
+    },
+    async updateTransactionStatus(transaction, status) {
+        try {
+            await db.collection('transactions').doc(transaction.id).update({ status });
+            if (status === 'completed') {
+                if (transaction.type === 'deposit' && transaction.userId) {
+                    const userDoc = await db.collection('users').doc(transaction.userId).get();
+                    const user = userDoc.data();
+                    await db.collection('users').doc(transaction.userId).update({
+                        balance: (user.balance || 0) + Number(transaction.amount)
+                    });
+                } else if (transaction.type === 'withdrawal' && transaction.userId) {
+                    const userDoc = await db.collection('users').doc(transaction.userId).get();
+                    const user = userDoc.data();
+                    await db.collection('users').doc(transaction.userId).update({
+                        balance: (user.balance || 0) - Number(transaction.amount)
+                    });
+                }
+            }
+            await this.fetchTransactions();
+            await this.fetchUsers();
+            this.showNotification(`Transaction ${status} successfully!`, 'success');
+        } catch (err) {
+            console.error(err);
+            this.showNotification('Failed to update transaction', 'error');
+        }
+    },
     filteredUsers() {
         return this.users.filter(u =>
             (u.firstName && u.firstName.toLowerCase().includes(this.searchUser.toLowerCase())) ||
             (u.lastName && u.lastName.toLowerCase().includes(this.searchUser.toLowerCase())) ||
             (u.email && u.email.toLowerCase().includes(this.searchUser.toLowerCase()))
         );
+    },
+    async switchTab(tab) {
+        this.activeTab = tab;
+        if (tab === 'users') await this.fetchUsers();
+        if (tab === 'transactions') await this.fetchTransactions();
+        if (tab === 'loans') await this.fetchLoans();
+    },
+    authenticate() {
+        if (this.adminPassword === 'admin123') {
+            this.authenticated = true;
+            this.fetchUsers();
+            this.fetchTransactions();
+            this.fetchLoans();
+        } else {
+            this.showNotification('Invalid password!', 'error');
+        }
     }
 }" x-init="
     initDarkMode();
-    fetchUsers();
 ">
 <head>
     <meta charset="UTF-8">
@@ -157,7 +307,37 @@
     </style>
 </head>
 <body class="font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
-    <div class="flex h-screen">
+    <!-- Password Prompt -->
+    <div x-show="!authenticated" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-lock text-4xl text-white"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Admin Login</h2>
+                <p class="text-gray-600 dark:text-gray-400">Enter admin password to continue</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <input 
+                        type="password" 
+                        x-model="adminPassword" 
+                        @keyup.enter="authenticate"
+                        placeholder="Enter password..." 
+                        class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    >
+                </div>
+                <button 
+                    @click="authenticate" 
+                    class="w-full px-4 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold rounded-xl shadow-lg transition-all"
+                >
+                    Access Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div x-show="authenticated" class="flex h-screen">
         <!-- Sidebar -->
         <aside class="hidden lg:flex w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex-col shadow-xl">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -166,9 +346,17 @@
                 </div>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
-                <button @click="activeTab='users'" :class="activeTab === 'users' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
+                <button @click="switchTab('users')" :class="activeTab === 'users' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
                     <i class="fa-solid fa-users text-lg"></i>
                     <span>Users</span>
+                </button>
+                <button @click="switchTab('transactions')" :class="activeTab === 'transactions' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
+                    <i class="fa-solid fa-exchange-alt text-lg"></i>
+                    <span>Transactions</span>
+                </button>
+                <button @click="switchTab('loans')" :class="activeTab === 'loans' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
+                    <i class="fa-solid fa-hand-holding-usd text-lg"></i>
+                    <span>Loans</span>
                 </button>
             </nav>
             <div class="p-4 border-t border-gray-200 dark:border-gray-700">
@@ -233,7 +421,9 @@
                                     <tr>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Balance</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">KYC Status</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Account Status</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
@@ -251,14 +441,23 @@
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 text-gray-600 dark:text-gray-300" x-text="user.email"></td>
+                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-300" x-text="'$' + (user.balance || 0).toLocaleString()"></td>
                                             <td class="px-6 py-4">
                                                 <span :class="{
                                                     'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400': user.kycStatus === 'pending',
                                                     'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400': user.kycStatus === 'verified',
+                                                    'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': user.kycStatus === 'rejected',
                                                     'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300': !user.kycStatus || user.kycStatus === 'not_submitted'
                                                 }" class="px-3 py-1 rounded-full text-sm font-medium">
                                                     <span x-text="user.kycStatus || 'Not Submitted'"></span>
                                                 </span>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <span :class="{
+                                                    'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400': user.status === 'active',
+                                                    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400': user.status === 'pending',
+                                                    'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': user.status === 'suspended'
+                                                }" class="px-3 py-1 rounded-full text-sm font-medium" x-text="user.status || 'pending'"></span>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <div class="flex items-center space-x-2">
@@ -274,6 +473,160 @@
                                             </td>
                                         </tr>
                                     </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions Tab -->
+                <div x-show="activeTab === 'transactions' && !loading">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Total Transactions</p>
+                            <p class="text-3xl font-bold mt-1" x-text="transactions.length"></p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Pending</p>
+                            <p class="text-3xl font-bold mt-1" x-text="transactions.filter(t => t.status === 'pending').length"></p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Completed</p>
+                            <p class="text-3xl font-bold mt-1" x-text="transactions.filter(t => t.status === 'completed').length"></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                        <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between flex-wrap gap-4">
+                            <h3 class="text-lg font-bold">Transaction Management</h3>
+                            <button @click="openAddTransaction()" class="px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl font-medium hover:from-primary-600 hover:to-primary-700">
+                                <i class="fa-solid fa-plus mr-2"></i>Add Transaction
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50 dark:bg-gray-700/50">
+                                    <tr>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Type</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                                    <template x-for="transaction in transactions" :key="transaction.id">
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+                                            <td class="px-6 py-4">
+                                                <span :class="{
+                                                    'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400': transaction.type === 'deposit',
+                                                    'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': transaction.type === 'withdrawal',
+                                                    'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400': transaction.type === 'transfer'
+                                                }" class="px-3 py-1 rounded-full text-sm font-medium" x-text="transaction.type"></span>
+                                            </td>
+                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-300 font-semibold" x-text="'$' + (transaction.amount || 0).toLocaleString()"></td>
+                                            <td class="px-6 py-4">
+                                                <span :class="{
+                                                    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400': transaction.status === 'pending',
+                                                    'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400': transaction.status === 'completed',
+                                                    'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': transaction.status === 'rejected'
+                                                }" class="px-3 py-1 rounded-full text-sm font-medium" x-text="transaction.status"></span>
+                                            </td>
+                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-300" x-text="transaction.createdAt ? new Date(transaction.createdAt.toDate()).toLocaleString() : '-'"></td>
+                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-300" x-text="transaction.description || '-'"></td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center space-x-2">
+                                                    <template x-if="transaction.status === 'pending'">
+                                                        <button @click="updateTransactionStatus(transaction, 'completed')" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl text-green-600" title="Approve">
+                                                            <i class="fa-solid fa-check"></i>
+                                                        </button>
+                                                    </template>
+                                                    <template x-if="transaction.status === 'pending'">
+                                                        <button @click="updateTransactionStatus(transaction, 'rejected')" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl text-red-600" title="Reject">
+                                                            <i class="fa-solid fa-times"></i>
+                                                        </button>
+                                                    </template>
+                                                    <button @click="openEditTransaction(transaction)" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl text-primary-600 dark:text-primary-400" title="Edit">
+                                                        <i class="fa-solid fa-edit"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <tr x-show="transactions.length === 0">
+                                        <td colspan="6" class="px-6 py-12 text-center text-gray-500">No transactions yet</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loans Tab -->
+                <div x-show="activeTab === 'loans' && !loading">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Total Loans</p>
+                            <p class="text-3xl font-bold mt-1" x-text="loans.length"></p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Pending</p>
+                            <p class="text-3xl font-bold mt-1" x-text="loans.filter(l => l.status === 'pending').length"></p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Approved</p>
+                            <p class="text-3xl font-bold mt-1" x-text="loans.filter(l => l.status === 'approved').length"></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                            <h3 class="text-lg font-bold">Loan Applications</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50 dark:bg-gray-700/50">
+                                    <tr>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Purpose</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                                    <template x-for="loan in loans" :key="loan.id">
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-300 font-semibold" x-text="'$' + (loan.amount || 0).toLocaleString()"></td>
+                                            <td class="px-6 py-4">
+                                                <span :class="{
+                                                    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400': loan.status === 'pending',
+                                                    'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400': loan.status === 'approved',
+                                                    'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': loan.status === 'rejected'
+                                                }" class="px-3 py-1 rounded-full text-sm font-medium" x-text="loan.status"></span>
+                                            </td>
+                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-300" x-text="loan.createdAt ? new Date(loan.createdAt.toDate()).toLocaleString() : '-'"></td>
+                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-300" x-text="loan.purpose || '-'"></td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center space-x-2">
+                                                    <template x-if="loan.status === 'pending'">
+                                                        <button @click="updateLoanStatus(loan, 'approved')" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl text-green-600" title="Approve">
+                                                            <i class="fa-solid fa-check"></i>
+                                                        </button>
+                                                    </template>
+                                                    <template x-if="loan.status === 'pending'">
+                                                        <button @click="updateLoanStatus(loan, 'rejected')" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl text-red-600" title="Reject">
+                                                            <i class="fa-solid fa-times"></i>
+                                                        </button>
+                                                    </template>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <tr x-show="loans.length === 0">
+                                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">No loan applications yet</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -306,6 +659,10 @@
                     <input type="email" x-model="editingUser.email" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
                 </div>
                 <div>
+                    <label class="block text-sm font-medium mb-1">Balance</label>
+                    <input type="number" x-model="editingUser.balance" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                </div>
+                <div>
                     <label class="block text-sm font-medium mb-1">KYC Status</label>
                     <select x-model="editingUser.kycStatus" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
                         <option value="not_submitted">Not Submitted</option>
@@ -330,5 +687,97 @@
         </div>
     </div>
 
+    <!-- Add Transaction Modal -->
+    <div x-show="showAddTransactionModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @click="showAddTransactionModal = false">
+        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold">Add Transaction</h3>
+                <button @click="showAddTransactionModal = false" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl">
+                    <i class="fa-solid fa-times text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">User</label>
+                    <select x-model="newTransaction.userId" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                        <option value="">Select User</option>
+                        <template x-for="user in users" :key="user.id">
+                            <option :value="user.id" x-text="(user.firstName || '') + ' ' + (user.lastName || '') + ' - ' + user.email"></option>
+                        </template>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Type</label>
+                    <select x-model="newTransaction.type" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                        <option value="deposit">Deposit</option>
+                        <option value="withdrawal">Withdrawal</option>
+                        <option value="transfer">Transfer</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Amount</label>
+                    <input type="number" x-model="newTransaction.amount" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Status</label>
+                    <select x-model="newTransaction.status" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Description</label>
+                    <textarea x-model="newTransaction.description" rows="3" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900"></textarea>
+                </div>
+                <div class="flex items-center space-x-3 pt-4">
+                    <button @click="showAddTransactionModal = false" class="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium">Cancel</button>
+                    <button @click="saveAddTransaction()" class="flex-1 px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl font-medium hover:from-primary-600 hover:to-primary-700">Add Transaction</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Transaction Modal -->
+    <div x-show="showEditTransactionModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @click="showEditTransactionModal = false">
+        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold">Edit Transaction</h3>
+                <button @click="showEditTransactionModal = false" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl">
+                    <i class="fa-solid fa-times text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+            <div x-show="editingTransaction" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Type</label>
+                    <select x-model="editingTransaction.type" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                        <option value="deposit">Deposit</option>
+                        <option value="withdrawal">Withdrawal</option>
+                        <option value="transfer">Transfer</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Amount</label>
+                    <input type="number" x-model="editingTransaction.amount" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Status</label>
+                    <select x-model="editingTransaction.status" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Description</label>
+                    <textarea x-model="editingTransaction.description" rows="3" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900"></textarea>
+                </div>
+                <div class="flex items-center space-x-3 pt-4">
+                    <button @click="showEditTransactionModal = false" class="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium">Cancel</button>
+                    <button @click="saveEditTransaction()" class="flex-1 px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl font-medium hover:from-primary-600 hover:to-primary-700">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
