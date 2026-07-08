@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{
+    darkMode: localStorage.getItem('darkMode') === 'true' || false,
+    user: null,
+    loading: true,
+    submitting: false,
+    initDarkMode() {
+        if (this.darkMode) document.documentElement.classList.add('dark');
+    },
+    toggleDarkMode() {
+        this.darkMode = !this.darkMode;
+        localStorage.setItem('darkMode', this.darkMode);
+        document.documentElement.classList.toggle('dark');
+    },
+    showNotification(message, type='success') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-[100000] px-6 py-4 rounded-xl shadow-2xl transition-all duration-300 transform translate-x-full ${type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+            notification.classList.add('translate-x-0');
+        }, 10);
+        
+        setTimeout(() => {
+            notification.classList.remove('translate-x-0');
+            notification.classList.add('translate-x-full');
+            setTimeout(() => notification.remove(), 300);
+        }, 5000);
+    }
+}" x-init="
+    initDarkMode();
+    auth.onAuthStateChanged(async user => {
+        if (user) {
+            const doc = await db.collection('users').doc(user.uid).get();
+            if (doc.exists) $data.user = { id: doc.id, ...doc.data() };
+        } else {
+            window.location.href = 'login.html';
+        }
+        $data.loading = false;
+    });
+">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrandVisionTrust | KYC Verification</title>
+    <link rel="shortcut icon" href="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAPBT1yStJbk4I_6sLvctlmGXu0lBotaiA",
+            authDomain: "grandvisiontrust.firebaseapp.com",
+            projectId: "grandvisiontrust",
+            storageBucket: "grandvisiontrust.firebasestorage.app",
+            messagingSenderId: "796538268477",
+            appId: "1:796538268477:web:78a8bab0eb8d36d6ca7354",
+            measurementId: "G-6XWG7HEG2V"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+    </script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#38bdf8',
+                            DEFAULT: '#10b981',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            foreground: '#ffffff',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            foreground: '#0f172a',
+                        },
+                        background: '#f8fafc',
+                        foreground: '#1e293b',
+                        card: {
+                            DEFAULT: '#ffffff',
+                            foreground: '#1e293b',
+                        },
+                        border: '#e2e8f0',
+                        input: '#e2e8f0',
+                        ring: '#10b981',
+                    },
+                    borderRadius: {
+                        lg: '0.75rem',
+                        xl: '0.75rem',
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+</head>
+<body class="font-sans bg-background dark:bg-gray-900 min-h-screen">
+    <div x-show="loading" class="fixed inset-0 bg-white dark:bg-gray-900 flex items-center justify-center z-50">
+        <div class="w-12 h-12 border-4 border-gray-200 border-t-primary-500 rounded-full animate-spin"></div>
+    </div>
+
+    <nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 fixed w-full z-40">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="dashboard.html" class="flex items-center">
+                    <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust" class="h-12 w-auto">
+                </a>
+                <div class="flex items-center gap-4">
+                    <button @click="toggleDarkMode()" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fa-solid fa-moon text-gray-700 dark:text-gray-300" x-show="!darkMode"></i>
+                        <i class="fa-solid fa-sun text-yellow-500" x-show="darkMode"></i>
+                    </button>
+                    <a href="dashboard.html" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl mx-auto">
+            <h1 class="text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white mb-6 text-center">
+                Complete your KYC Verification
+            </h1>
+
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 p-8 lg:p-12">
+                <div x-show="user" class="space-y-8">
+                    <div class="text-center">
+                        <div class="text-lg text-gray-600 dark:text-gray-300">
+                            <span class="font-semibold" x-text="user?.firstName && user?.lastName ? user.firstName + ' ' + user.lastName : 'User'"></span>,
+                            <span x-text="user?.email"></span>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                                Government-issued ID *
+                            </label>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                Valid government ID (passport, driver's license, etc.)
+                            </p>
+                            <input type="file" id="govtId" accept="image/*,.pdf" class="hidden" />
+                            <label for="govtId" class="cursor-pointer w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 bg-gray-50 dark:bg-gray-900 hover:border-primary-500 dark:hover:border-primary-400 transition-all">
+                                <i class="fa-solid fa-upload text-4xl text-gray-400 dark:text-gray-500 mb-4"></i>
+                                <p class="text-sm text-gray-700 dark:text-gray-300 font-medium">Click to upload ID</p>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-4 pt-4">
+                        <button @click="submitKyc()" :disabled="submitting" class="w-full py-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold text-lg rounded-2xl shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <span x-show="!submitting">Submit for Verification</span>
+                            <span x-show="submitting">Submitting...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function submitKyc() {
+            const alpineComponent = document.querySelector('[x-data]').__x.$data;
+            const govtIdInput = document.getElementById('govtId');
+            const govtIdFile = govtIdInput.files[0];
+
+            if (!govtIdFile) {
+                alpineComponent.showNotification('Please upload your government-issued ID', 'error');
+                return;
+            }
+
+            alpineComponent.submitting = true;
+
+            try {
+                const storageRef = firebase.storage().ref('kyc/' + auth.currentUser.uid + '/' + govtIdFile.name);
+                await storageRef.put(govtIdFile);
+                const governmentIdUrl = await storageRef.getDownloadURL();
+
+                await db.collection('users').doc(auth.currentUser.uid).update({
+                    governmentIdUrl: governmentIdUrl,
+                    kycStatus: 'pending',
+                    kycSubmittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                });
+
+                alpineComponent.showNotification('KYC submitted successfully! Our team will review it soon.', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 3000);
+
+            } catch (err) {
+                console.error(err);
+                alpineComponent.showNotification('Failed to submit KYC, please try again', 'error');
+            } finally {
+                alpineComponent.submitting = false;
+            }
+        }
+    </script>
+</body>
+</html>

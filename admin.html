@@ -1,206 +1,180 @@
-
 <!DOCTYPE html>
 <html lang="en" x-data="{
-  darkMode: false,
-  sidebarOpen: false,
-  activeTab: 'users',
-  showEditUserModal: false,
-  showAddTransactionModal: false,
-  users: [],
-  transactions: [],
-  applications: [],
-  settings: {
-    btc_address: '',
-    eth_address: '',
-    usdt_address: '',
-    bank_name: '',
-    routing_number: '',
-    swift_code: '',
-    support_email: '',
-    support_phone: ''
-  },
-  currentUser: null,
-  newTransaction: {
-    userId: '',
-    kind: 'deposit',
-    description: '',
-    amount: 0,
-    currency: 'USD',
-    status: 'completed',
-    transferCode: '',
-    createdAt: new Date().toISOString()
-  },
-  loading: true,
-  searchUser: '',
-  searchTransaction: '',
-  async init() {
-    this.loading = true;
-    await Promise.all([this.fetchData(), this.fetchSettings()]);
-    this.loading = false;
-  },
-  async fetchData() {
-    try {
-      const [usersRes, transactionsRes, applicationsRes] = await Promise.all([
-        fetch('/api/admin/users'),
-        fetch('/api/admin/transactions'),
-        fetch('/api/admin/applications')
-      ]);
-      
-      this.users = await usersRes.json();
-      this.transactions = await transactionsRes.json();
-      this.applications = await applicationsRes.json();
-    } catch (error) {
-      console.error('Error fetching data:', error);
+    darkMode: localStorage.getItem('darkMode') === 'true' || false,
+    sidebarOpen: false,
+    activeTab: 'users',
+    showEditUserModal: false,
+    users: [],
+    loading: true,
+    searchUser: '',
+    editingUser: null,
+    initDarkMode() { if(this.darkMode) document.documentElement.classList.add('dark'); },
+    toggleDarkMode() {
+        this.darkMode = !this.darkMode;
+        localStorage.setItem('darkMode', this.darkMode);
+        document.documentElement.classList.toggle('dark');
+    },
+    showNotification(message, type='success') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-[100000] px-6 py-4 rounded-xl shadow-2xl transition-all duration-300 transform translate-x-full ${type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+            notification.classList.add('translate-x-0');
+        },10);
+        
+        setTimeout(() => {
+            notification.classList.remove('translate-x-0');
+            notification.classList.add('translate-x-full');
+            setTimeout(() => notification.remove(),300);
+        }, 5000);
+    },
+    async fetchUsers() {
+        this.loading = true;
+        try {
+            const snapshot = await db.collection('users').get();
+            this.users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        } catch (err) {
+            console.error(err);
+            this.showNotification('Failed to load users', 'error');
+        } finally {
+            this.loading = false;
+        }
+    },
+    openEditUser(user) {
+        this.editingUser = { ...user };
+        this.showEditUserModal = true;
+    },
+    async saveUser() {
+        try {
+            await db.collection('users').doc(this.editingUser.id).update({
+                firstName: this.editingUser.firstName,
+                lastName: this.editingUser.lastName,
+                email: this.editingUser.email,
+                kycStatus: this.editingUser.kycStatus,
+                status: this.editingUser.status,
+            });
+            this.showEditUserModal = false;
+            await this.fetchUsers();
+            this.showNotification('User updated successfully!', 'success');
+        } catch (err) {
+            console.error(err);
+            this.showNotification('Failed to update user', 'error');
+        }
+    },
+    filteredUsers() {
+        return this.users.filter(u =>
+            (u.firstName && u.firstName.toLowerCase().includes(this.searchUser.toLowerCase())) ||
+            (u.lastName && u.lastName.toLowerCase().includes(this.searchUser.toLowerCase())) ||
+            (u.email && u.email.toLowerCase().includes(this.searchUser.toLowerCase()))
+        );
     }
-  },
-  async fetchSettings() {
-    try {
-      const res = await fetch('/api/admin/settings');
-      this.settings = await res.json();
-    } catch (error) {
-      console.error('Error fetching settings:', error);
-    }
-  },
-  async saveSettings() {
-    try {
-      await fetch('/api/admin/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.settings)
-      });
-      alert('Settings saved successfully!');
-    } catch (error) {
-      console.error('Error saving settings:', error);
-    }
-  },
-  openEditUser(user) {
-    this.currentUser = { ...user, balance: user.balanceCents / 100 };
-    this.showEditUserModal = true;
-  },
-  async saveUser() {
-    try {
-      const updates = {};
-      if (this.currentUser.fullName) updates.fullName = this.currentUser.fullName;
-      if (this.currentUser.email) updates.email = this.currentUser.email;
-      if (this.currentUser.balance !== undefined) updates.balanceCents = Math.round(this.currentUser.balance * 100);
-      if (this.currentUser.isVerified !== undefined) updates.isVerified = this.currentUser.isVerified;
-      if (this.currentUser.isActive !== undefined) updates.isActive = this.currentUser.isActive;
-
-      await fetch(`/api/admin/users/${this.currentUser.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates)
-      });
-      
-      this.showEditUserModal = false;
-      await this.fetchData();
-    } catch (error) {
-      console.error('Error saving user:', error);
-    }
-  },
-  async updateTransactionStatus(id, status, transferCode = null) {
-    try {
-      await fetch(`/api/admin/transactions/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status, transferCode })
-      });
-      await this.fetchData();
-    } catch (error) {
-      console.error('Error updating transaction:', error);
-    }
-  },
-  async addTransaction() {
-    try {
-      await fetch('/api/admin/transactions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.newTransaction)
-      });
-      this.showAddTransactionModal = false;
-      this.newTransaction = {
-        userId: '',
-        kind: 'deposit',
-        description: '',
-        amount: 0,
-        currency: 'USD',
-        status: 'completed',
-        transferCode: '',
-        createdAt: new Date().toISOString()
-      };
-      await this.fetchData();
-    } catch (error) {
-      console.error('Error adding transaction:', error);
-    }
-  },
-  filteredUsers() {
-    return this.users.filter(u => 
-      u.fullName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
-      u.email.toLowerCase().includes(this.searchUser.toLowerCase())
-    );
-  },
-  filteredTransactions() {
-    return this.transactions.filter(t => 
-      t.description.toLowerCase().includes(this.searchTransaction.toLowerCase()) ||
-      t.userFullName.toLowerCase().includes(this.searchTransaction.toLowerCase())
-    );
-  },
-  formatCurrency(cents) {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
-  },
-  formatDate(dateStr) {
-    return new Date(dateStr).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
-  }
-}">
+}" x-init="
+    initDarkMode();
+    fetchUsers();
+">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | GrandVisionTrust</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="shortcut icon" href="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAPBT1yStJbk4I_6sLvctlmGXu0lBotaiA",
+            authDomain: "grandvisiontrust.firebaseapp.com",
+            projectId: "grandvisiontrust",
+            storageBucket: "grandvisiontrust.firebasestorage.app",
+            messagingSenderId: "796538268477",
+            appId: "1:796538268477:web:78a8bab0eb8d36d6ca7354",
+            measurementId: "G-6XWG7HEG2V"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+    </script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#38bdf8',
+                            DEFAULT: '#10b981',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            foreground: '#ffffff',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            foreground: '#0f172a',
+                        },
+                        background: '#f8fafc',
+                        foreground: '#1e293b',
+                        card: { DEFAULT: '#ffffff', foreground: '#1e293b' },
+                        border: '#e2e8f0',
+                        input: '#e2e8f0',
+                        ring: '#10b981',
+                    },
+                    borderRadius: {
+                        lg: '0.75rem',
+                        xl: '0.75rem',
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Montserrat', sans-serif; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height:6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius:3px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
+<body class="font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
     <div class="flex h-screen">
         <!-- Sidebar -->
         <aside class="hidden lg:flex w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex-col shadow-xl">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex items-center space-x-3">
-                    <img src="images/PixVerse_Image_Effect_prompt_create_a_logo_for.jpg" alt="Bank" class="h-12 w-auto">
+                    <img src="images/PixVerse_Image_Effect_prompt_create a logo for.jpg" alt="GrandVisionTrust" class="h-12 w-auto">
                 </div>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
-                <button @click="activeTab = 'users'" :class="activeTab === 'users' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all">
+                <button @click="activeTab='users'" :class="activeTab === 'users' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
                     <i class="fa-solid fa-users text-lg"></i>
                     <span>Users</span>
                 </button>
-                <button @click="activeTab = 'transactions'" :class="activeTab === 'transactions' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all">
-                    <i class="fa-solid fa-exchange-alt text-lg"></i>
-                    <span>Transactions</span>
-                </button>
-                <button @click="activeTab = 'applications'" :class="activeTab === 'applications' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all">
-                    <i class="fa-solid fa-file-invoice text-lg"></i>
-                    <span>Applications</span>
-                </button>
-                <button @click="activeTab = 'settings'" :class="activeTab === 'settings' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all">
-                    <i class="fa-solid fa-gear text-lg"></i>
-                    <span>Settings</span>
-                </button>
             </nav>
             <div class="p-4 border-t border-gray-200 dark:border-gray-700">
-                <a href="index.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:text-red-600 transition-all">
-                    <i class="fa-solid fa-sign-out-alt"></i>
-                    <span>Exit Admin</span>
+                <a href="index.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-all">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Back to Home</span>
                 </a>
             </div>
         </aside>
@@ -210,12 +184,15 @@
             <!-- Header -->
             <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 shadow-sm">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-4">
+                    <div class="flex items-center gap-4">
+                        <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 rounded-xl bg-gray-100 dark:bg-gray-700">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
                         <h1 class="text-2xl font-bold capitalize" x-text="activeTab"></h1>
                     </div>
                     <div class="flex items-center space-x-3">
-                        <button @click="darkMode = !darkMode; if (darkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark')" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600">
-                            <i class="fa-solid fa-moon text-gray-600 dark:text-gray-300" x-show="!darkMode"></i>
+                        <button @click="toggleDarkMode()" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600">
+                            <i class="fa-solid fa-moon text-gray-700 dark:text-gray-300" x-show="!darkMode"></i>
                             <i class="fa-solid fa-sun text-yellow-500" x-show="darkMode"></i>
                         </button>
                     </div>
@@ -225,10 +202,7 @@
             <!-- Content -->
             <main class="flex-1 overflow-y-auto p-6 custom-scrollbar">
                 <div x-show="loading" class="flex items-center justify-center h-full">
-                    <div class="text-center">
-                        <div class="w-12 h-12 border-4 border-gray-200 border-t-green-500 rounded-full animate-spin mx-auto mb-4"></div>
-                        <p class="text-gray-500">Loading...</p>
-                    </div>
+                    <div class="w-12 h-12 border-4 border-gray-200 border-t-primary-500 rounded-full animate-spin"></div>
                 </div>
 
                 <!-- Users Tab -->
@@ -239,12 +213,12 @@
                             <p class="text-3xl font-bold mt-1" x-text="users.length"></p>
                         </div>
                         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Verified Users</p>
-                            <p class="text-3xl font-bold mt-1" x-text="users.filter(u => u.isVerified).length"></p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Pending KYC</p>
+                            <p class="text-3xl font-bold mt-1" x-text="users.filter(u => u.kycStatus === 'pending').length"></p>
                         </div>
                         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Active Users</p>
-                            <p class="text-3xl font-bold mt-1" x-text="users.filter(u => u.isActive).length"></p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Verified KYC</p>
+                            <p class="text-3xl font-bold mt-1" x-text="users.filter(u => u.kycStatus === 'verified').length"></p>
                         </div>
                     </div>
 
@@ -259,8 +233,7 @@
                                     <tr>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
-                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Balance</th>
-                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">KYC Status</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
@@ -269,171 +242,40 @@
                                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                                             <td class="px-6 py-4">
                                                 <div class="flex items-center space-x-3">
-                                                    <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold" x-text="user.fullName.split(' ').map(n => n[0]).join('').substring(0,2)"></div>
+                                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-bold">
+                                                        <span x-text="(user.firstName ? user.firstName.charAt(0).toUpperCase() : 'U') + (user.lastName ? user.lastName.charAt(0).toUpperCase() : 'N')"></span>
+                                                    </div>
                                                     <div>
-                                                        <p class="font-semibold" x-text="user.fullName"></p>
+                                                        <p class="font-semibold" x-text="(user.firstName || '') + ' ' + (user.lastName || '')"></p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 text-gray-600 dark:text-gray-300" x-text="user.email"></td>
-                                            <td class="px-6 py-4 font-semibold" x-text="formatCurrency(user.balanceCents)"></td>
-                                            <td class="px-6 py-4">
-                                                <span :class="user.isActive ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'" class="px-3 py-1 rounded-full text-sm font-medium" x-text="user.isActive ? 'Active' : 'Inactive'"></span>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <button @click="openEditUser(user)" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl text-green-600 dark:text-green-400">
-                                                    <i class="fa-solid fa-edit"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </template>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Transactions Tab -->
-                <div x-show="activeTab === 'transactions' && !loading">
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                        <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between flex-wrap gap-4">
-                            <h3 class="text-lg font-bold">Transaction Management</h3>
-                            <div class="flex items-center space-x-3">
-                                <input type="text" x-model="searchTransaction" placeholder="Search transactions..." class="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                                <button @click="showAddTransactionModal = true" class="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-medium hover:from-green-600 hover:to-green-700">
-                                    <i class="fa-solid fa-plus mr-2"></i>Add Transaction
-                                </button>
-                            </div>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead class="bg-gray-50 dark:bg-gray-700/50">
-                                    <tr>
-                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
-                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
-                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
-                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                    <template x-for="tx in filteredTransactions()" :key="tx.id">
-                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
-                                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300" x-text="formatDate(tx.createdAt)"></td>
-                                            <td class="px-6 py-4" x-text="tx.userFullName"></td>
-                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-300" x-text="tx.description"></td>
-                                            <td class="px-6 py-4 font-semibold" :class="tx.amountCents > 0 ? 'text-green-600' : 'text-red-600'" x-text="formatCurrency(tx.amountCents)"></td>
                                             <td class="px-6 py-4">
                                                 <span :class="{
-                                                    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400': tx.status === 'pending',
-                                                    'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400': tx.status === 'completed',
-                                                    'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': tx.status === 'failed'
-                                                }" class="px-3 py-1 rounded-full text-sm font-medium" x-text="tx.status"></span>
+                                                    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400': user.kycStatus === 'pending',
+                                                    'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400': user.kycStatus === 'verified',
+                                                    'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300': !user.kycStatus || user.kycStatus === 'not_submitted'
+                                                }" class="px-3 py-1 rounded-full text-sm font-medium">
+                                                    <span x-text="user.kycStatus || 'Not Submitted'"></span>
+                                                </span>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <template x-if="tx.status === 'pending'">
-                                                    <div class="flex items-center space-x-2">
-                                                        <button @click="updateTransactionStatus(tx.id, 'completed')" class="px-3 py-1 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600">
-                                                            <i class="fa-solid fa-check mr-1"></i>Approve
-                                                        </button>
-                                                        <button @click="updateTransactionStatus(tx.id, 'failed')" class="px-3 py-1 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600">
-                                                            <i class="fa-solid fa-times mr-1"></i>Reject
-                                                        </button>
-                                                    </div>
-                                                </template>
+                                                <div class="flex items-center space-x-2">
+                                                    <template x-if="user.governmentIdUrl">
+                                                        <a :href="user.governmentIdUrl" target="_blank" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl text-primary-600 dark:text-primary-400" title="View KYC Document">
+                                                            <i class="fa-solid fa-eye"></i>
+                                                        </a>
+                                                    </template>
+                                                    <button @click="openEditUser(user)" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl text-primary-600 dark:text-primary-400" title="Edit User">
+                                                        <i class="fa-solid fa-edit"></i>
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     </template>
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Applications Tab -->
-                <div x-show="activeTab === 'applications' && !loading">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <template x-for="app in applications" :key="app.id">
-                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                                <div class="flex items-center justify-between mb-4">
-                                    <h4 class="font-bold capitalize" x-text="app.type.replace(/_/g, ' ')"></h4>
-                                    <span :class="{
-                                        'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400': app.status === 'received',
-                                        'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400': app.status === 'approved',
-                                        'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': app.status === 'rejected'
-                                    }" class="px-3 py-1 rounded-full text-sm font-medium" x-text="app.status"></span>
-                                </div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-3" x-text="JSON.stringify(app.payload)"></p>
-                                <p class="text-xs text-gray-400" x-text="formatDate(app.createdAt)"></p>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-
-                <!-- Settings Tab -->
-                <div x-show="activeTab === 'settings' && !loading">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                                <h3 class="text-lg font-bold">Crypto Addresses</h3>
-                            </div>
-                            <div class="p-6 space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium mb-1">BTC Address</label>
-                                    <input type="text" x-model="settings.btc_address" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-1">ETH Address</label>
-                                    <input type="text" x-model="settings.eth_address" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-1">USDT Address</label>
-                                    <input type="text" x-model="settings.usdt_address" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                                <h3 class="text-lg font-bold">Bank Account Details</h3>
-                            </div>
-                            <div class="p-6 space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium mb-1">Bank Name</label>
-                                    <input type="text" x-model="settings.bank_name" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-1">Routing Number</label>
-                                    <input type="text" x-model="settings.routing_number" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-1">SWIFT Code</label>
-                                    <input type="text" x-model="settings.swift_code" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden md:col-span-2">
-                            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                                <h3 class="text-lg font-bold">Support Contact Details</h3>
-                            </div>
-                            <div class="p-6 space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium mb-1">Support Email</label>
-                                    <input type="email" x-model="settings.support_email" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-1">Support Phone</label>
-                                    <input type="text" x-model="settings.support_phone" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="md:col-span-2 flex justify-end">
-                            <button @click="saveSettings()" class="px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-medium hover:from-green-600 hover:to-green-700">
-                                Save Settings
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -443,100 +285,50 @@
 
     <!-- Edit User Modal -->
     <div x-show="showEditUserModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @click="showEditUserModal = false">
-        <div @click.stop class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-2xl max-w-lg w-full">
+        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full">
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold">Edit User</h3>
+                <h3 class="text-2xl font-bold">Edit User</h3>
                 <button @click="showEditUserModal = false" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl">
                     <i class="fa-solid fa-times text-gray-600 dark:text-gray-300"></i>
                 </button>
             </div>
-            <div class="space-y-4">
+            <div x-show="editingUser" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium mb-1">Full Name</label>
-                    <input type="text" x-model="currentUser.fullName" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                    <label class="block text-sm font-medium mb-1">First Name</label>
+                    <input type="text" x-model="editingUser.firstName" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Last Name</label>
+                    <input type="text" x-model="editingUser.lastName" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Email</label>
-                    <input type="email" x-model="currentUser.email" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                    <input type="email" x-model="editingUser.email" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Account Balance (USD)</label>
-                    <input type="number" step="0.01" x-model="currentUser.balance" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                    <label class="block text-sm font-medium mb-1">KYC Status</label>
+                    <select x-model="editingUser.kycStatus" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                        <option value="not_submitted">Not Submitted</option>
+                        <option value="pending">Pending</option>
+                        <option value="verified">Verified</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <label class="flex items-center space-x-2">
-                        <input type="checkbox" x-model="currentUser.isVerified" class="rounded text-green-600">
-                        <span class="text-sm">Verified</span>
-                    </label>
-                    <label class="flex items-center space-x-2">
-                        <input type="checkbox" x-model="currentUser.isActive" class="rounded text-green-600">
-                        <span class="text-sm">Active</span>
-                    </label>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Account Status</label>
+                    <select x-model="editingUser.status" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                        <option value="pending">Pending</option>
+                        <option value="active">Active</option>
+                        <option value="suspended">Suspended</option>
+                    </select>
                 </div>
                 <div class="flex items-center space-x-3 pt-4">
                     <button @click="showEditUserModal = false" class="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium">Cancel</button>
-                    <button @click="saveUser()" class="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-medium hover:from-green-600 hover:to-green-700">Save Changes</button>
+                    <button @click="saveUser()" class="flex-1 px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl font-medium hover:from-primary-600 hover:to-primary-700">Save Changes</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Add Transaction Modal -->
-    <div x-show="showAddTransactionModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @click="showAddTransactionModal = false">
-        <div @click.stop class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-2xl max-w-lg w-full">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold">Add Transaction</h3>
-                <button @click="showAddTransactionModal = false" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl">
-                    <i class="fa-solid fa-times text-gray-600 dark:text-gray-300"></i>
-                </button>
-            </div>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium mb-1">User</label>
-                    <select x-model="newTransaction.userId" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                        <option value="" disabled>Select user</option>
-                        <template x-for="user in users" :key="user.id">
-                            <option :value="user.id" x-text="`${user.fullName} (${user.email})`"></option>
-                        </template>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Type</label>
-                    <select x-model="newTransaction.kind" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                        <option value="deposit">Deposit</option>
-                        <option value="withdrawal">Withdrawal</option>
-                        <option value="transfer_local">Local Transfer</option>
-                        <option value="transfer_international">International Transfer</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Description</label>
-                    <input type="text" x-model="newTransaction.description" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Amount (USD)</label>
-                    <input type="number" step="0.01" x-model.number="newTransaction.amount" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Date</label>
-                    <input type="datetime-local" x-model="newTransaction.createdAt" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Status</label>
-                    <select x-model="newTransaction.status" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
-                        <option value="completed">Completed</option>
-                        <option value="pending">Pending</option>
-                        <option value="failed">Failed</option>
-                    </select>
-                </div>
-                <div class="flex items-center space-x-3 pt-4">
-                    <button @click="showAddTransactionModal = false" class="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium">Cancel</button>
-                    <button @click="addTransaction()" class="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-medium hover:from-green-600 hover:to-green-700">Add Transaction</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'></script>
 </body>
 </html>
