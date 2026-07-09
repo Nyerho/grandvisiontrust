@@ -840,15 +840,23 @@
             const last = user.lastName ? user.lastName.charAt(0).toUpperCase() : 'N';
             return first + last;
         },
+        realtimeUnsubscribe: null,
         async fetchUser(userId) {
-            try {
-                const doc = await db.collection('users').doc(userId).get();
-                if (doc.exists) {
-                    this.user = { id: doc.id, ...doc.data() };
-                }
-            } catch (err) {
-                console.error('Error fetching user:', err);
+            // Unsubscribe from previous listener if any
+            if (this.realtimeUnsubscribe) {
+                this.realtimeUnsubscribe();
             }
+            // Set up realtime listener
+            this.realtimeUnsubscribe = db.collection('users').doc(userId).onSnapshot(
+                (doc) => {
+                    if (doc.exists) {
+                        this.user = { id: doc.id, ...doc.data() };
+                    }
+                },
+                (err) => {
+                    console.error('Error fetching user:', err);
+                }
+            );
         },
         async signOutUser() {
             try {
