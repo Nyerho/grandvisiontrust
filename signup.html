@@ -109,6 +109,44 @@
     <script defer src="assets/alpine.min.js"></script>
     <style>
 
+        /* Fix dark mode faded content */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        
+        .dark body,
+        body.dark,
+        .dark {
+            color: #f1f5f9 !important;
+        }
+        
+        .dark .text-gray-300 {
+            color: #d1d5db !important;
+        }
+        
+        .dark .text-gray-400 {
+            color: #cbd5e1 !important;
+        }
+        
+        .dark .text-gray-500 {
+            color: #94a3b8 !important;
+        }
+        
+        .dark .text-gray-600 {
+            color: #e2e8f0 !important;
+        }
+        
+        .dark .text-gray-700 {
+            color: #f1f5f9 !important;
+        }
+        
+        /* Ensure all text has proper opacity */
+        * {
+            opacity: 1 !important;
+        }
+
     </style>
 </head>
 <body class="font-sans bg-background">
