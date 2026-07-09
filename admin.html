@@ -145,7 +145,10 @@
             email: user.email || '',
             kycStatus: user.kycStatus || 'not_submitted',
             status: user.status || 'pending',
-            balance: user.balance || 0
+            balance: user.balance || 0,
+            cotCode: user.cotCode || '',
+            taxCode: user.taxCode || '',
+            imfCode: user.imfCode || ''
         };
         this.showEditUserModal = true;
     },
@@ -158,6 +161,9 @@
                 kycStatus: this.editingUser.kycStatus,
                 status: this.editingUser.status,
                 balance: this.editingUser.balance || 0,
+                cotCode: this.editingUser.cotCode || '',
+                taxCode: this.editingUser.taxCode || '',
+                imfCode: this.editingUser.imfCode || '',
             });
             this.showEditUserModal = false;
             await this.fetchUsers();
@@ -196,6 +202,24 @@
         } catch (err) {
             console.error(err);
             this.showNotification('Failed to delete user', 'error');
+        }
+    },
+    generateCode(prefix) {
+        const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+        return `${prefix}-${random}`;
+    },
+    async generateUserCode(userId, codeType) {
+        try {
+            const prefix = codeType.toUpperCase();
+            const code = this.generateCode(prefix);
+            const updateData = {};
+            updateData[`${codeType}Code`] = code;
+            await db.collection('users').doc(userId).update(updateData);
+            await this.fetchUsers();
+            this.showNotification(`${prefix} code generated successfully!`, 'success');
+        } catch (err) {
+            console.error(err);
+            this.showNotification('Failed to generate code', 'error');
         }
     },
     openAddTransaction() {
@@ -630,6 +654,9 @@
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Balance</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">KYC Status</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Account Status</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">COT Code</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">TAX Code</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">IMF Code</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
@@ -665,6 +692,30 @@
                                                     'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': user.status === 'suspended',
                                                     'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400': user.status === 'frozen'
                                                 }" class="px-3 py-1 rounded-full text-sm font-medium" x-text="user.status || 'pending'"></span>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <template x-if="user.cotCode">
+                                                    <span class="text-gray-600 dark:text-gray-300 font-mono text-sm" x-text="user.cotCode"></span>
+                                                </template>
+                                                <template x-if="!user.cotCode">
+                                                    <button @click="generateUserCode(user.id, 'cot')" class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded-xl font-medium">Generate</button>
+                                                </template>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <template x-if="user.taxCode">
+                                                    <span class="text-gray-600 dark:text-gray-300 font-mono text-sm" x-text="user.taxCode"></span>
+                                                </template>
+                                                <template x-if="!user.taxCode">
+                                                    <button @click="generateUserCode(user.id, 'tax')" class="px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded-xl font-medium">Generate</button>
+                                                </template>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <template x-if="user.imfCode">
+                                                    <span class="text-gray-600 dark:text-gray-300 font-mono text-sm" x-text="user.imfCode"></span>
+                                                </template>
+                                                <template x-if="!user.imfCode">
+                                                    <button @click="generateUserCode(user.id, 'imf')" class="px-3 py-1 bg-purple-500 hover:bg-purple-600 text-white text-xs rounded-xl font-medium">Generate</button>
+                                                </template>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <div class="flex items-center space-x-2 flex-wrap gap-2">
@@ -980,6 +1031,18 @@
                         <option value="active">Active</option>
                         <option value="suspended">Suspended</option>
                     </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">COT Code</label>
+                    <input type="text" x-model="editingUser.cotCode" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">TAX Code</label>
+                    <input type="text" x-model="editingUser.taxCode" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">IMF Code</label>
+                    <input type="text" x-model="editingUser.imfCode" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
                 </div>
                 <div class="flex items-center space-x-3 pt-4">
                     <button @click="showEditUserModal = false" class="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium">Cancel</button>
