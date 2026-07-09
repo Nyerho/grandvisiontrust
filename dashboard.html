@@ -41,7 +41,7 @@
 
 
     <!-- Tailwind CSS with custom color variables -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -1176,7 +1176,7 @@
                                     <!-- Header Section -->
                                     <div class="flex items-center justify-between mb-6">
                                         <div class="flex items-center space-x-2">
-                                            <img src="/placeholder.svg?width=40&amp;height=40" alt="Profile" class="w-10 h-10 rounded-full border-2 border-white/20">
+                                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-bold border-2 border-white/20" x-text="user?.firstName ? user.firstName.charAt(0).toUpperCase() + (user.lastName ? user.lastName.charAt(0).toUpperCase() : '') : 'U'"></div>
                                             <div>
                                                 <p class="text-white/80 text-xs" x-text="greeting + ' 👋'"></p>
                                                 <p class="text-white font-semibold text-base">
@@ -1265,7 +1265,7 @@
                                                                 <p class="text-white/80 text-xs mb-1">Available Balance</p>
                                                                 <div class="flex items-center justify-center space-x-2">
                                                                     <p class="text-3xl font-bold" x-show="balanceVisible" x-transition>
-                                                                        ƒ0.00
+                                                                        ƒ<span x-text="(user?.balance || 0).toLocaleString()"></span>
                                                                     </p>
                                                                     <p class="text-3xl font-bold" x-show="!balanceVisible" x-transition>
                                                                         ƒ ******
@@ -2181,7 +2181,7 @@
                                                 <div class="flex items-baseline space-x-2 mb-2">
                                                     <div class="text-center">
                                                         <p class="text-4xl font-bold leading-tight" x-show="balanceVisible" x-transition>
-                                                            ƒ0.00
+                                                            ƒ<span x-text="(user?.balance || 0).toLocaleString()"></span>
                                                         </p>
                                                         <p class="text-4xl font-bold leading-tight" x-show="!balanceVisible" x-transition>
                                                             ƒ ••••••
