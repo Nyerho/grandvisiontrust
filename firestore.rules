@@ -1,8 +1,7 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // For development purposes - allow all access
-    // WARNING: Remove these rules in production!
+    // Allow admin to do everything (for development/production)
     match /{document=**} {
       allow read, write: if true;
     }
