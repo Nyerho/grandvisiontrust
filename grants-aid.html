@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" x-data="{ darkMode: false, open: false }" x-init="darkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches); if (darkMode) { document.documentElement.classList.add('dark'); }">
 <head>
+    <script>
+        // Early dark mode initialization to prevent FOUC
+        const isDarkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grants & Aid - GrandVisionTrust Bank</title>

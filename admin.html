@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" x-data="{
-    darkMode: localStorage.getItem('darkMode') === 'true' || false,
+    darkMode: localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches),
     sidebarOpen: false,
     activeTab: 'users',
     showEditUserModal: false,
@@ -325,6 +325,13 @@
     initDarkMode();
 ">
 <head>
+    <script>
+        // Early dark mode initialization to prevent FOUC
+        const isDarkMode = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | GrandVisionTrust</title>
