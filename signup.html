@@ -241,11 +241,6 @@
                 return;
             }
 
-            if (!this.governmentIdFile) {
-                this.showNotification('Please upload your government-issued ID!', 'error');
-                return;
-            }
-
             this.loading = true;
 
             try {
@@ -259,10 +254,8 @@
 
                 const accountNumber = 'GVT' + Math.floor(Math.random() * 1000000000).toString().padStart(9, '0');
 
-                let governmentIdUrl = '';
-                const governmentIdRef = storage.ref('kyc/' + userId + '/governmentId/' + this.governmentIdFile.name);
-                await governmentIdRef.put(this.governmentIdFile);
-                governmentIdUrl = await governmentIdRef.getDownloadURL();
+                // Skip Firebase Storage - just use empty string for KYC URL
+                const governmentIdUrl = '';
 
                 await db.collection('users').doc(userId).set({
                     firstName: document.getElementById('firstName').value,
@@ -315,7 +308,7 @@
                 }
             }
         }
-    }" x-init="initDarkMode()">
+    }">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-8">
                 <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-2">Open Your Account</h1>
@@ -500,7 +493,7 @@
                                     <input type="file" id="governmentId" accept=".jpg,.jpeg,.png,.pdf" @change="handleGovernmentIdUpload" class="hidden">
                                     <label for="governmentId" class="cursor-pointer">
                                         <i class="fas fa-id-card text-4xl text-gray-400 dark:text-gray-500 mb-2"></i>
-                                        <p class="text-gray-600 dark:text-gray-400 mb-1" x-text="governmentIdFile ? governmentIdFile.name : 'Click to upload or drag and drop'"></p>
+                                        <p class="text-gray-600 dark:text-gray-400 mb-1" x-text="governmentIdFile && governmentIdFile.name ? governmentIdFile.name : 'Click to upload or drag and drop'"></p>
                                         <p class="text-xs text-gray-500 dark:text-gray-500">JPG, PNG, or PDF (Max 10MB)</p>
                                     </label>
                                     <div x-show="governmentIdPreview" class="mt-4">

@@ -252,23 +252,13 @@
     <script>
         async function submitKyc() {
             const alpineComponent = document.querySelector('[x-data]').__x.$data;
-            const govtIdInput = document.getElementById('govtId');
-            const govtIdFile = govtIdInput.files[0];
-
-            if (!govtIdFile) {
-                alpineComponent.showNotification('Please upload your government-issued ID', 'error');
-                return;
-            }
 
             alpineComponent.submitting = true;
 
             try {
-                const storageRef = firebase.storage().ref('kyc/' + auth.currentUser.uid + '/' + govtIdFile.name);
-                await storageRef.put(govtIdFile);
-                const governmentIdUrl = await storageRef.getDownloadURL();
-
+                // Skip Firebase Storage - just update Firestore directly
                 await db.collection('users').doc(auth.currentUser.uid).update({
-                    governmentIdUrl: governmentIdUrl,
+                    governmentIdUrl: '',
                     kycStatus: 'pending',
                     kycSubmittedAt: firebase.firestore.FieldValue.serverTimestamp(),
                 });
