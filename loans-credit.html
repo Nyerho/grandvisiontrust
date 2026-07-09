@@ -145,7 +145,62 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;90&display=swap" rel="stylesheet">
 
-    <style>
+    <style>        /* Comprehensive Dark Mode Fix */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffffff;
+            color: #1e293b;
+        }
+
+        .dark body {
+            background-color: #0f172a;
+            color: #f1f5f9;
+        }
+
+        /* Ensure all text elements have proper dark mode colors */
+        .dark .text-gray-50, .dark .text-gray-100, .dark .text-gray-200, .dark .text-gray-300, 
+        .dark .text-gray-400, .dark .text-gray-500, .dark .text-gray-600, .dark .text-gray-700, 
+        .dark .text-gray-800, .dark .text-gray-900 {
+            color: #e2e8f0 !important;
+        }
+
+        .dark .text-white {
+            color: #ffffff !important;
+        }
+
+        /* Dark mode background fixes */
+        .dark .bg-white {
+            background-color: #1e293b !important;
+        }
+
+        .dark .bg-gray-50, .dark .bg-gray-100 {
+            background-color: #334155 !important;
+        }
+
+        .dark .bg-gray-200, .dark .bg-gray-300 {
+            background-color: #475569 !important;
+        }
+
+        /* Border fixes for dark mode */
+        .dark .border-gray-100, .dark .border-gray-200, .dark .border-gray-300 {
+            border-color: #334155 !important;
+        }
+
+        .dark .border-gray-400, .dark .border-gray-500, .dark .border-gray-600 {
+            border-color: #475569 !important;
+        }
+
+        /* Ensure input and form elements work in dark mode */
+        .dark input, .dark textarea, .dark select {
+            background-color: #1e293b;
+            color: #f1f5f9;
+            border-color: #334155;
+        }
+
+        .dark input::placeholder, .dark textarea::placeholder {
+            color: #94a3b8;
+        }
+
         body {
             font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: theme('colors.background');
