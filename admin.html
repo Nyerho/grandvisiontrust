@@ -11,9 +11,29 @@
     loans: [],
     loading: true,
     searchUser: '',
-    editingUser: null,
-    newTransaction: {},
-    editingTransaction: null,
+    editingUser: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        kycStatus: 'not_submitted',
+        status: 'pending',
+        balance: 0,
+        id: ''
+    },
+    newTransaction: {
+        userId: '',
+        type: 'deposit',
+        amount: 0,
+        status: 'pending',
+        description: '',
+    },
+    editingTransaction: {
+        id: '',
+        type: 'deposit',
+        amount: 0,
+        status: 'pending',
+        description: '',
+    },
     authenticated: false,
     adminPassword: '',
     initDarkMode() { if(this.darkMode) document.documentElement.classList.add('dark'); },
@@ -43,7 +63,16 @@
         this.loading = true;
         try {
             const snapshot = await db.collection('users').get();
-            this.users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            this.users = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                firstName: doc.data().firstName || '',
+                lastName: doc.data().lastName || '',
+                email: doc.data().email || '',
+                kycStatus: doc.data().kycStatus || 'not_submitted',
+                status: doc.data().status || 'pending',
+                balance: doc.data().balance || 0,
+            }));
         } catch (err) {
             console.error(err);
             this.showNotification('Failed to load users', 'error');
@@ -54,7 +83,14 @@
     async fetchTransactions() {
         try {
             const snapshot = await db.collection('transactions').orderBy('createdAt', 'desc').get();
-            this.transactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            this.transactions = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                type: doc.data().type || 'deposit',
+                amount: doc.data().amount || 0,
+                status: doc.data().status || 'pending',
+                description: doc.data().description || '',
+            }));
         } catch (err) {
             console.error(err);
             this.showNotification('Failed to load transactions', 'error');
@@ -63,7 +99,13 @@
     async fetchLoans() {
         try {
             const snapshot = await db.collection('loans').orderBy('createdAt', 'desc').get();
-            this.loans = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            this.loans = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                amount: doc.data().amount || 0,
+                status: doc.data().status || 'pending',
+                purpose: doc.data().purpose || '',
+            }));
         } catch (err) {
             console.error(err);
             this.showNotification('Failed to load loans', 'error');
@@ -71,7 +113,7 @@
     },
     openEditUser(user) {
         this.editingUser = {
-            ...user,
+            id: user.id || '',
             firstName: user.firstName || '',
             lastName: user.lastName || '',
             email: user.email || '',
@@ -139,7 +181,7 @@
     },
     openEditTransaction(transaction) {
         this.editingTransaction = {
-            ...transaction,
+            id: transaction.id || '',
             type: transaction.type || 'deposit',
             amount: transaction.amount || 0,
             status: transaction.status || 'pending',
@@ -179,13 +221,13 @@
             if (status === 'completed') {
                 if (transaction.type === 'deposit' && transaction.userId) {
                     const userDoc = await db.collection('users').doc(transaction.userId).get();
-                    const user = userDoc.data();
+                    const user = userDoc.data() || { balance: 0 };
                     await db.collection('users').doc(transaction.userId).update({
                         balance: (user.balance || 0) + Number(transaction.amount)
                     });
                 } else if (transaction.type === 'withdrawal' && transaction.userId) {
                     const userDoc = await db.collection('users').doc(transaction.userId).get();
-                    const user = userDoc.data();
+                    const user = userDoc.data() || { balance: 0 };
                     await db.collection('users').doc(transaction.userId).update({
                         balance: (user.balance || 0) - Number(transaction.amount)
                     });
@@ -476,7 +518,7 @@
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 text-gray-600 dark:text-gray-300" x-text="user.email"></td>
-                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-300" x-text="'$' + (user.balance || 0).toLocaleString()"></td>
+                                            <td class="px-6 py-4 text-gray-600 dark:text-gray-300 font-semibold" x-text="'$' + (user.balance || 0).toLocaleString()"></td>
                                             <td class="px-6 py-4">
                                                 <span :class="{
                                                     'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400': user.kycStatus === 'pending',
@@ -680,7 +722,7 @@
                     <i class="fa-solid fa-times text-gray-600 dark:text-gray-300"></i>
                 </button>
             </div>
-            <div x-show="editingUser" class="space-y-4">
+            <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-1">First Name</label>
                     <input type="text" x-model="editingUser.firstName" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
@@ -695,7 +737,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Balance</label>
-                    <input type="number" x-model="editingUser.balance" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                    <input type="number" x-model.number="editingUser.balance" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">KYC Status</label>
@@ -751,7 +793,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Amount</label>
-                    <input type="number" x-model="newTransaction.amount" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                    <input type="number" x-model.number="newTransaction.amount" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Status</label>
@@ -782,7 +824,7 @@
                     <i class="fa-solid fa-times text-gray-600 dark:text-gray-300"></i>
                 </button>
             </div>
-            <div x-show="editingTransaction" class="space-y-4">
+            <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-1">Type</label>
                     <select x-model="editingTransaction.type" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
@@ -793,7 +835,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Amount</label>
-                    <input type="number" x-model="editingTransaction.amount" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                    <input type="number" x-model.number="editingTransaction.amount" class="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Status</label>
