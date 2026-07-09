@@ -36,6 +36,26 @@
     },
     authenticated: false,
     adminPassword: '',
+    async createTestUser() {
+        try {
+            const testId = 'test_user_' + Date.now();
+            await db.collection('users').doc(testId).set({
+                firstName: 'Test',
+                lastName: 'User',
+                email: 'test' + Date.now() + '@example.com',
+                balance: 1000,
+                status: 'active',
+                kycStatus: 'pending',
+                accountNumber: 'GVT' + Math.floor(Math.random() * 1000000000).toString().padStart(9, '0'),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            this.showNotification('Test user created successfully!', 'success');
+            await this.fetchUsers();
+        } catch (err) {
+            console.error(err);
+            this.showNotification('Failed to create test user: ' + err.message, 'error');
+        }
+    },
     initDarkMode() { if(this.darkMode) document.documentElement.classList.add('dark'); },
     toggleDarkMode() {
         this.darkMode = !this.darkMode;
@@ -60,26 +80,32 @@
         }, 5000);
     },
     async fetchUsers() {
-        this.loading = true;
-        try {
-            const snapshot = await db.collection('users').get();
-            this.users = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-                firstName: doc.data().firstName || '',
-                lastName: doc.data().lastName || '',
-                email: doc.data().email || '',
-                kycStatus: doc.data().kycStatus || 'not_submitted',
-                status: doc.data().status || 'pending',
-                balance: doc.data().balance || 0,
-            }));
-        } catch (err) {
-            console.error(err);
-            this.showNotification('Failed to load users', 'error');
-        } finally {
-            this.loading = false;
-        }
-    },
+            this.loading = true;
+            try {
+                console.log('Fetching users from Firestore...');
+                const snapshot = await db.collection('users').get();
+                console.log('Number of users found:', snapshot.size);
+                this.users = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    console.log('User data:', data);
+                    return {
+                        id: doc.id,
+                        ...data,
+                        firstName: data.firstName || '',
+                        lastName: data.lastName || '',
+                        email: data.email || '',
+                        kycStatus: data.kycStatus || 'not_submitted',
+                        status: data.status || 'pending',
+                        balance: data.balance || 0,
+                    };
+                });
+            } catch (err) {
+                console.error('Error fetching users:', err);
+                this.showNotification('Failed to load users: ' + err.message, 'error');
+            } finally {
+                this.loading = false;
+            }
+        },
     async fetchTransactions() {
         try {
             const snapshot = await db.collection('transactions').orderBy('createdAt', 'desc').get();
@@ -485,6 +511,12 @@
                             <p class="text-sm text-gray-500 dark:text-gray-400">Verified KYC</p>
                             <p class="text-3xl font-bold mt-1" x-text="users.filter(u => u.kycStatus === 'verified').length"></p>
                         </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <button @click="createTestUser()" class="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl font-medium hover:from-purple-600 hover:to-purple-700">
+                            <i class="fa-solid fa-user-plus mr-2"></i>Create Test User
+                        </button>
                     </div>
 
                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
