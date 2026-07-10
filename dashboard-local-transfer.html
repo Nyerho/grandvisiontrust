@@ -635,40 +635,38 @@
                     recipientName: '',
                     accountNumber: '',
                     bankName: '',
-                    amount: '',
-                    description: '',
                     cotCode: '',
                     taxCode: '',
                     imfCode: '',
-                    validateCotCode() {
-                        if (!this.$parent.user?.cotCode) {
-                            this.$parent.showNotification('No COT code assigned to your account. Please contact support.', 'error');
+                    validateCotCode(rootUser) {
+                        if (!rootUser?.cotCode) {
+                            $root.showNotification('No COT code assigned to your account. Please contact support.', 'error');
                             return false;
                         }
-                        if (this.cotCode !== this.$parent.user.cotCode) {
-                            this.$parent.showNotification('Invalid COT code. Please check and try again.', 'error');
-                            return false;
-                        }
-                        return true;
-                    },
-                    validateTaxCode() {
-                        if (!this.$parent.user?.taxCode) {
-                            this.$parent.showNotification('No TAX code assigned to your account. Please contact support.', 'error');
-                            return false;
-                        }
-                        if (this.taxCode !== this.$parent.user.taxCode) {
-                            this.$parent.showNotification('Invalid TAX code. Please check and try again.', 'error');
+                        if (this.cotCode !== rootUser.cotCode) {
+                            $root.showNotification('Invalid COT code. Please check and try again.', 'error');
                             return false;
                         }
                         return true;
                     },
-                    validateImfCode() {
-                        if (!this.$parent.user?.imfCode) {
-                            this.$parent.showNotification('No IMF code assigned to your account. Please contact support.', 'error');
+                    validateTaxCode(rootUser) {
+                        if (!rootUser?.taxCode) {
+                            $root.showNotification('No TAX code assigned to your account. Please contact support.', 'error');
                             return false;
                         }
-                        if (this.imfCode !== this.$parent.user.imfCode) {
-                            this.$parent.showNotification('Invalid IMF code. Please check and try again.', 'error');
+                        if (this.taxCode !== rootUser.taxCode) {
+                            $root.showNotification('Invalid TAX code. Please check and try again.', 'error');
+                            return false;
+                        }
+                        return true;
+                    },
+                    validateImfCode(rootUser) {
+                        if (!rootUser?.imfCode) {
+                            $root.showNotification('No IMF code assigned to your account. Please contact support.', 'error');
+                            return false;
+                        }
+                        if (this.imfCode !== rootUser.imfCode) {
+                            $root.showNotification('Invalid IMF code. Please check and try again.', 'error');
                             return false;
                         }
                         return true;
@@ -677,7 +675,7 @@
                         try {
                             const user = firebase.auth().currentUser;
                             if (!user) {
-                                this.$parent.showNotification('Please log in to continue.', 'error');
+                                $root.showNotification('Please log in to continue.', 'error');
                                 return;
                             }
 
@@ -704,7 +702,7 @@
                             this.step = 5;
                         } catch (err) {
                             console.error('Transfer failed:', err);
-                            this.$parent.showNotification('Transfer failed. Please try again.', 'error');
+                            $root.showNotification('Transfer failed. Please try again.', 'error');
                         }
                     }
                 }">
@@ -779,7 +777,7 @@
                                     <button type="button" @click="step = 1" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
                                         Back
                                     </button>
-                                    <button type="button" @click="if(validateCotCode()) step = 3" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                    <button type="button" @click="if(validateCotCode($root.user)) step = 3" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
                                         Verify
                                     </button>
                                 </div>
@@ -807,7 +805,7 @@
                                     <button type="button" @click="step = 2" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
                                         Back
                                     </button>
-                                    <button type="button" @click="if(validateTaxCode()) step = 4" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                    <button type="button" @click="if(validateTaxCode($root.user)) step = 4" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
                                         Verify
                                     </button>
                                 </div>
@@ -835,7 +833,7 @@
                                     <button type="button" @click="step = 3" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
                                         Back
                                     </button>
-                                    <button type="button" @click="if(validateImfCode()) completeTransfer()" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                    <button type="button" @click="if(validateImfCode($root.user)) completeTransfer()" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
                                         Verify
                                     </button>
                                 </div>

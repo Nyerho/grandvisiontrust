@@ -362,57 +362,6 @@
                 this.showNotification('Failed to sign out', 'error');
             }
         }
-,
-        showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 z-[100000] px-6 py-4 rounded-xl shadow-2xl transition-all duration-300 transform translate-x-full ${type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.classList.remove('translate-x-full');
-                notification.classList.add('translate-x-0');
-            }, 10);
-            
-            setTimeout(() => {
-                notification.classList.remove('translate-x-0');
-                notification.classList.add('translate-x-full');
-                setTimeout(() => notification.remove(), 300);
-            }, 5000);
-        },
-        getInitials(user) {
-            if (!user) return 'UN';
-            const first = user.firstName ? user.firstName.charAt(0).toUpperCase() : 'U';
-            const last = user.lastName ? user.lastName.charAt(0).toUpperCase() : 'N';
-            return first + last;
-        },
-        realtimeUnsubscribe: null,
-        fetchUser(userId) {
-            // Unsubscribe from previous listener if any
-            if (this.realtimeUnsubscribe) {
-                this.realtimeUnsubscribe();
-            }
-            // Set up realtime listener
-            this.realtimeUnsubscribe = db.collection('users').doc(userId).onSnapshot(
-                (doc) => {
-                    if (doc.exists) {
-                        this.user = { id: doc.id, ...doc.data() };
-                    }
-                },
-                (err) => {
-                    console.error('Error fetching user:', err);
-                }
-            );
-        },
-        async signOutUser() {
-            try {
-                await auth.signOut();
-                window.location.href = 'index.html';
-            } catch (err) {
-                console.error('Error signing out:', err);
-                this.showNotification('Failed to sign out', 'error');
-            }
-        }
 
     }" x-init="
         initDarkMode();
@@ -693,35 +642,35 @@
                     cotCode: '',
                     taxCode: '',
                     imfCode: '',
-                    validateCotCode() {
-                        if (!this.$parent.user?.cotCode) {
-                            this.$parent.showNotification('No COT code assigned to your account. Please contact support.', 'error');
+                    validateCotCode(rootUser) {
+                        if (!rootUser?.cotCode) {
+                            $root.showNotification('No COT code assigned to your account. Please contact support.', 'error');
                             return false;
                         }
-                        if (this.cotCode !== this.$parent.user.cotCode) {
-                            this.$parent.showNotification('Invalid COT code. Please check and try again.', 'error');
-                            return false;
-                        }
-                        return true;
-                    },
-                    validateTaxCode() {
-                        if (!this.$parent.user?.taxCode) {
-                            this.$parent.showNotification('No TAX code assigned to your account. Please contact support.', 'error');
-                            return false;
-                        }
-                        if (this.taxCode !== this.$parent.user.taxCode) {
-                            this.$parent.showNotification('Invalid TAX code. Please check and try again.', 'error');
+                        if (this.cotCode !== rootUser.cotCode) {
+                            $root.showNotification('Invalid COT code. Please check and try again.', 'error');
                             return false;
                         }
                         return true;
                     },
-                    validateImfCode() {
-                        if (!this.$parent.user?.imfCode) {
-                            this.$parent.showNotification('No IMF code assigned to your account. Please contact support.', 'error');
+                    validateTaxCode(rootUser) {
+                        if (!rootUser?.taxCode) {
+                            $root.showNotification('No TAX code assigned to your account. Please contact support.', 'error');
                             return false;
                         }
-                        if (this.imfCode !== this.$parent.user.imfCode) {
-                            this.$parent.showNotification('Invalid IMF code. Please check and try again.', 'error');
+                        if (this.taxCode !== rootUser.taxCode) {
+                            $root.showNotification('Invalid TAX code. Please check and try again.', 'error');
+                            return false;
+                        }
+                        return true;
+                    },
+                    validateImfCode(rootUser) {
+                        if (!rootUser?.imfCode) {
+                            $root.showNotification('No IMF code assigned to your account. Please contact support.', 'error');
+                            return false;
+                        }
+                        if (this.imfCode !== rootUser.imfCode) {
+                            $root.showNotification('Invalid IMF code. Please check and try again.', 'error');
                             return false;
                         }
                         return true;
@@ -730,7 +679,7 @@
                         try {
                             const user = firebase.auth().currentUser;
                             if (!user) {
-                                this.$parent.showNotification('Please log in to continue.', 'error');
+                                $root.showNotification('Please log in to continue.', 'error');
                                 return;
                             }
 
@@ -758,7 +707,7 @@
                             this.step = 5;
                         } catch (err) {
                             console.error('Transfer failed:', err);
-                            this.$parent.showNotification('Transfer failed. Please try again.', 'error');
+                            $root.showNotification('Transfer failed. Please try again.', 'error');
                         }
                     }
                 }">
@@ -841,7 +790,7 @@
                                     <button type="button" @click="step = 1" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
                                         Back
                                     </button>
-                                    <button type="button" @click="if(validateCotCode()) step = 3" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                    <button type="button" @click="if(validateCotCode($root.user)) step = 3" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
                                         Verify
                                     </button>
                                 </div>
@@ -871,7 +820,7 @@
                                     <button type="button" @click="step = 2" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
                                         Back
                                     </button>
-                                    <button type="button" @click="if(validateTaxCode()) step = 4" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                    <button type="button" @click="if(validateTaxCode($root.user)) step = 4" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
                                         Verify
                                     </button>
                                 </div>
@@ -901,7 +850,7 @@
                                     <button type="button" @click="step = 3" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
                                         Back
                                     </button>
-                                    <button type="button" @click="if(validateImfCode()) completeTransfer()" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                    <button type="button" @click="if(validateImfCode($root.user)) completeTransfer()" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
                                         Verify
                                     </button>
                                 </div>
