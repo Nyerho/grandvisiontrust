@@ -36,6 +36,10 @@
     },
     authenticated: false,
     adminPassword: '',
+    // AI Assistant
+    aiMessages: [],
+    aiInput: '',
+    aiTyping: false,
     async createTestUser() {
         try {
             const testId = 'test_user_' + Date.now();
@@ -238,17 +242,25 @@
                 ...this.newTransaction,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
-            if (this.newTransaction.type === 'deposit' && this.newTransaction.status === 'completed' && this.newTransaction.userId) {
+            if (this.newTransaction.status === 'completed' && this.newTransaction.userId) {
                 const userDoc = await db.collection('users').doc(this.newTransaction.userId).get();
                 const user = userDoc.data() || { balance: 0 };
+                let newBalance = user.balance || 0;
+                const amount = Number(this.newTransaction.amount);
+                
+                // Add to balance: deposit, loan, grant
+                // Subtract from balance: withdrawal, transfer, bill_payment, local_transfer, international_transfer
+                const addTypes = ['deposit', 'loan', 'grant'];
+                const subtractTypes = ['withdrawal', 'transfer', 'bill_payment', 'local_transfer', 'international_transfer'];
+                
+                if (addTypes.includes(this.newTransaction.type)) {
+                    newBalance += amount;
+                } else if (subtractTypes.includes(this.newTransaction.type)) {
+                    newBalance -= amount;
+                }
+                
                 await db.collection('users').doc(this.newTransaction.userId).update({
-                    balance: (user.balance || 0) + Number(this.newTransaction.amount)
-                });
-            } else if (this.newTransaction.type === 'withdrawal' && this.newTransaction.status === 'completed' && this.newTransaction.userId) {
-                const userDoc = await db.collection('users').doc(this.newTransaction.userId).get();
-                const user = userDoc.data() || { balance: 0 };
-                await db.collection('users').doc(this.newTransaction.userId).update({
-                    balance: (user.balance || 0) - Number(this.newTransaction.amount)
+                    balance: newBalance
                 });
             }
             this.showAddTransactionModal = false;
@@ -299,20 +311,24 @@
     async updateTransactionStatus(transaction, status) {
         try {
             await db.collection('transactions').doc(transaction.id).update({ status });
-            if (status === 'completed') {
-                if (transaction.type === 'deposit' && transaction.userId) {
-                    const userDoc = await db.collection('users').doc(transaction.userId).get();
-                    const user = userDoc.data() || { balance: 0 };
-                    await db.collection('users').doc(transaction.userId).update({
-                        balance: (user.balance || 0) + Number(transaction.amount)
-                    });
-                } else if (transaction.type === 'withdrawal' && transaction.userId) {
-                    const userDoc = await db.collection('users').doc(transaction.userId).get();
-                    const user = userDoc.data() || { balance: 0 };
-                    await db.collection('users').doc(transaction.userId).update({
-                        balance: (user.balance || 0) - Number(transaction.amount)
-                    });
+            if (status === 'completed' && transaction.userId) {
+                const userDoc = await db.collection('users').doc(transaction.userId).get();
+                const user = userDoc.data() || { balance: 0 };
+                let newBalance = user.balance || 0;
+                const amount = Number(transaction.amount);
+                
+                const addTypes = ['deposit', 'loan', 'grant'];
+                const subtractTypes = ['withdrawal', 'transfer', 'bill_payment', 'local_transfer', 'international_transfer'];
+                
+                if (addTypes.includes(transaction.type)) {
+                    newBalance += amount;
+                } else if (subtractTypes.includes(transaction.type)) {
+                    newBalance -= amount;
                 }
+                
+                await db.collection('users').doc(transaction.userId).update({
+                    balance: newBalance
+                });
             }
             await this.fetchTransactions();
             await this.fetchUsers();
@@ -344,6 +360,177 @@
         } else {
             this.showNotification('Invalid password!', 'error');
         }
+    },
+    // AI Assistant Functions
+    async sendAiMessage() {
+        if (!this.aiInput.trim()) return;
+        
+        const userMessage = {
+            role: 'user',
+            content: this.aiInput,
+            timestamp: new Date()
+        };
+        this.aiMessages.push(userMessage);
+        const input = this.aiInput;
+        this.aiInput = '';
+        this.aiTyping = true;
+        
+        try {
+            const response = await this.processAiRequest(input);
+            const aiMessage = {
+                role: 'assistant',
+                content: response,
+                timestamp: new Date()
+            };
+            this.aiMessages.push(aiMessage);
+        } catch (err) {
+            console.error(err);
+            this.aiMessages.push({
+                role: 'assistant',
+                content: 'Sorry, I encountered an error. Please try again.',
+                timestamp: new Date()
+            });
+        } finally {
+            this.aiTyping = false;
+        }
+    },
+    async processAiRequest(input) {
+        const lowerInput = input.toLowerCase();
+        
+        // Try to parse commands
+        if (lowerInput.includes('update user') || lowerInput.includes('edit user')) {
+            return await this.parseUpdateUser(input);
+        } else if (lowerInput.includes('add transaction') || lowerInput.includes('create transaction')) {
+            return await this.parseAddTransaction(input);
+        } else if (lowerInput.includes('update transaction status') || lowerInput.includes('set transaction')) {
+            return await this.parseUpdateTransaction(input);
+        } else if (lowerInput.includes('user balance') || lowerInput.includes('get user')) {
+            return await this.parseGetUser(input);
+        } else if (lowerInput.includes('list users') || lowerInput.includes('show users')) {
+            return this.listUsers();
+        } else if (lowerInput.includes('list transactions') || lowerInput.includes('show transactions')) {
+            return this.listTransactions();
+        } else {
+            return `I can help you with:\n- Managing users (update details, check balance)\n- Adding/updating transactions\n- Listing users/transactions\n\nTry asking something like: "Update John Doe's balance to $5000" or "Add a deposit of $1000 to user test@example.com"`;
+        }
+    },
+    listUsers() {
+        if (this.users.length === 0) return 'No users found.';
+        return this.users.slice(0, 10).map(u => 
+            `- ${u.firstName} ${u.lastName} (${u.email}): $${u.balance || 0}, Status: ${u.status}`
+        ).join('\n');
+    },
+    listTransactions() {
+        if (this.transactions.length === 0) return 'No transactions found.';
+        return this.transactions.slice(0, 10).map(t => 
+            `- ${t.type} $${t.amount} (${t.status}): ${t.description || 'No description'}`
+        ).join('\n');
+    },
+    async parseGetUser(input) {
+        const emailMatch = input.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+        const nameMatch = input.match(/(?:for|user|of)\s+([a-zA-Z]+)\s+([a-zA-Z]+)/i);
+        
+        let user = null;
+        if (emailMatch) {
+            user = this.users.find(u => u.email === emailMatch[0]);
+        } else if (nameMatch) {
+            user = this.users.find(u => 
+                u.firstName?.toLowerCase() === nameMatch[1].toLowerCase() && 
+                u.lastName?.toLowerCase() === nameMatch[2].toLowerCase()
+            );
+        }
+        
+        if (!user) return 'User not found. Please provide an email or full name.';
+        
+        return `User found:\nName: ${user.firstName} ${user.lastName}\nEmail: ${user.email}\nBalance: $${user.balance || 0}\nStatus: ${user.status}\nKYC: ${user.kycStatus}`;
+    },
+    async parseUpdateUser(input) {
+        const emailMatch = input.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+        const nameMatch = input.match(/(?:for|user|of)\s+([a-zA-Z]+)\s+([a-zA-Z]+)/i);
+        
+        let user = null;
+        if (emailMatch) {
+            user = this.users.find(u => u.email === emailMatch[0]);
+        } else if (nameMatch) {
+            user = this.users.find(u => 
+                u.firstName?.toLowerCase() === nameMatch[1].toLowerCase() && 
+                u.lastName?.toLowerCase() === nameMatch[2].toLowerCase()
+            );
+        }
+        
+        if (!user) return 'User not found. Please provide an email or full name.';
+        
+        // Try to find balance update
+        const balanceMatch = input.match(/(?:balance|to)\s*\$?([\d,.]+)/i);
+        if (balanceMatch) {
+            const newBalance = Number(balanceMatch[1].replace(/,/g, ''));
+            try {
+                await db.collection('users').doc(user.id).update({ balance: newBalance });
+                await this.fetchUsers();
+                return `Updated ${user.firstName} ${user.lastName}'s balance to $${newBalance.toLocaleString()}`;
+            } catch (err) {
+                return 'Failed to update balance: ' + err.message;
+            }
+        }
+        
+        // Try to find status update
+        const statusMatch = input.match(/(?:status|account status)\s+(active|pending|suspended|frozen)/i);
+        if (statusMatch) {
+            try {
+                await this.updateUserAccountStatus(user.id, statusMatch[1]);
+                return `Updated ${user.firstName} ${user.lastName}'s account status to ${statusMatch[1]}`;
+            } catch (err) {
+                return 'Failed to update status: ' + err.message;
+            }
+        }
+        
+        return 'What would you like to update? Balance or account status?';
+    },
+    async parseAddTransaction(input) {
+        const lowerInput = input.toLowerCase();
+        const emailMatch = input.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+        const nameMatch = input.match(/(?:for|user|to)\s+([a-zA-Z]+)\s+([a-zA-Z]+)/i);
+        
+        let user = null;
+        if (emailMatch) {
+            user = this.users.find(u => u.email === emailMatch[0]);
+        } else if (nameMatch) {
+            user = this.users.find(u => 
+                u.firstName?.toLowerCase() === nameMatch[1].toLowerCase() && 
+                u.lastName?.toLowerCase() === nameMatch[2].toLowerCase()
+            );
+        }
+        
+        if (!user) return 'User not found. Please provide an email or full name.';
+        
+        // Get amount
+        const amountMatch = input.match(/\$?([\d,.]+)/);
+        if (!amountMatch) return 'Please specify an amount.';
+        
+        // Get type
+        let type = 'deposit';
+        if (lowerInput.includes('withdraw')) type = 'withdrawal';
+        else if (lowerInput.includes('transfer')) type = 'transfer';
+        else if (lowerInput.includes('bill')) type = 'bill_payment';
+        else if (lowerInput.includes('loan')) type = 'loan';
+        else if (lowerInput.includes('grant')) type = 'grant';
+        
+        try {
+            this.newTransaction = {
+                userId: user.id,
+                type: type,
+                amount: Number(amountMatch[1].replace(/,/g, '')),
+                status: 'completed',
+                description: 'Added by AI Assistant'
+            };
+            await this.saveAddTransaction();
+            return `Added ${type} of $${Number(amountMatch[1].replace(/,/g, '')).toLocaleString()} to ${user.firstName} ${user.lastName}`;
+        } catch (err) {
+            return 'Failed to add transaction: ' + err.message;
+        }
+    },
+    async parseUpdateTransaction(input) {
+        return 'Transaction status updates are best done manually through the Transactions tab for now.';
     }
 }" x-init="
     initDarkMode();
@@ -581,6 +768,10 @@
                 <button @click="switchTab('loans')" :class="activeTab === 'loans' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
                     <i class="fa-solid fa-hand-holding-usd text-lg"></i>
                     <span>Loans</span>
+                </button>
+                <button @click="switchTab('ai')" :class="activeTab === 'ai' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
+                    <i class="fa-solid fa-robot text-lg"></i>
+                    <span>AI Assistant</span>
                 </button>
             </nav>
             <div class="p-4 border-t border-gray-200 dark:border-gray-700">
@@ -982,6 +1173,61 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Assistant Tab -->
+                <div x-show="activeTab === 'ai' && !loading" class="h-full flex flex-col">
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 flex-1 flex flex-col">
+                        <div class="mb-4">
+                            <h3 class="text-lg font-bold flex items-center">
+                                <i class="fa-solid fa-robot mr-2 text-primary-500"></i>
+                                AI Assistant
+                            </h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Ask me to help with user management, transactions, and more!</p>
+                        </div>
+                        
+                        <div id="aiChat" class="flex-1 overflow-y-auto space-y-4 mb-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-xl min-h-[300px]">
+                            <template x-for="(msg, index) in aiMessages" :key="index">
+                                <div :class="msg.role === 'user' ? 'ml-auto' : 'mr-auto'" class="max-w-[80%]">
+                                    <div :class="msg.role === 'user' 
+                                        ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' 
+                                        : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600'" 
+                                        class="p-4 rounded-2xl shadow-sm">
+                                        <p x-text="msg.content" class="whitespace-pre-wrap text-sm"></p>
+                                    </div>
+                                </div>
+                            </template>
+                            <div x-show="aiTyping" class="mr-auto max-w-[80%]">
+                                <div class="bg-white dark:bg-gray-700 p-4 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-600">
+                                    <div class="flex space-x-2">
+                                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div x-show="aiMessages.length === 0" class="text-center py-8">
+                                <i class="fa-solid fa-comments text-4xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                                <p class="text-gray-500 dark:text-gray-400">Start a conversation with the AI Assistant!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <input 
+                                type="text" 
+                                x-model="aiInput" 
+                                @keyup.enter="sendAiMessage()" 
+                                placeholder="Ask something like 'Update John Doe's balance to $5000'" 
+                                class="flex-1 px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            >
+                            <button 
+                                @click="sendAiMessage()" 
+                                class="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl font-medium hover:from-primary-600 hover:to-primary-700 transition-all"
+                            >
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
