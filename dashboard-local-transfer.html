@@ -657,7 +657,12 @@
                             setTimeout(() => notification.remove(), 300);
                         }, 5000);
                     },
-                    validateCotCode(rootUser) {
+                    validateCotCode() {
+                        // Find the root Alpine component using Alpine.js public API
+                        const rootElement = document.querySelector('[x-data]');
+                        const rootData = rootElement ? Alpine.$data(rootElement) : null;
+                        const rootUser = rootData ? rootData.user : null;
+                        console.log('validateCotCode - rootUser:', rootUser);
                         if (!rootUser?.cotCode) {
                             this.showNotification('No COT code assigned to your account. Please contact support.', 'error');
                             return false;
@@ -668,7 +673,11 @@
                         }
                         return true;
                     },
-                    validateTaxCode(rootUser) {
+                    validateTaxCode() {
+                        const rootElement = document.querySelector('[x-data]');
+                        const rootData = rootElement ? Alpine.$data(rootElement) : null;
+                        const rootUser = rootData ? rootData.user : null;
+                        console.log('validateTaxCode - rootUser:', rootUser);
                         if (!rootUser?.taxCode) {
                             this.showNotification('No TAX code assigned to your account. Please contact support.', 'error');
                             return false;
@@ -679,7 +688,11 @@
                         }
                         return true;
                     },
-                    validateImfCode(rootUser) {
+                    validateImfCode() {
+                        const rootElement = document.querySelector('[x-data]');
+                        const rootData = rootElement ? Alpine.$data(rootElement) : null;
+                        const rootUser = rootData ? rootData.user : null;
+                        console.log('validateImfCode - rootUser:', rootUser);
                         if (!rootUser?.imfCode) {
                             this.showNotification('No IMF code assigned to your account. Please contact support.', 'error');
                             return false;
@@ -796,7 +809,7 @@
                                     <button type="button" @click="step = 1" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
                                         Back
                                     </button>
-                                    <button type="button" @click="if(validateCotCode($root.user)) step = 3" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                    <button type="button" @click="if(validateCotCode()) step = 3" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
                                         Verify
                                     </button>
                                 </div>
@@ -824,7 +837,7 @@
                                     <button type="button" @click="step = 2" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
                                         Back
                                     </button>
-                                    <button type="button" @click="if(validateTaxCode($root.user)) step = 4" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                    <button type="button" @click="if(validateTaxCode()) step = 4" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
                                         Verify
                                     </button>
                                 </div>
@@ -852,7 +865,7 @@
                                     <button type="button" @click="step = 3" class="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200">
                                         Back
                                     </button>
-                                    <button type="button" @click="if(validateImfCode($root.user)) completeTransfer()" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
+                                    <button type="button" @click="if(validateImfCode()) completeTransfer()" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
                                         Verify
                                     </button>
                                 </div>

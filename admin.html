@@ -1236,8 +1236,8 @@
     </div>
 
     <!-- Edit User Modal -->
-    <div x-show="showEditUserModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @click="showEditUserModal = false">
-        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full">
+    <div x-show="showEditUserModal" x-transition class="fixed inset-0 z-50 flex items-start justify-center bg-black/50 p-4 pt-8" @click="showEditUserModal = false">
+        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-2xl font-bold">Edit User</h3>
                 <button @click="showEditUserModal = false" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl">
