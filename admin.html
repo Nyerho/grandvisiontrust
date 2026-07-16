@@ -417,13 +417,13 @@
     listUsers() {
         if (this.users.length === 0) return 'No users found.';
         return this.users.slice(0, 10).map(u => 
-            `- ${u.firstName} ${u.lastName} (${u.email}): $${u.balance || 0}, Status: ${u.status}`
+            `- ${u.firstName} ${u.lastName} (${u.email}): $${Number(u.balance || 0).toLocaleString()}, Status: ${u.status}`
         ).join('\n');
     },
     listTransactions() {
         if (this.transactions.length === 0) return 'No transactions found.';
         return this.transactions.slice(0, 10).map(t => 
-            `- ${t.type} $${t.amount} (${t.status}): ${t.description || 'No description'}`
+            `- ${t.type} $${Number(t.amount || 0).toLocaleString()} (${t.status}): ${t.description || 'No description'}`
         ).join('\n');
     },
     async parseGetUser(input) {
@@ -467,7 +467,7 @@
             try {
                 await db.collection('users').doc(user.id).update({ balance: newBalance });
                 await this.fetchUsers();
-                return `Updated ${user.firstName} ${user.lastName}'s balance to $${newBalance.toLocaleString()}`;
+                return 'Updated ' + user.firstName + ' ' + user.lastName + '\'s balance to $' + newBalance.toLocaleString();
             } catch (err) {
                 return 'Failed to update balance: ' + err.message;
             }
@@ -524,7 +524,7 @@
                 description: 'Added by AI Assistant'
             };
             await this.saveAddTransaction();
-            return `Added ${type} of $${Number(amountMatch[1].replace(/,/g, '')).toLocaleString()} to ${user.firstName} ${user.lastName}`;
+            return 'Added ' + type + ' of $' + Number(amountMatch[1].replace(/,/g, '')).toLocaleString() + ' to ' + user.firstName + ' ' + user.lastName;
         } catch (err) {
             return 'Failed to add transaction: ' + err.message;
         }
@@ -1236,8 +1236,8 @@
     </div>
 
     <!-- Edit User Modal -->
-    <div x-show="showEditUserModal" x-transition class="fixed inset-0 z-50 flex items-start justify-center bg-black/50 p-4 pt-8" @click="showEditUserModal = false">
-        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+    <div x-show="showEditUserModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @click="showEditUserModal = false">
+        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-2xl font-bold">Edit User</h3>
                 <button @click="showEditUserModal = false" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl">
