@@ -359,18 +359,30 @@
             }
             this.transactionUnsubscribe = db.collection('transactions')
                 .where('userId', '==', userId)
-                .orderBy('createdAt', 'desc')
                 .onSnapshot(
                     (snapshot) => {
-                        this.transactions = snapshot.docs.map(doc => {
-                            const data = doc.data();
-                            return { id: doc.id, ...data };
-                        });
+                        this.transactions = snapshot.docs
+                            .map(doc => {
+                                const data = doc.data();
+                                return { id: doc.id, ...data };
+                            })
+                            .sort((a, b) => {
+                                const aTime = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+                                const bTime = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+                                return bTime - aTime;
+                            });
                     },
                     (err) => {
                         console.error('Error fetching transactions:', err);
                     }
                 );
+        },
+        formatTransactionType(type) {
+            if (!type) return 'Transfer';
+            return type
+                .split('_')
+                .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+                .join(' ');
         },
         async signOutUser() {
             try {
@@ -671,7 +683,7 @@
                                                 <i class="fa-solid fa-exchange-alt text-primary-600 dark:text-primary-400 text-xl"></i>
                                             </div>
                                             <div>
-                                                <h3 class="font-semibold text-gray-900 dark:text-white" x-text="transaction.type || 'Transfer'"></h3>
+                                                <h3 class="font-semibold text-gray-900 dark:text-white" x-text="formatTransactionType(transaction.type)"></h3>
                                                 <p class="text-sm text-gray-500 dark:text-gray-400" x-text="transaction.description || transaction.recipientName || 'Transaction'"></p>
                                                 <p class="text-xs text-gray-400 dark:text-gray-500 mt-1" x-text="transaction.createdAt ? new Date(transaction.createdAt.toDate()).toLocaleString() : ''"></p>
                                             </div>

@@ -795,6 +795,8 @@
         currentRoute: 'dashboard',
         darkMode: localStorage.getItem('darkMode') === 'true' || false,
         user: null,
+        transactions: [],
+        transactionUnsubscribe: null,
         toggleSidebar() { this.sidebarOpen = !this.sidebarOpen; },
         closeSidebar() { this.sidebarOpen = false; },
         isActiveRoute(route) { return this.currentRoute === route; },
@@ -858,6 +860,35 @@
                 }
             );
         },
+        fetchTransactions(userId) {
+            if (this.transactionUnsubscribe) {
+                this.transactionUnsubscribe();
+            }
+            this.transactionUnsubscribe = db.collection('transactions')
+                .where('userId', '==', userId)
+                .onSnapshot(
+                    (snapshot) => {
+                        this.transactions = snapshot.docs
+                            .map(doc => ({ id: doc.id, ...doc.data() }))
+                            .sort((a, b) => {
+                                const aTime = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+                                const bTime = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+                                return bTime - aTime;
+                            })
+                            .slice(0, 5);
+                    },
+                    (err) => {
+                        console.error('Error fetching transactions:', err);
+                    }
+                );
+        },
+        formatTransactionType(type) {
+            if (!type) return 'Transaction';
+            return type
+                .split('_')
+                .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+                .join(' ');
+        },
         async signOutUser() {
             try {
                 await auth.signOut();
@@ -872,6 +903,7 @@
         auth.onAuthStateChanged(user => {
             if (user) {
                 $data.fetchUser(user.uid);
+                $data.fetchTransactions(user.uid);
             } else {
                 window.location.href = 'login.html';
             }
@@ -2369,10 +2401,28 @@
                                     </div>
 
                                     <div class="space-y-3">
+                                        <template x-if="transactions.length === 0">
                                         <div class="text-center py-6">
                                             <i class="fa-solid fa-receipt text-gray-300 dark:text-gray-600 text-2xl mb-2"></i>
                                             <p class="text-gray-500 dark:text-gray-400 text-xs">No recent transactions</p>
                                         </div>
+                                        </template>
+                                        <template x-if="transactions.length > 0">
+                                        <div class="space-y-3">
+                                            <template x-for="transaction in transactions" :key="transaction.id">
+                                                <div class="flex items-center justify-between rounded-xl border border-gray-100 dark:border-gray-700 p-3">
+                                                    <div class="min-w-0">
+                                                        <p class="text-sm font-semibold text-gray-900 dark:text-white truncate" x-text="formatTransactionType(transaction.type)"></p>
+                                                        <p class="text-xs text-gray-500 dark:text-gray-400 truncate" x-text="transaction.description || transaction.recipientName || 'Transaction'"></p>
+                                                    </div>
+                                                    <div class="text-right ml-3">
+                                                        <p class="text-sm font-semibold text-gray-900 dark:text-white" x-text="'$' + Number(transaction.amount || 0).toLocaleString()"></p>
+                                                        <p class="text-xs text-gray-500 dark:text-gray-400" x-text="transaction.status || 'pending'"></p>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                        </template>
                                     </div>
                                 </div>
 
