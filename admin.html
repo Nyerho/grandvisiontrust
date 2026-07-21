@@ -548,6 +548,7 @@
     <title>Admin Dashboard | GrandVisionTrust</title>
     <link rel="shortcut icon" href="images/logo.jpg" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -744,23 +745,23 @@
         </div>
     </div>
 
-    <div x-show="authenticated" class="flex h-screen overflow-hidden">
+    <div x-show="authenticated" class="container-fluid p-0 d-flex h-100 overflow-hidden">
         <div
             x-show="sidebarOpen"
             x-transition.opacity
             @click="sidebarOpen = false"
-            class="fixed inset-0 z-30 bg-black/50 lg:hidden"
+            class="fixed inset-0 z-30 bg-black/50 d-lg-none"
         ></div>
 
         <!-- Sidebar -->
         <aside
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-            class="fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-xl transform transition-transform duration-300 lg:static lg:z-auto lg:translate-x-0"
+            class="fixed inset-y-0 left-0 z-40 d-flex w-72 flex-column bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-xl transform transition-transform duration-300 lg:static lg:z-auto lg:translate-x-0"
         >
             <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex items-center justify-between space-x-3">
                     <img src="images/logo.jpg" alt="GrandVisionTrust" class="h-12 w-auto">
-                    <button @click="sidebarOpen = false" class="lg:hidden p-2 rounded-xl bg-gray-100 dark:bg-gray-700">
+                    <button @click="sidebarOpen = false" class="d-lg-none p-2 rounded-xl bg-gray-100 dark:bg-gray-700">
                         <i class="fa-solid fa-times"></i>
                     </button>
                 </div>
@@ -796,15 +797,15 @@
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-fill d-flex flex-column overflow-hidden min-w-0">
             <!-- Header -->
-            <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 shadow-sm">
+            <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-3 px-md-4 px-lg-6 py-3 py-md-4 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-4">
-                        <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 rounded-xl bg-gray-100 dark:bg-gray-700">
+                        <button @click="sidebarOpen = !sidebarOpen" class="d-lg-none p-2 rounded-xl bg-gray-100 dark:bg-gray-700">
                             <i class="fa-solid fa-bars"></i>
                         </button>
-                        <h1 class="text-2xl font-bold capitalize" x-text="activeTab"></h1>
+                        <h1 class="text-xl md:text-2xl font-bold capitalize mb-0" x-text="activeTab"></h1>
                     </div>
                     <div class="flex items-center space-x-3">
                         <button @click="toggleDarkMode()" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600">
@@ -816,41 +817,47 @@
             </header>
 
             <!-- Content -->
-            <main class="flex-1 overflow-y-auto p-6 custom-scrollbar">
+            <main class="flex-1 overflow-y-auto p-3 p-md-4 p-lg-6 custom-scrollbar">
                 <div x-show="loading" class="flex items-center justify-center h-full">
                     <div class="w-12 h-12 border-4 border-gray-200 border-t-primary-500 rounded-full animate-spin"></div>
                 </div>
 
                 <!-- Users Tab -->
                 <div x-show="activeTab === 'users' && !loading">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div class="row g-3 g-lg-4 mb-4 mb-lg-6">
+                        <div class="col-12 col-md-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-100">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Total Users</p>
                             <p class="text-3xl font-bold mt-1" x-text="users.length"></p>
                         </div>
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                        </div>
+                        <div class="col-12 col-md-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-100">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Pending KYC</p>
                             <p class="text-3xl font-bold mt-1" x-text="users.filter(u => u.kycStatus === 'pending').length"></p>
                         </div>
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                        </div>
+                        <div class="col-12 col-md-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-100">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Verified KYC</p>
                             <p class="text-3xl font-bold mt-1" x-text="users.filter(u => u.kycStatus === 'verified').length"></p>
                         </div>
+                        </div>
                     </div>
                     
-                    <div class="mb-6">
-                        <button @click="createTestUser()" class="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl font-medium hover:from-purple-600 hover:to-purple-700">
+                    <div class="mb-4 mb-lg-6">
+                        <button @click="createTestUser()" class="btn w-100 sm:w-auto px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl font-medium border-0 hover:from-purple-600 hover:to-purple-700">
                             <i class="fa-solid fa-user-plus mr-2"></i>Create Test User
                         </button>
                     </div>
 
                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                        <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between flex-wrap gap-4">
+                        <div class="p-4 p-md-6 border-b border-gray-200 dark:border-gray-700 d-flex align-items-center justify-content-between flex-wrap gap-3 gap-md-4">
                             <h3 class="text-lg font-bold">User Management</h3>
-                            <input type="text" x-model="searchUser" placeholder="Search users..." class="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
+                            <input type="text" x-model="searchUser" placeholder="Search users..." class="form-control w-100 md:w-auto px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900">
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
+                        <div class="table-responsive">
+                            <table class="w-full min-w-full">
                                 <thead class="bg-gray-50 dark:bg-gray-700/50">
                                     <tr>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
@@ -956,27 +963,33 @@
 
                 <!-- KYC Tab -->
                 <div x-show="activeTab === 'kyc' && !loading">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div class="row g-3 g-lg-4 mb-4 mb-lg-6">
+                        <div class="col-12 col-md-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-100">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Total Users</p>
                             <p class="text-3xl font-bold mt-1" x-text="users.length"></p>
                         </div>
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                        </div>
+                        <div class="col-12 col-md-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-100">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Pending KYC</p>
                             <p class="text-3xl font-bold mt-1" x-text="users.filter(u => u.kycStatus === 'pending').length"></p>
                         </div>
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                        </div>
+                        <div class="col-12 col-md-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-100">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Verified KYC</p>
                             <p class="text-3xl font-bold mt-1" x-text="users.filter(u => u.kycStatus === 'verified').length"></p>
+                        </div>
                         </div>
                     </div>
 
                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                        <div class="p-4 p-md-6 border-b border-gray-200 dark:border-gray-700">
                             <h3 class="text-lg font-bold">KYC Applications</h3>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
+                        <div class="table-responsive">
+                            <table class="w-full min-w-full">
                                 <thead class="bg-gray-50 dark:bg-gray-700/50">
                                     <tr>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
@@ -1038,30 +1051,36 @@
 
                 <!-- Transactions Tab -->
                 <div x-show="activeTab === 'transactions' && !loading">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div class="row g-3 g-lg-4 mb-4 mb-lg-6">
+                        <div class="col-12 col-md-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-100">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Total Transactions</p>
                             <p class="text-3xl font-bold mt-1" x-text="transactions.length"></p>
                         </div>
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                        </div>
+                        <div class="col-12 col-md-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-100">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Pending</p>
                             <p class="text-3xl font-bold mt-1" x-text="transactions.filter(t => t.status === 'pending').length"></p>
                         </div>
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                        </div>
+                        <div class="col-12 col-md-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-100">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Completed</p>
                             <p class="text-3xl font-bold mt-1" x-text="transactions.filter(t => t.status === 'completed').length"></p>
+                        </div>
                         </div>
                     </div>
 
                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                        <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between flex-wrap gap-4">
+                        <div class="p-4 p-md-6 border-b border-gray-200 dark:border-gray-700 d-flex align-items-center justify-content-between flex-wrap gap-3 gap-md-4">
                             <h3 class="text-lg font-bold">Transaction Management</h3>
-                            <button @click="openAddTransaction()" class="px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl font-medium hover:from-primary-600 hover:to-primary-700">
+                            <button @click="openAddTransaction()" class="btn w-100 sm:w-auto px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl font-medium border-0 hover:from-primary-600 hover:to-primary-700">
                                 <i class="fa-solid fa-plus mr-2"></i>Add Transaction
                             </button>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
+                        <div class="table-responsive">
+                            <table class="w-full min-w-full">
                                 <thead class="bg-gray-50 dark:bg-gray-700/50">
                                     <tr>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Type</th>
@@ -1122,27 +1141,33 @@
 
                 <!-- Loans Tab -->
                 <div x-show="activeTab === 'loans' && !loading">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div class="row g-3 g-lg-4 mb-4 mb-lg-6">
+                        <div class="col-12 col-md-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-100">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Total Loans</p>
                             <p class="text-3xl font-bold mt-1" x-text="loans.length"></p>
                         </div>
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                        </div>
+                        <div class="col-12 col-md-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-100">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Pending</p>
                             <p class="text-3xl font-bold mt-1" x-text="loans.filter(l => l.status === 'pending').length"></p>
                         </div>
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                        </div>
+                        <div class="col-12 col-md-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-100">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Approved</p>
                             <p class="text-3xl font-bold mt-1" x-text="loans.filter(l => l.status === 'approved').length"></p>
+                        </div>
                         </div>
                     </div>
 
                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                        <div class="p-4 p-md-6 border-b border-gray-200 dark:border-gray-700">
                             <h3 class="text-lg font-bold">Loan Applications</h3>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
+                        <div class="table-responsive">
+                            <table class="w-full min-w-full">
                                 <thead class="bg-gray-50 dark:bg-gray-700/50">
                                     <tr>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
