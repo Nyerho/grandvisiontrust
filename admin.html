@@ -744,38 +744,51 @@
         </div>
     </div>
 
-    <div x-show="authenticated" class="flex h-screen">
+    <div x-show="authenticated" class="flex h-screen overflow-hidden">
+        <div
+            x-show="sidebarOpen"
+            x-transition.opacity
+            @click="sidebarOpen = false"
+            class="fixed inset-0 z-30 bg-black/50 lg:hidden"
+        ></div>
+
         <!-- Sidebar -->
-        <aside class="hidden lg:flex w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex-col shadow-xl">
+        <aside
+            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+            class="fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-xl transform transition-transform duration-300 lg:static lg:z-auto lg:translate-x-0"
+        >
             <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center justify-between space-x-3">
                     <img src="images/logo.jpg" alt="GrandVisionTrust" class="h-12 w-auto">
+                    <button @click="sidebarOpen = false" class="lg:hidden p-2 rounded-xl bg-gray-100 dark:bg-gray-700">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
                 </div>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
-                <button @click="switchTab('users')" :class="activeTab === 'users' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
+                <button @click="switchTab('users'); sidebarOpen = false" :class="activeTab === 'users' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
                     <i class="fa-solid fa-users text-lg"></i>
                     <span>Users</span>
                 </button>
-                <button @click="switchTab('kyc')" :class="activeTab === 'kyc' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
+                <button @click="switchTab('kyc'); sidebarOpen = false" :class="activeTab === 'kyc' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
                     <i class="fa-solid fa-id-card text-lg"></i>
                     <span>KYC Verification</span>
                 </button>
-                <button @click="switchTab('transactions')" :class="activeTab === 'transactions' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
+                <button @click="switchTab('transactions'); sidebarOpen = false" :class="activeTab === 'transactions' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
                     <i class="fa-solid fa-exchange-alt text-lg"></i>
                     <span>Transactions</span>
                 </button>
-                <button @click="switchTab('loans')" :class="activeTab === 'loans' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
+                <button @click="switchTab('loans'); sidebarOpen = false" :class="activeTab === 'loans' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
                     <i class="fa-solid fa-hand-holding-usd text-lg"></i>
                     <span>Loans</span>
                 </button>
-                <button @click="switchTab('ai')" :class="activeTab === 'ai' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
+                <button @click="switchTab('ai'); sidebarOpen = false" :class="activeTab === 'ai' ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all">
                     <i class="fa-solid fa-robot text-lg"></i>
                     <span>AI Assistant</span>
                 </button>
             </nav>
             <div class="p-4 border-t border-gray-200 dark:border-gray-700">
-                <a href="index.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-all">
+                <a @click="sidebarOpen = false" href="index.html" class="flex items-center space-x-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-all">
                     <i class="fa-solid fa-house"></i>
                     <span>Back to Home</span>
                 </a>
@@ -1236,8 +1249,8 @@
     </div>
 
     <!-- Edit User Modal -->
-    <div x-show="showEditUserModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @click="showEditUserModal = false">
-        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full">
+    <div x-show="showEditUserModal" x-transition class="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto bg-black/50 p-4" @click="showEditUserModal = false">
+        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full my-4 max-h-[calc(100vh-2rem)] overflow-y-auto custom-scrollbar">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-2xl font-bold">Edit User</h3>
                 <button @click="showEditUserModal = false" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl">
@@ -1299,8 +1312,8 @@
     </div>
 
     <!-- Add Transaction Modal -->
-    <div x-show="showAddTransactionModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @click="showAddTransactionModal = false">
-        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full">
+    <div x-show="showAddTransactionModal" x-transition class="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto bg-black/50 p-4" @click="showAddTransactionModal = false">
+        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full my-4 max-h-[calc(100vh-2rem)] overflow-y-auto custom-scrollbar">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-2xl font-bold">Add Transaction</h3>
                 <button @click="showAddTransactionModal = false" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl">
@@ -1350,8 +1363,8 @@
     </div>
 
     <!-- Edit Transaction Modal -->
-    <div x-show="showEditTransactionModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @click="showEditTransactionModal = false">
-        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full">
+    <div x-show="showEditTransactionModal" x-transition class="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto bg-black/50 p-4" @click="showEditTransactionModal = false">
+        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl max-w-md w-full my-4 max-h-[calc(100vh-2rem)] overflow-y-auto custom-scrollbar">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-2xl font-bold">Edit Transaction</h3>
                 <button @click="showEditTransactionModal = false" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl">
