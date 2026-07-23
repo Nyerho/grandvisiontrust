@@ -402,94 +402,61 @@
         getReceiptDescription(transaction) {
             return transaction?.description || transaction?.recipientName || 'Transaction';
         },
-        getLogoUrl() {
-            return new URL('images/logo.jpg', window.location.href).href;
-        },
-        escapeHtml(value) {
-            return String(value ?? '')
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
-        },
-        buildReceiptHtml(transaction) {
-            const details = [
-                ['Receipt ID', transaction.id || 'N/A'],
-                ['Transaction Type', this.formatTransactionType(transaction.type)],
-                ['Status', transaction.status || 'pending'],
-                ['Amount', this.formatCurrency(transaction.amount)],
-                ['Date', this.formatTransactionDate(transaction.createdAt)],
-                ['Description', this.getReceiptDescription(transaction)],
-                ['Recipient', transaction.recipientName || 'N/A'],
-                ['Account Number', transaction.accountNumber || 'N/A'],
-                ['Bank Name', transaction.bankName || 'N/A'],
-                ['Country', transaction.country || 'N/A']
-            ];
-            const detailRows = details.map(([label, value]) => `
-                <div style="display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #e5e7eb;">
-                    <span style="color:#64748b;font-weight:600;">${this.escapeHtml(label)}</span>
-                    <span style="color:#0f172a;text-align:right;">${this.escapeHtml(value)}</span>
-                </div>
-            `).join('');
-
-            return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>${this.escapeHtml(this.companyName)} Receipt</title>
-  <style>
-    body { font-family: Arial, sans-serif; background:#f8fafc; color:#0f172a; margin:0; padding:24px; }
-    .receipt { max-width:720px; margin:0 auto; background:#ffffff; border:1px solid #e5e7eb; border-radius:20px; overflow:hidden; }
-    .header { padding:24px; background:linear-gradient(135deg, #059669, #10b981); color:#ffffff; }
-    .brand { display:flex; align-items:center; gap:16px; }
-    .brand img { width:56px; height:56px; border-radius:12px; object-fit:cover; background:#ffffff; }
-    .content { padding:24px; }
-    .title { font-size:24px; font-weight:700; margin:0 0 6px; }
-    .subtitle { margin:0; opacity:0.9; }
-    .amount { margin:24px 0; padding:20px; background:#f0fdf4; border-radius:16px; text-align:center; }
-    .amount-label { color:#166534; font-size:14px; margin-bottom:8px; }
-    .amount-value { color:#166534; font-size:32px; font-weight:700; }
-    .footer { padding:20px 24px 24px; color:#64748b; font-size:13px; text-align:center; }
-  </style>
-</head>
-<body>
-  <div class="receipt">
-    <div class="header">
-      <div class="brand">
-        <img src="${this.getLogoUrl()}" alt="${this.escapeHtml(this.companyName)} logo" />
-        <div>
-          <h1 class="title">${this.escapeHtml(this.companyName)}</h1>
-          <p class="subtitle">Official Transaction Receipt</p>
-        </div>
-      </div>
-    </div>
-    <div class="content">
-      <div class="amount">
-        <div class="amount-label">Transaction Amount</div>
-        <div class="amount-value">${this.escapeHtml(this.formatCurrency(transaction.amount))}</div>
-      </div>
-      ${detailRows}
-    </div>
-    <div class="footer">
-      This receipt was generated from ${this.escapeHtml(this.companyName)}.
-    </div>
-  </div>
-</body>
-</html>`;
-        },
-        downloadReceipt(transaction = this.selectedTransaction) {
+        receiptFilename(transaction = this.selectedTransaction, extension = 'pdf') {
             if (!transaction) return;
-            const receiptWindow = window.open('', '_blank', 'width=900,height=700');
-            if (!receiptWindow) {
-                this.showNotification('Please allow pop-ups to download the receipt.', 'error');
+            const safeCompany = this.companyName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            const safeId = String(transaction.id || 'receipt').replace(/[^a-zA-Z0-9_-]+/g, '-');
+            return safeCompany + '-receipt-' + safeId + '.' + extension;
+        },
+        async downloadReceiptPdf(transaction = this.selectedTransaction) {
+            if (!transaction || !this.$refs.receiptCard) return;
+            if (typeof html2canvas === 'undefined') {
+                this.showNotification('Receipt PDF download is not available right now.', 'error');
                 return;
             }
-            receiptWindow.document.open();
-            receiptWindow.document.write(this.buildReceiptHtml(transaction));
-            receiptWindow.document.close();
-            receiptWindow.focus();
-            receiptWindow.print();
+            try {
+                const canvas = await html2canvas(this.$refs.receiptCard, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff'
+                });
+                const receiptWindow = window.open('', '_blank', 'width=900,height=900');
+                if (!receiptWindow) {
+                    this.showNotification('Please allow pop-ups to download the receipt.', 'error');
+                    return;
+                }
+                receiptWindow.document.open();
+                receiptWindow.document.write(window.buildReceiptPrintHtml(canvas.toDataURL('image/png'), this.companyName));
+                receiptWindow.document.close();
+                receiptWindow.onload = () => {
+                    receiptWindow.focus();
+                    receiptWindow.print();
+                };
+            } catch (err) {
+                console.error('Receipt PDF download failed:', err);
+                this.showNotification('Failed to prepare receipt PDF.', 'error');
+            }
+        },
+        async downloadReceiptImage(transaction = this.selectedTransaction) {
+            if (!transaction || !this.$refs.receiptCard) return;
+            if (typeof html2canvas === 'undefined') {
+                this.showNotification('Receipt image download is not available right now.', 'error');
+                return;
+            }
+            try {
+                const canvas = await html2canvas(this.$refs.receiptCard, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff'
+                });
+                const link = document.createElement('a');
+                link.download = this.receiptFilename(transaction, 'png');
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (err) {
+                console.error('Receipt image download failed:', err);
+                this.showNotification('Failed to download receipt image.', 'error');
+            }
         },
         async signOutUser() {
             try {
@@ -812,9 +779,9 @@
         </div>
     </div>
 
-    <div x-show="selectedTransaction" x-transition class="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto bg-black/60 p-4" @click="closeTransactionReceipt()">
-        <div x-show="selectedTransaction" @click.stop class="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 max-h-[calc(100vh-2rem)] overflow-y-auto custom-scrollbar">
-            <div class="p-6 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-t-3xl">
+    <div x-show="selectedTransaction" x-transition class="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto bg-slate-950/80 backdrop-blur-sm p-4" @click="closeTransactionReceipt()">
+        <div x-show="selectedTransaction" @click.stop x-ref="receiptCard" class="w-full max-w-2xl bg-white text-slate-900 rounded-3xl shadow-2xl border border-slate-200 max-h-[calc(100vh-2rem)] overflow-y-auto custom-scrollbar">
+            <div class="p-6 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-t-3xl">
                 <div class="flex items-start justify-between gap-4">
                     <div class="flex items-center gap-4">
                         <img src="images/logo.jpg" alt="GrandVisionTrust logo" class="w-14 h-14 rounded-2xl object-cover bg-white p-1">
@@ -830,55 +797,58 @@
                 </div>
             </div>
 
-            <div class="p-6 space-y-6" x-show="selectedTransaction">
-                <div class="rounded-2xl bg-primary-50 dark:bg-primary-900/20 p-5 text-center border border-primary-100 dark:border-primary-800/50">
-                    <p class="text-sm text-primary-700 dark:text-primary-300 mb-2">Transaction Amount</p>
-                    <p class="text-3xl font-bold text-primary-900 dark:text-primary-100" x-text="formatCurrency(selectedTransaction?.amount)"></p>
+            <div class="p-6 space-y-6 bg-white" x-show="selectedTransaction">
+                <div class="rounded-2xl bg-emerald-50 p-5 text-center border border-emerald-100">
+                    <p class="text-sm text-emerald-700 mb-2">Transaction Amount</p>
+                    <p class="text-3xl font-bold text-emerald-900" x-text="formatCurrency(selectedTransaction?.amount)"></p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-4">
-                        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Receipt ID</p>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Receipt ID</p>
                         <p class="mt-2 font-semibold break-all" x-text="selectedTransaction?.id || 'N/A'"></p>
                     </div>
-                    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-4">
-                        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Transaction Type</p>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Transaction Type</p>
                         <p class="mt-2 font-semibold" x-text="formatTransactionType(selectedTransaction?.type)"></p>
                     </div>
-                    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-4">
-                        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Status</p>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Status</p>
                         <p class="mt-2 font-semibold" x-text="selectedTransaction?.status || 'pending'"></p>
                     </div>
-                    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-4">
-                        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Date</p>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Date</p>
                         <p class="mt-2 font-semibold" x-text="formatTransactionDate(selectedTransaction?.createdAt)"></p>
                     </div>
-                    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-4">
-                        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Recipient</p>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Recipient</p>
                         <p class="mt-2 font-semibold" x-text="selectedTransaction?.recipientName || 'N/A'"></p>
                     </div>
-                    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-4">
-                        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Account Number</p>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Account Number</p>
                         <p class="mt-2 font-semibold" x-text="selectedTransaction?.accountNumber || 'N/A'"></p>
                     </div>
-                    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-4">
-                        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Bank Name</p>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Bank Name</p>
                         <p class="mt-2 font-semibold" x-text="selectedTransaction?.bankName || 'N/A'"></p>
                     </div>
-                    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-4">
-                        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Country</p>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Country</p>
                         <p class="mt-2 font-semibold" x-text="selectedTransaction?.country || 'N/A'"></p>
                     </div>
                 </div>
 
-                <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-4">
-                    <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Description</p>
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <p class="text-xs uppercase tracking-wide text-slate-500">Description</p>
                     <p class="mt-2 font-semibold" x-text="getReceiptDescription(selectedTransaction)"></p>
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-3">
-                    <button @click="downloadReceipt()" class="flex-1 px-4 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-2xl font-semibold hover:from-primary-600 hover:to-primary-700 transition-all">
-                        <i class="fa-solid fa-download mr-2"></i>Download / Save PDF
+                    <button @click="downloadReceiptPdf()" class="flex-1 px-4 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-2xl font-semibold hover:from-primary-600 hover:to-primary-700 transition-all">
+                        <i class="fa-solid fa-file-pdf mr-2"></i>Download / Save PDF
+                    </button>
+                    <button @click="downloadReceiptImage()" class="flex-1 px-4 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-2xl font-semibold hover:from-emerald-600 hover:to-emerald-700 transition-all">
+                        <i class="fa-solid fa-image mr-2"></i>Download as Image
                     </button>
                     <button @click="closeTransactionReceipt()" class="flex-1 px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-2xl font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
                         Close
@@ -888,6 +858,37 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script>
+        function escapeReceiptHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function buildReceiptPrintHtml(receiptImageDataUrl, companyName) {
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>${escapeReceiptHtml(companyName)} Receipt</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f8fafc; margin: 0; padding: 24px; }
+    .print-wrap { max-width: 860px; margin: 0 auto; text-align: center; }
+    img { width: 100%; height: auto; border-radius: 24px; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12); }
+  </style>
+</head>
+<body>
+  <div class="print-wrap"><img src="${receiptImageDataUrl}" alt="${escapeReceiptHtml(companyName)} Receipt"></div>
+</body>
+</html>`;
+        }
+
+        window.buildReceiptPrintHtml = buildReceiptPrintHtml;
+    </script>
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'></script>
 </body>
 </html>
