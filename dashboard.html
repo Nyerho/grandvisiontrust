@@ -1178,9 +1178,40 @@
     showReceiveModal: false,
     showMobileMenu: false,
     showMobileNotifications: false,
+    recentTransactions: [],
+    recentTransactionsUnsubscribe: null,
     greeting: '',
     currentDate: '',
     balanceVisible: true,
+    fetchRecentTransactions(userId) {
+        if (this.recentTransactionsUnsubscribe) {
+            this.recentTransactionsUnsubscribe();
+        }
+        this.recentTransactionsUnsubscribe = db.collection('transactions')
+            .where('userId', '==', userId)
+            .onSnapshot(
+                (snapshot) => {
+                    this.recentTransactions = snapshot.docs
+                        .map(doc => ({ id: doc.id, ...doc.data() }))
+                        .sort((a, b) => {
+                            const aTime = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+                            const bTime = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+                            return bTime - aTime;
+                        })
+                        .slice(0, 5);
+                },
+                (err) => {
+                    console.error('Error fetching recent transactions:', err);
+                }
+            );
+    },
+    formatRecentTransactionType(type) {
+        if (!type) return 'Transaction';
+        return type
+            .split('_')
+            .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+            .join(' ');
+    },
     toggleBalance() {
         this.balanceVisible = !this.balanceVisible;
         localStorage.setItem('balanceVisible', this.balanceVisible);
@@ -1199,6 +1230,11 @@
     balanceVisible = localStorage.getItem('balanceVisible') === null 
         ? true 
         : localStorage.getItem('balanceVisible') === 'true';
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            fetchRecentTransactions(user.uid);
+        }
+    });
 ">
 
 
@@ -2401,18 +2437,18 @@
                                     </div>
 
                                     <div class="space-y-3">
-                                        <template x-if="transactions.length === 0">
+                                        <template x-if="recentTransactions.length === 0">
                                         <div class="text-center py-6">
                                             <i class="fa-solid fa-receipt text-gray-300 dark:text-gray-600 text-2xl mb-2"></i>
                                             <p class="text-gray-500 dark:text-gray-400 text-xs">No recent transactions</p>
                                         </div>
                                         </template>
-                                        <template x-if="transactions.length > 0">
+                                        <template x-if="recentTransactions.length > 0">
                                         <div class="space-y-3">
-                                            <template x-for="transaction in transactions" :key="transaction.id">
+                                            <template x-for="transaction in recentTransactions" :key="transaction.id">
                                                 <div class="flex items-center justify-between rounded-xl border border-gray-100 dark:border-gray-700 p-3">
                                                     <div class="min-w-0">
-                                                        <p class="text-sm font-semibold text-gray-900 dark:text-white truncate" x-text="formatTransactionType(transaction.type)"></p>
+                                                        <p class="text-sm font-semibold text-gray-900 dark:text-white truncate" x-text="formatRecentTransactionType(transaction.type)"></p>
                                                         <p class="text-xs text-gray-500 dark:text-gray-400 truncate" x-text="transaction.description || transaction.recipientName || 'Transaction'"></p>
                                                     </div>
                                                     <div class="text-right ml-3">
