@@ -163,7 +163,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;90&display=swap" rel="stylesheet">
 
-    <style>        /* Comprehensive Dark Mode Fix */
+    <style>        [x-cloak] { display: none !important; }
+
+        /* Comprehensive Dark Mode Fix */
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: #ffffff;
@@ -364,7 +366,7 @@
                         this.transactions = snapshot.docs
                             .map(doc => {
                                 const data = doc.data();
-                                return { id: doc.id, ...data };
+                                return { ...data, id: doc.id };
                             })
                             .sort((a, b) => {
                                 const aTime = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
@@ -387,7 +389,10 @@
         selectedTransaction: null,
         companyName: 'GrandVisionTrust Bank',
         openTransactionReceipt(transaction) {
-            this.selectedTransaction = transaction;
+            if (!transaction) return;
+            const normalized = { ...transaction, id: transaction.id || transaction.transactionId || transaction.reference || transaction.ref || null };
+            if (!normalized.id) return;
+            this.selectedTransaction = normalized;
         },
         closeTransactionReceipt() {
             this.selectedTransaction = null;
@@ -779,8 +784,8 @@
         </div>
     </div>
 
-    <div x-show="selectedTransaction" x-transition class="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto bg-slate-950/80 backdrop-blur-sm p-4" @click="closeTransactionReceipt()">
-        <div x-show="selectedTransaction" @click.stop x-ref="receiptCard" class="w-full max-w-2xl bg-white text-slate-900 rounded-3xl shadow-2xl border border-slate-200 max-h-[calc(100vh-2rem)] overflow-y-auto custom-scrollbar">
+    <div x-cloak x-show="selectedTransaction && selectedTransaction.id" x-transition class="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto bg-slate-950/80 backdrop-blur-sm p-4" @click="closeTransactionReceipt()">
+        <div x-show="selectedTransaction && selectedTransaction.id" @click.stop x-ref="receiptCard" class="w-full max-w-2xl bg-white text-slate-900 rounded-3xl shadow-2xl border border-slate-200 max-h-[calc(100vh-2rem)] overflow-y-auto custom-scrollbar">
             <div class="p-6 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-t-3xl">
                 <div class="flex items-start justify-between gap-4">
                     <div class="flex items-center gap-4">
@@ -797,7 +802,7 @@
                 </div>
             </div>
 
-            <div class="p-6 space-y-6 bg-white" x-show="selectedTransaction">
+            <div class="p-6 space-y-6 bg-white" x-show="selectedTransaction && selectedTransaction.id">
                 <div class="rounded-2xl bg-emerald-50 p-5 text-center border border-emerald-100">
                     <p class="text-sm text-emerald-700 mb-2">Transaction Amount</p>
                     <p class="text-3xl font-bold text-emerald-900" x-text="formatCurrency(selectedTransaction?.amount)"></p>
