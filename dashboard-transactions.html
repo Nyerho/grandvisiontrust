@@ -782,7 +782,6 @@
                 </main>
             </div>
         </div>
-    </div>
 
     <div x-cloak x-show="selectedTransaction && selectedTransaction.id" x-transition class="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto bg-slate-950/80 backdrop-blur-sm p-4" @click="closeTransactionReceipt()">
         <div x-show="selectedTransaction && selectedTransaction.id" @click.stop x-ref="receiptCard" class="w-full max-w-2xl bg-white text-slate-900 rounded-3xl shadow-2xl border border-slate-200 max-h-[calc(100vh-2rem)] overflow-y-auto custom-scrollbar">
@@ -861,6 +860,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
