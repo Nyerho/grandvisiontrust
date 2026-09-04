@@ -280,6 +280,19 @@
             background: #9ca3af;
         }
     </style>
+    <script>
+        const currencySymbols = {
+            USD: '$', EUR: '€', GBP: '£', JPY: '¥', CNY: '¥', INR: '₹',
+            CAD: '$', AUD: '$', CHF: '₣', SGD: '$', HKD: '$', NZD: '$',
+            SEK: 'kr', NOK: 'kr', DKK: 'kr', ZAR: 'R', RUB: '₽', BRL: 'R$',
+            MXN: '$', NGN: '₦', KES: 'KSh', GHS: 'GH₵', EGP: 'E£', AED: 'د.إ',
+            SAR: '﷼', TRY: '₺', PLN: 'zł', THB: '฿', KRW: '₩', MYR: 'RM',
+            PHP: '₱', IDR: 'Rp', VND: '₫', PKR: '₨', BDT: '৳'
+        };
+        function getCurrencySymbol(currency) {
+            return currencySymbols[currency] || '$';
+        }
+    </script>
 </head>
 <body class="font-sans bg-background text-foreground">    <div x-data="{ 
         sidebarOpen: false,

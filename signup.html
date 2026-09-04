@@ -274,6 +274,7 @@
                     city: document.getElementById('city').value,
                     state: document.getElementById('state').value,
                     accountType: document.getElementById('accountType').value,
+                    currency: document.getElementById('currency').value,
                     securityQuestion1: document.getElementById('securityQuestion1').value,
                     securityAnswer1: document.getElementById('securityAnswer1').value,
                     accountNumber: accountNumber,
@@ -446,6 +447,47 @@
                                     <option value="checking">Checking Account</option>
                                     <option value="savings">Savings Account</option>
                                     <option value="both">Checking & Savings</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Account Currency *</label>
+                                <select id="currency" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                    <option value="">Select currency</option>
+                                    <option value="USD">US Dollar (USD) - $</option>
+                                    <option value="EUR">Euro (EUR) - €</option>
+                                    <option value="GBP">British Pound (GBP) - £</option>
+                                    <option value="JPY">Japanese Yen (JPY) - ¥</option>
+                                    <option value="CNY">Chinese Yuan (CNY) - ¥</option>
+                                    <option value="INR">Indian Rupee (INR) - ₹</option>
+                                    <option value="CAD">Canadian Dollar (CAD) - $</option>
+                                    <option value="AUD">Australian Dollar (AUD) - $</option>
+                                    <option value="CHF">Swiss Franc (CHF) - ₣</option>
+                                    <option value="SGD">Singapore Dollar (SGD) - $</option>
+                                    <option value="HKD">Hong Kong Dollar (HKD) - $</option>
+                                    <option value="NZD">New Zealand Dollar (NZD) - $</option>
+                                    <option value="SEK">Swedish Krona (SEK) - kr</option>
+                                    <option value="NOK">Norwegian Krone (NOK) - kr</option>
+                                    <option value="DKK">Danish Krone (DKK) - kr</option>
+                                    <option value="ZAR">South African Rand (ZAR) - R</option>
+                                    <option value="RUB">Russian Ruble (RUB) - ₽</option>
+                                    <option value="BRL">Brazilian Real (BRL) - R$</option>
+                                    <option value="MXN">Mexican Peso (MXN) - $</option>
+                                    <option value="NGN">Nigerian Naira (NGN) - ₦</option>
+                                    <option value="KES">Kenyan Shilling (KES) - KSh</option>
+                                    <option value="GHS">Ghanaian Cedi (GHS) - GH₵</option>
+                                    <option value="EGP">Egyptian Pound (EGP) - E£</option>
+                                    <option value="AED">UAE Dirham (AED) - د.إ</option>
+                                    <option value="SAR">Saudi Riyal (SAR) - ﷼</option>
+                                    <option value="TRY">Turkish Lira (TRY) - ₺</option>
+                                    <option value="PLN">Polish Zloty (PLN) - zł</option>
+                                    <option value="THB">Thai Baht (THB) - ฿</option>
+                                    <option value="KRW">South Korean Won (KRW) - ₩</option>
+                                    <option value="MYR">Malaysian Ringgit (MYR) - RM</option>
+                                    <option value="PHP">Philippine Peso (PHP) - ₱</option>
+                                    <option value="IDR">Indonesian Rupiah (IDR) - Rp</option>
+                                    <option value="VND">Vietnamese Dong (VND) - ₫</option>
+                                    <option value="PKR">Pakistani Rupee (PKR) - ₨</option>
+                                    <option value="BDT">Bangladeshi Taka (BDT) - ৳</option>
                                 </select>
                             </div>
                             <div>
