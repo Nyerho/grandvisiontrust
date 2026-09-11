@@ -358,7 +358,23 @@
             this.realtimeUnsubscribe = db.collection('users').doc(userId).onSnapshot(
                 (doc) => {
                     if (doc.exists) {
-                        this.user = { id: doc.id, ...doc.data() };
+                        const profile = doc.data();
+                        const authUser = firebase.auth().currentUser;
+                        this.user = {
+                            id: doc.id,
+                            ...profile,
+                            email: profile.email || authUser?.email || '',
+                            firstName: profile.firstName || authUser?.displayName?.split(' ')[0] || '',
+                            lastName: profile.lastName || authUser?.displayName?.split(' ').slice(1).join(' ') || ''
+                        };
+                    } else {
+                        const authUser = firebase.auth().currentUser;
+                        this.user = {
+                            id: userId,
+                            email: authUser?.email || '',
+                            firstName: authUser?.displayName?.split(' ')[0] || '',
+                            lastName: authUser?.displayName?.split(' ').slice(1).join(' ') || ''
+                        };
                     }
                 },
                 (err) => {
@@ -379,6 +395,7 @@
         initDarkMode();
         auth.onAuthStateChanged(user => {
             if (user) {
+                $data.user = { id: user.uid, email: user.email || '', firstName: user.displayName?.split(' ')[0] || '', lastName: user.displayName?.split(' ').slice(1).join(' ') || '' };
                 $data.fetchUser(user.uid);
             } else {
                 window.location.href = 'login.html';
@@ -584,7 +601,7 @@
                                     </div>
                                     <div class="hidden md:block text-left">
                                         <p class="text-sm font-semibold text-gray-900 dark:text-white" x-text="user?.firstName && user?.lastName ? user.firstName + ' ' + user.lastName : 'User'"></p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400" x-text="user?.email || 'user@example.com'"></p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400" x-text="user?.email || 'No email available'"></p>
                                     </div>
                                     <i class="fa-solid fa-chevron-down text-gray-400 dark:text-gray-500 text-sm group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"></i>
                                 </button>
@@ -599,7 +616,7 @@
                                             </div>
                                             <div>
                                                 <p class="text-sm font-bold text-gray-900 dark:text-white" x-text="user?.firstName && user?.lastName ? user.firstName + ' ' + user.lastName : 'User'"></p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400" x-text="user?.email || 'user@example.com'"></p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400" x-text="user?.email || 'No email available'"></p>
                                             </div>
                                         </div>
 
