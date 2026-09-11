@@ -13,6 +13,57 @@
         localStorage.setItem('darkMode', this.darkMode);
         document.documentElement.classList.toggle('dark');
     },
+    initKyc() {
+        this.initDarkMode();
+        let timeoutId = setTimeout(() => {
+            if (this.loading) {
+                this.showNotification('Unable to load your account details. Please refresh or return to login.', 'error');
+                this.loading = false;
+            }
+        }, 10000);
+        const finish = () => {
+            clearTimeout(timeoutId);
+            this.loading = false;
+        };
+        if (typeof auth === 'undefined' || typeof db === 'undefined') {
+            console.error('Firebase services are not available on the KYC page.');
+            this.showNotification('The verification service is unavailable. Please refresh the page.', 'error');
+            finish();
+            return;
+        }
+        auth.onAuthStateChanged(async user => {
+            try {
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                this.user = {
+                    id: user.uid,
+                    email: user.email || '',
+                    firstName: user.displayName?.split(' ')[0] || '',
+                    lastName: user.displayName?.split(' ').slice(1).join(' ') || ''
+                };
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (doc.exists) {
+                        const profile = doc.data();
+                        this.user = { ...this.user, ...profile, id: doc.id, email: profile.email || this.user.email };
+                    }
+                } catch (profileError) {
+                    console.error('Unable to load KYC profile:', profileError);
+                }
+            } catch (authError) {
+                console.error('Unable to initialize KYC authentication:', authError);
+                this.showNotification('Unable to load your account. Please try logging in again.', 'error');
+            } finally {
+                finish();
+            }
+        }, authError => {
+            console.error('Firebase authentication error:', authError);
+            this.showNotification('Unable to verify your session. Please log in again.', 'error');
+            finish();
+        });
+    },
     showNotification(message, type='success') {
         const notification = document.createElement('div');
         notification.className = `fixed top-4 right-4 z-[100000] px-6 py-4 rounded-xl shadow-2xl transition-all duration-300 transform translate-x-full ${type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`;
@@ -30,50 +81,7 @@
             setTimeout(() => notification.remove(), 300);
         }, 5000);
     }
-}" x-init="
-    initDarkMode();
-    const finishLoading = () => { this.loading = false; };
-    const loadingTimeout = setTimeout(() => {
-        if (this.loading) {
-            this.showNotification('Unable to load your account details. Please refresh or return to login.', 'error');
-            finishLoading();
-        }
-    }, 10000);
-    auth.onAuthStateChanged(async user => {
-        try {
-            if (!user) {
-                window.location.href = 'login.html';
-                return;
-            }
-            this.user = {
-                id: user.uid,
-                email: user.email || '',
-                firstName: user.displayName?.split(' ')[0] || '',
-                lastName: user.displayName?.split(' ').slice(1).join(' ') || ''
-            };
-            try {
-                const doc = await db.collection('users').doc(user.uid).get();
-                if (doc.exists) {
-                    const profile = doc.data();
-                    this.user = { ...this.user, ...profile, id: doc.id, email: profile.email || this.user.email };
-                }
-            } catch (profileError) {
-                console.error('Unable to load KYC profile:', profileError);
-            }
-        } catch (authError) {
-            console.error('Unable to initialize KYC authentication:', authError);
-            this.showNotification('Unable to load your account. Please try logging in again.', 'error');
-        } finally {
-            clearTimeout(loadingTimeout);
-            finishLoading();
-        }
-    }, authError => {
-        console.error('Firebase authentication error:', authError);
-        clearTimeout(loadingTimeout);
-        this.showNotification('Unable to verify your session. Please log in again.', 'error');
-        finishLoading();
-    });
-">
+}">
 <head>
     <script>
         // Early dark mode initialization to prevent FOUC
@@ -218,7 +226,7 @@
         }
     </style>
 </head>
-<body class="font-sans bg-background dark:bg-gray-900 min-h-screen">
+<body x-init="initKyc()" class="font-sans bg-background dark:bg-gray-900 min-h-screen">
     <div x-show="loading" class="fixed inset-0 bg-white dark:bg-gray-900 flex items-center justify-center z-50">
         <div class="w-12 h-12 border-4 border-gray-200 border-t-primary-500 rounded-full animate-spin"></div>
     </div>
