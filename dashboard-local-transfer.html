@@ -753,15 +753,6 @@
                 }">
                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm dark:shadow-gray-900/25 border border-gray-200 dark:border-gray-700 p-6">
                         <div x-show="step === 1">
-                            <div class="flex items-center space-x-4 mb-8">
-                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">1</div>
-                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">2</div>
-                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
-                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">4</div>
-                            </div>
                             <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Transfer Details</h2>
                             <form class="space-y-6">
                                 <div class="space-y-4">
@@ -774,12 +765,8 @@
                                         <input type="text" placeholder="Enter account number" x-model="accountNumber" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bank Name</label>
-                                        <select x-model="bankName" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                                            <option value="">Select bank</option>
-                                            <option value="bank1">Bank of Example</option>
-                                            <option value="bank2">Example Bank</option>
-                                        </select>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bank Name (type manually)</label>
+                                        <input type="text" autocomplete="organization" placeholder="Enter bank name" x-model="bankName" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amount</label>
@@ -801,15 +788,6 @@
                             </form>
                         </div>
                         <div x-show="step === 2">
-                            <div class="flex items-center space-x-4 mb-8">
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">1</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">2</div>
-                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
-                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">4</div>
-                            </div>
                             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Cost of Transfer Code</h2>
                             <p class="text-gray-700 dark:text-gray-300 mb-4">Wire transfers can be an expensive way to send money from one bank account to another, with typical outgoing fees of $25 per $1,000.00 transfer within the U.S. and $150.00 outside United States but if you're sending a lot of money or need a transfer to happen quickly, you will need Cost of Transfer Code from our customer service to complete your transactions</p>
                             <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Enter your Cost of Transfer (COT) Code</h3>
@@ -829,15 +807,6 @@
                             </form>
                         </div>
                         <div x-show="step === 3">
-                            <div class="flex items-center space-x-4 mb-8">
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">1</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">2</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">3</div>
-                                <div class="h-1 flex-1 bg-gray-200 dark:bg-gray-700"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">4</div>
-                            </div>
                             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">TAX/VAT Code</h2>
                             <p class="text-gray-700 dark:text-gray-300 mb-4">A tax is a compulsory financial charge or some other type of levy imposed on a taxpayer (an individual in order to fund government spending and various public expenditures. A failure to pay, along with evasion of or resistance to taxation, is punishable by law</p>
                             <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Kindly enter your TAX Code</h3>
@@ -857,15 +826,6 @@
                             </form>
                         </div>
                         <div x-show="step === 4">
-                            <div class="flex items-center space-x-4 mb-8">
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">1</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">2</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">4</div>
-                            </div>
                             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">International Monetary Fund</h2>
                             <p class="text-gray-700 dark:text-gray-300 mb-4">The IMF monitors the international monetary system and global economic developments to identify risks and recommend policies for growth and financial stability. The Fund also regularly reviews the economic and financial policies of its 190 member countries and advises their governments on possible policy adjustments.</p>
                             <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Enter your International Monetary Fund (IMF) code.</h3>
@@ -885,15 +845,6 @@
                             </form>
                         </div>
                         <div x-show="step === 5">
-                            <div class="flex items-center space-x-4 mb-8">
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">1</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">2</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold">3</div>
-                                <div class="h-1 flex-1 bg-primary-500"></div>
-                                <div class="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold">4</div>
-                            </div>
                             <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Transfer Complete</h2>
                             <div class="text-center py-8">
                                 <div class="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-6">
