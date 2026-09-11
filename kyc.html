@@ -4,6 +4,7 @@
     user: null,
     loading: true,
     submitting: false,
+    governmentIdFile: null,
     initDarkMode() {
         if (this.darkMode) document.documentElement.classList.add('dark');
     },
@@ -34,11 +35,12 @@
     auth.onAuthStateChanged(async user => {
         if (user) {
             const doc = await db.collection('users').doc(user.uid).get();
-            if (doc.exists) $data.user = { id: doc.id, ...doc.data() };
+            if (doc.exists) this.user = { id: doc.id, ...doc.data(), email: doc.data().email || user.email || '' };
+            else this.user = { id: user.uid, email: user.email || '', firstName: user.displayName?.split(' ')[0] || '', lastName: user.displayName?.split(' ').slice(1).join(' ') || '' };
         } else {
             window.location.href = 'login.html';
         }
-        $data.loading = false;
+        this.loading = false;
     });
 ">
 <head>
@@ -230,16 +232,16 @@
                             <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
                                 Valid government ID (passport, driver's license, etc.)
                             </p>
-                            <input type="file" id="govtId" accept="image/*,.pdf" class="hidden" />
+                            <input type="file" id="govtId" accept="image/*,.pdf" class="hidden" @change="governmentIdFile = $event.target.files[0] || null" />
                             <label for="govtId" class="cursor-pointer w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 bg-gray-50 dark:bg-gray-900 hover:border-primary-500 dark:hover:border-primary-400 transition-all">
                                 <i class="fa-solid fa-upload text-4xl text-gray-400 dark:text-gray-500 mb-4"></i>
-                                <p class="text-sm text-gray-700 dark:text-gray-300 font-medium">Click to upload ID</p>
+                                <p class="text-sm text-gray-700 dark:text-gray-300 font-medium" x-text="governmentIdFile ? governmentIdFile.name : 'Click to upload ID'"></p>
                             </label>
                         </div>
                     </div>
 
                     <div class="flex flex-col gap-4 pt-4">
-                        <button @click="submitKyc()" :disabled="submitting" class="w-full py-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold text-lg rounded-2xl shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button @click="submitKyc($data)" :disabled="submitting" class="w-full py-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold text-lg rounded-2xl shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
                             <span x-show="!submitting">Submit for Verification</span>
                             <span x-show="submitting">Submitting...</span>
                         </button>
@@ -250,28 +252,38 @@
     </div>
 
     <script>
-        async function submitKyc() {
-            const alpineComponent = document.querySelector('[x-data]').__x.$data;
+        async function submitKyc(alpineComponent) {
+            const currentUser = auth.currentUser;
+            const file = document.getElementById('govtId')?.files?.[0];
+            if (!currentUser) {
+                alpineComponent.showNotification('Your session has expired. Please log in again.', 'error');
+                return;
+            }
+            if (!file) {
+                alpineComponent.showNotification('Please upload your government-issued ID first.', 'error');
+                return;
+            }
+            if (file.size > 10 * 1024 * 1024) {
+                alpineComponent.showNotification('Please choose a file smaller than 10 MB.', 'error');
+                return;
+            }
 
             alpineComponent.submitting = true;
-
             try {
-                // Skip Firebase Storage - just update Firestore directly
-                await db.collection('users').doc(auth.currentUser.uid).update({
-                    governmentIdUrl: '',
+                const storageRef = firebase.storage().ref(`kyc/${currentUser.uid}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`);
+                const upload = await storageRef.put(file, { contentType: file.type });
+                const governmentIdUrl = await upload.ref.getDownloadURL();
+                await db.collection('users').doc(currentUser.uid).update({
+                    governmentIdUrl,
                     kycStatus: 'pending',
                     kycSubmittedAt: firebase.firestore.FieldValue.serverTimestamp(),
                 });
 
                 alpineComponent.showNotification('KYC submitted successfully! Our team will review it soon.', 'success');
-
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 3000);
-
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 3000);
             } catch (err) {
-                console.error(err);
-                alpineComponent.showNotification('Failed to submit KYC, please try again', 'error');
+                console.error('KYC submission failed:', err);
+                alpineComponent.showNotification('Failed to submit KYC. Please try again.', 'error');
             } finally {
                 alpineComponent.submitting = false;
             }
