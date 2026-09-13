@@ -42,14 +42,21 @@ async function initDb() {
       const dbPath = path.join(dataDir, 'app.db');
       console.log('Database path:', dbPath);
 
-      let dbBuffer;
+      let dbBuffer = null;
       try {
         dbBuffer = fs.readFileSync(dbPath);
       } catch (e) {
-        dbBuffer = null;
+        if (e.code !== 'ENOENT') {
+          console.warn('Unable to read existing database; creating a new database:', e.message);
+        }
       }
 
-      db = new SQL.Database(dbBuffer);
+      try {
+        db = new SQL.Database(dbBuffer);
+      } catch (e) {
+        console.warn('Existing database is invalid; creating a new database:', e.message);
+        db = new SQL.Database();
+      }
 
       db.run(`
         CREATE TABLE IF NOT EXISTS users (
@@ -168,9 +175,14 @@ async function initDb() {
       dbInitialized = true;
     } catch (err) {
       console.error('Error initializing database:', err);
+      dbInitialized = false;
       throw err;
     }
-  })();
+  })().catch((err) => {
+    // Do not cache a rejected promise forever in a warm serverless instance.
+    dbInitPromise = undefined;
+    throw err;
+  });
 
   return dbInitPromise;
 }
