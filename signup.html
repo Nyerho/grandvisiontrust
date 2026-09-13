@@ -302,7 +302,7 @@
                 await Promise.race([profileWrite, profileTimeout]);
 
                 this.showNotification('Account created successfully! Your account is pending administrator review.', 'success');
-                setTimeout(() => window.location.href = 'login.html', 2000);
+                window.location.replace('/login.html?registered=1');
             } catch (error) {
                 console.error('Registration error:', error);
                 if (createdUser && profileWriteStarted) {
