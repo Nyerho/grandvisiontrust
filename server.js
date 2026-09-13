@@ -1335,11 +1335,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/storage', express.static(path.join(__dirname, 'storage')));
 app.use(express.static(__dirname, { extensions: ['html'] }));
 
-app.use(
-  ['/dashboard.html', '/dashboard-transactions.html', '/dashboard-cards.html', '/dashboard-local-transfer.html', '/dashboard-international-transfer.html', '/dashboard-deposit.html', '/dashboard-currency-swap.html', '/dashboard-grants.html', '/dashboard-settings.html', '/dashboard-support.html', '/dashboard-paybills.html', '/admin.html'],
-  requireAuth
-);
-
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
