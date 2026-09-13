@@ -233,6 +233,12 @@
             }, 5000);
         },
         async submitRegistration() {
+            const form = document.getElementById('registrationForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                this.showNotification('Please complete the required fields before creating your account.', 'error');
+                return;
+            }
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
@@ -244,10 +250,12 @@
             this.loading = true;
 
             try {
-                const userCredential = await auth.createUserWithEmailAndPassword(
+                const registration = auth.createUserWithEmailAndPassword(
                     document.getElementById('email').value,
                     password
                 );
+                const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Registration timed out. Check your connection and try again.')), 20000));
+                const userCredential = await Promise.race([registration, timeout]);
 
                 const user = userCredential.user;
                 const userId = user.uid;
@@ -289,7 +297,14 @@
                 setTimeout(() => window.location.href = 'login.html', 2000);
             } catch (error) {
                 console.error('Registration error:', error);
-                this.showNotification('Registration failed: ' + error.message, 'error');
+                const message = error.code === 'auth/email-already-in-use'
+                    ? 'An account with this email already exists.'
+                    : error.code === 'auth/invalid-email'
+                        ? 'Please enter a valid email address.'
+                        : error.code === 'auth/weak-password'
+                            ? 'Password must be at least 6 characters.'
+                            : error.message || 'Registration failed. Please try again.';
+                this.showNotification(message, 'error');
             } finally {
                 this.loading = false;
             }
@@ -329,7 +344,7 @@
             </div>
 
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-200 dark:border-gray-700 p-8">
-                <form id="registrationForm" @submit.prevent>
+                <form id="registrationForm" @submit.prevent="submitRegistration()">
                     <!-- Step 1: Personal Information -->
                     <div x-show="step === 1">
                         <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Personal Information</h2>
@@ -556,7 +571,7 @@
                         </div>
                         <div class="mt-8 flex justify-between">
                             <button type="button" @click="step = 3" class="px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold rounded-xl transition-all duration-200">Back</button>
-                            <button type="button" @click="submitRegistration()" :disabled="loading" class="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <button type="submit" :disabled="loading" class="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                                 <span x-show="!loading">Create Account</span>
                                 <span x-show="loading">Creating Account...</span>
                             </button>
