@@ -226,8 +226,9 @@ function prepare(query) {
 
 const app = express();
 
-// Middleware to ensure DB is initialized before handling requests
-app.use(async (req, res, next) => {
+// Only API requests need the legacy server database. Firebase-backed static
+// pages must be able to load even if a serverless database cold start fails.
+app.use('/api', async (req, res, next) => {
   try {
     await initDb();
     next();

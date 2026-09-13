@@ -5,7 +5,9 @@ const app = server;
 // Export a Vercel-compatible handler that waits for DB initialization
 module.exports = async (req, res) => {
   try {
-    await server.initDb();
+    if (String(req.url || '').startsWith('/api/')) {
+      await server.initDb();
+    }
     return app(req, res);
   } catch (err) {
     console.error('Error in Vercel handler:', err);
