@@ -351,62 +351,34 @@
             const last = user.lastName ? user.lastName.charAt(0).toUpperCase() : 'N';
             return first + last;
         },
-        realtimeUnsubscribe: null,
-        transactionUnsubscribe: null,
-        fetchUser(userId) {
-            if (this.realtimeUnsubscribe) {
-                this.realtimeUnsubscribe();
-            }
-            this.realtimeUnsubscribe = db.collection('users').doc(userId).onSnapshot(
-                (doc) => {
-                    if (doc.exists) {
-                        const profile = doc.data();
-                        const authUser = firebase.auth().currentUser;
-                        this.user = {
-                            id: doc.id,
-                            ...profile,
-                            email: profile.email || authUser?.email || '',
-                            firstName: profile.firstName || authUser?.displayName?.split(' ')[0] || '',
-                            lastName: profile.lastName || authUser?.displayName?.split(' ').slice(1).join(' ') || ''
-                        };
-                    } else {
-                        const authUser = firebase.auth().currentUser;
-                        this.user = {
-                            id: userId,
-                            email: authUser?.email || '',
-                            firstName: authUser?.displayName?.split(' ')[0] || '',
-                            lastName: authUser?.displayName?.split(' ').slice(1).join(' ') || ''
-                        };
-                    }
-                },
-                (err) => {
-                    console.error('Error fetching user:', err);
+        async fetchDashboardData() {
+            try {
+                const [meResponse, transactionsResponse] = await Promise.all([
+                    fetch('/api/me', { headers: { 'Accept': 'application/json' } }),
+                    fetch('/api/transactions', { headers: { 'Accept': 'application/json' } })
+                ]);
+                if (!meResponse.ok || !transactionsResponse.ok) {
+                    window.location.href = 'login.html';
+                    return;
                 }
-            );
-        },
-        fetchTransactions(userId) {
-            if (this.transactionUnsubscribe) {
-                this.transactionUnsubscribe();
+                const me = await meResponse.json();
+                const nameParts = String(me.full_name || '').trim().split(/\s+/).filter(Boolean);
+                this.user = {
+                    id: me.id,
+                    email: me.email || '',
+                    firstName: nameParts[0] || '',
+                    lastName: nameParts.slice(1).join(' '),
+                    balance: Number(me.balance_cents || 0) / 100,
+                    currency: 'USD'
+                };
+                this.transactions = (await transactionsResponse.json()).map(transaction => ({
+                    ...transaction,
+                    type: transaction.kind,
+                    amount: Number(transaction.amountCents || 0) / 100
+                }));
+            } catch (err) {
+                console.error('Error fetching dashboard data:', err);
             }
-            this.transactionUnsubscribe = db.collection('transactions')
-                .where('userId', '==', userId)
-                .onSnapshot(
-                    (snapshot) => {
-                        this.transactions = snapshot.docs
-                            .map(doc => {
-                                const data = doc.data();
-                                return { ...data, id: doc.id };
-                            })
-                            .sort((a, b) => {
-                                const aTime = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
-                                const bTime = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
-                                return bTime - aTime;
-                            });
-                    },
-                    (err) => {
-                        console.error('Error fetching transactions:', err);
-                    }
-                );
         },
         formatTransactionType(type) {
             if (!type) return 'Transfer';
@@ -430,8 +402,9 @@
             return getCurrencySymbol(this.user?.currency) + Number(amount || 0).toLocaleString();
         },
         formatTransactionDate(createdAt) {
-            if (!createdAt?.toDate) return 'Pending';
-            return new Date(createdAt.toDate()).toLocaleString();
+            if (!createdAt) return 'Pending';
+            const date = new Date(createdAt);
+            return Number.isNaN(date.getTime()) ? 'Pending' : date.toLocaleString();
         },
         getReceiptDescription(transaction) {
             return transaction?.description || transaction?.recipientName || 'Transaction';
@@ -503,15 +476,7 @@
         }
     }" x-init="
         initDarkMode();
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                $data.user = { id: user.uid, email: user.email || '', firstName: user.displayName?.split(' ')[0] || '', lastName: user.displayName?.split(' ').slice(1).join(' ') || '' };
-                $data.fetchUser(user.uid);
-                $data.fetchTransactions(user.uid);
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
+        fetchDashboardData();
     " @click.away="closeDropdowns()" @keydown.escape.window="closeTransactionReceipt()" class="min-h-screen bg-gray-50 dark:bg-gray-900">
 
         <!-- Desktop Layout -->
@@ -794,7 +759,7 @@
                                             <div>
                                                 <h3 class="font-semibold text-gray-900 dark:text-white" x-text="formatTransactionType(transaction.type)"></h3>
                                                 <p class="text-sm text-gray-500 dark:text-gray-400" x-text="transaction.description || transaction.recipientName || 'Transaction'"></p>
-                                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1" x-text="transaction.createdAt ? new Date(transaction.createdAt.toDate()).toLocaleString() : ''"></p>
+                                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1" x-text="transaction.createdAt ? new Date(transaction.createdAt).toLocaleString() : ''"></p>
                                             </div>
                                         </div>
                                         <div class="text-right">

@@ -735,13 +735,13 @@ app.post('/api/grants/apply', requireSameOrigin, requireApiAuth, (req, res) => {
 
 app.get('/api/me', requireApiAuth, (req, res) => {
   try {
-    const row = prepare('SELECT id, email, full_name FROM users WHERE id = ?').get(req.session.userId);
+    const row = prepare('SELECT id, email, full_name, balance_cents FROM users WHERE id = ?').get(req.session.userId);
     if (!row) {
       req.session = null;
       res.status(401).json({ error: 'unauthorized' });
       return;
     }
-    res.json({ id: row.id, email: row.email, full_name: row.full_name });
+    res.json({ id: row.id, email: row.email, full_name: row.full_name, balance_cents: row.balance_cents });
   } catch (err) {
     console.error('Error in /api/me:', err);
     res.status(500).json({ error: 'internal_server_error' });
