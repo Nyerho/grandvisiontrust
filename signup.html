@@ -249,7 +249,10 @@
 
             this.loading = true;
 
+            let createdUser = null;
+            let profileWriteStarted = false;
             try {
+                this.showNotification('Creating your secure account…', 'success');
                 const registration = auth.createUserWithEmailAndPassword(
                     document.getElementById('email').value,
                     password
@@ -258,6 +261,7 @@
                 const userCredential = await Promise.race([registration, timeout]);
 
                 const user = userCredential.user;
+                createdUser = user;
                 const userId = user.uid;
 
                 const accountNumber = 'GVT' + Math.floor(Math.random() * 1000000000).toString().padStart(9, '0');
@@ -265,7 +269,9 @@
                 // Skip Firebase Storage - just use empty string for KYC URL
                 const governmentIdUrl = '';
 
-                await db.collection('users').doc(userId).set({
+                this.showNotification('Saving your application…', 'success');
+                profileWriteStarted = true;
+                const profileWrite = db.collection('users').doc(userId).set({
                     firstName: document.getElementById('firstName').value,
                     middleName: document.getElementById('middleName').value,
                     lastName: document.getElementById('lastName').value,
@@ -292,11 +298,23 @@
                     governmentIdUrl: governmentIdUrl,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                const profileTimeout = new Promise((_, reject) => setTimeout(() => reject(new Error('We could not save your application. Check your connection and try again.')), 20000));
+                await Promise.race([profileWrite, profileTimeout]);
 
                 this.showNotification('Account created successfully! Your account is pending administrator review.', 'success');
                 setTimeout(() => window.location.href = 'login.html', 2000);
             } catch (error) {
                 console.error('Registration error:', error);
+                if (createdUser && profileWriteStarted) {
+                    try {
+                        await Promise.race([
+                            createdUser.delete(),
+                            new Promise((_, reject) => setTimeout(() => reject(new Error('cleanup timeout')), 5000))
+                        ]);
+                    } catch (cleanupError) {
+                        console.warn('Unable to clean up partial Firebase account:', cleanupError);
+                    }
+                }
                 const message = error.code === 'auth/email-already-in-use'
                     ? 'An account with this email already exists.'
                     : error.code === 'auth/invalid-email'
