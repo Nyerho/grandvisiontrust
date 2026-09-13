@@ -235,61 +235,71 @@
         async submitRegistration() {
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
+            const pin = document.getElementById('pin').value;
 
             if (password !== confirmPassword) {
                 this.showNotification('Passwords do not match!', 'error');
+                return;
+            }
+            if (!/^\d{4}$/.test(pin)) {
+                this.showNotification('PIN must be exactly 4 digits.', 'error');
                 return;
             }
 
             this.loading = true;
 
             try {
-                const userCredential = await auth.createUserWithEmailAndPassword(
-                    document.getElementById('email').value,
-                    password
-                );
-
-                const user = userCredential.user;
-                const userId = user.uid;
-
-                const accountNumber = 'GVT' + Math.floor(Math.random() * 1000000000).toString().padStart(9, '0');
-
-                // Skip Firebase Storage - just use empty string for KYC URL
-                const governmentIdUrl = '';
-
-                await db.collection('users').doc(userId).set({
+                const income = document.getElementById('annualIncome').value;
+                const incomeMap = {
+                    '0-25000': 'under_25k',
+                    '25001-50000': '25k_50k',
+                    '50001-75000': '50k_100k',
+                    '75001-100000': '50k_100k',
+                    '100001-200000': '100k_250k',
+                    '200001+': 'over_250k'
+                };
+                const accountType = document.getElementById('accountType').value;
+                const payload = {
                     firstName: document.getElementById('firstName').value,
-                    middleName: document.getElementById('middleName').value,
                     lastName: document.getElementById('lastName').value,
-                    dateOfBirth: document.getElementById('dateOfBirth').value,
-                    ssn: document.getElementById('ssn').value,
-                    citizenship: document.getElementById('citizenship').value,
-                    maritalStatus: document.getElementById('maritalStatus').value,
-                    occupation: document.getElementById('occupation').value,
-                    employerName: document.getElementById('employerName').value,
-                    annualIncome: document.getElementById('annualIncome').value,
                     email: document.getElementById('email').value,
                     phone: document.getElementById('phone').value,
-                    streetAddress: document.getElementById('streetAddress').value,
+                    dob: document.getElementById('dateOfBirth').value,
+                    ssnLast4: document.getElementById('ssn').value.replace(/\D/g, '').slice(-4),
+                    address1: document.getElementById('streetAddress').value,
                     city: document.getElementById('city').value,
                     state: document.getElementById('state').value,
-                    accountType: document.getElementById('accountType').value,
-                    currency: document.getElementById('currency').value,
-                    securityQuestion1: document.getElementById('securityQuestion1').value,
-                    securityAnswer1: document.getElementById('securityAnswer1').value,
-                    accountNumber: accountNumber,
-                    balance: 0,
-                    status: 'pending',
-                    kycStatus: 'pending',
-                    governmentIdUrl: governmentIdUrl,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    postalCode: 'N/A',
+                    country: document.getElementById('citizenship').value,
+                    accountType: accountType === 'both' ? 'checking_savings' : accountType,
+                    idType: 'passport',
+                    idNumber: this.governmentIdFile?.name || 'pending-review',
+                    employmentStatus: 'employed',
+                    annualIncome: incomeMap[income] || '',
+                    password,
+                    pin
+                };
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
-
-                this.showNotification('Account created successfully! Your account is pending administrator review.', 'success');
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    const messages = {
+                        email_in_use: 'An account with this email already exists.',
+                        invalid_input: 'Please complete all required fields.',
+                        weak_password: 'Password must be at least 8 characters.',
+                        invalid_ssn_last4: 'Please enter a valid SSN.',
+                        invalid_pin: 'PIN must be exactly 4 digits.'
+                    };
+                    throw new Error(messages[result.error] || 'Registration failed. Please try again.');
+                }
+                this.showNotification('Account created successfully! You can now sign in.', 'success');
                 setTimeout(() => window.location.href = 'login.html', 2000);
             } catch (error) {
                 console.error('Registration error:', error);
-                this.showNotification('Registration failed: ' + error.message, 'error');
+                this.showNotification(error.message || 'Registration failed. Please try again.', 'error');
             } finally {
                 this.loading = false;
             }
@@ -497,6 +507,11 @@
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Confirm Password *</label>
                                 <input type="password" id="confirmPassword" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Re-enter password">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Security PIN *</label>
+                                <input type="password" id="pin" required inputmode="numeric" pattern="[0-9]{4}" maxlength="4" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="4-digit PIN">
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">You will use this PIN after entering your password.</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Security Question 1 *</label>
