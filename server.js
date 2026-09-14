@@ -278,7 +278,10 @@ function requireSameOrigin(req, res, next) {
     return;
   }
 
-  const allowed = process.env.APP_ORIGIN || `http://localhost:${PORT}`;
+  const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
+  const protocol = forwardedProto || (IS_PROD ? 'https' : req.protocol);
+  const host = req.get('host');
+  const allowed = process.env.APP_ORIGIN || `${protocol}://${host || `localhost:${PORT}`}`;
   if (origin !== allowed) {
     res.status(403).json({ error: 'forbidden' });
     return;
