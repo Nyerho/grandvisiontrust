@@ -18,6 +18,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAPBT1yStJbk4I_6sLvctlmGXu0lBotaiA",
+            authDomain: "grandvisiontrust.firebaseapp.com",
+            projectId: "grandvisiontrust",
+            storageBucket: "grandvisiontrust.firebasestorage.app",
+            messagingSenderId: "796538268477",
+            appId: "1:796538268477:web:78a8bab0eb8d36d6ca7354",
+            measurementId: "G-6XWG7HEG2V"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+    </script>
     <script src="assets/tailwindcss.js"></script>
     <script>
         tailwind.config = {
@@ -192,11 +207,11 @@
                 <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Welcome back! Please enter your details</p>
             </div>
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft p-8 border border-gray-200 dark:border-gray-700">
-                <form x-show="step === 'credentials'" class="space-y-6" @submit.prevent="
+                <form class="space-y-6" @submit.prevent="
                     loading = true;
-                    fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ email: $el.email.value, password: $el.password.value }) })
-                        .then(async (response) => { const data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error === 'invalid_credentials' ? 'Invalid email or password.' : 'Unable to sign in. Please try again.'); if (data.next !== 'pin') throw new Error('This account needs PIN setup before it can sign in.'); step = 'pin'; loading = false; })
-                        .catch((error) => { showNotification(error.message, 'error'); loading = false; });
+                    auth.signInWithEmailAndPassword($el.email.value.trim(), $el.password.value)
+                        .then(() => { showNotification('Login successful! Redirecting...', 'success'); setTimeout(() => window.location.href = 'dashboard.html', 350); })
+                        .catch((error) => { const messages = { 'auth/invalid-credential': 'Invalid email or password.', 'auth/user-not-found': 'Invalid email or password.', 'auth/wrong-password': 'Invalid email or password.' }; showNotification(messages[error.code] || 'Unable to sign in. Please try again.', 'error'); loading = false; });
                 ">
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email address</label>
@@ -221,24 +236,6 @@
                             <span x-show="loading">Signing in...</span>
                         </button>
                     </div>
-                </form>
-                <form x-show="step === 'pin'" x-cloak class="space-y-6" @submit.prevent="
-                    loading = true;
-                    fetch('/api/auth/verify-pin', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ pin: $el.pin.value }) })
-                        .then(async (response) => { const data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error === 'invalid_pin' ? 'Invalid PIN.' : 'Unable to verify PIN. Please try again.'); showNotification('Login successful! Redirecting...', 'success'); setTimeout(() => window.location.href = 'dashboard.html', 350); })
-                        .catch((error) => { showNotification(error.message, 'error'); loading = false; });
-                ">
-                    <div>
-                        <label for="pin" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Security PIN</label>
-                        <input id="pin" name="pin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="one-time-code" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="Enter your 4-digit PIN">
-                    </div>
-                    <div>
-                        <button type="submit" :disabled="loading" class="w-full flex justify-center py-3 px-4 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 disabled:opacity-50 disabled:cursor-not-allowed">
-                            <span x-show="!loading">Verify PIN</span>
-                            <span x-show="loading">Verifying...</span>
-                        </button>
-                    </div>
-                    <button type="button" @click="step = 'credentials'; loading = false" class="w-full text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600">Use a different account</button>
                 </form>
                 <div class="mt-6">
                     <div class="relative">

@@ -858,29 +858,35 @@
         realtimeUnsubscribe: null,
         async fetchDashboardData() {
             try {
-                const [meResponse, transactionsResponse] = await Promise.all([
-                    fetch('/api/me', { headers: { 'Accept': 'application/json' } }),
-                    fetch('/api/transactions', { headers: { 'Accept': 'application/json' } })
-                ]);
-                if (!meResponse.ok || !transactionsResponse.ok) {
+                const authUser = auth.currentUser;
+                if (!authUser) {
                     window.location.href = 'login.html';
                     return;
                 }
-                const me = await meResponse.json();
-                const transactions = await transactionsResponse.json();
-                const nameParts = String(me.full_name || '').trim().split(/\s+/).filter(Boolean);
+                const userSnapshot = await db.collection('users').doc(authUser.uid).get();
+                if (!userSnapshot.exists) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                const me = userSnapshot.data() || {};
+                const nameParts = `${me.firstName || ''} ${me.lastName || ''}`.trim().split(/\s+/).filter(Boolean);
                 this.user = {
-                    id: me.id,
-                    email: me.email || '',
+                    id: authUser.uid,
+                    email: me.email || authUser.email || '',
                     firstName: nameParts[0] || '',
                     lastName: nameParts.slice(1).join(' '),
-                    balance: Number(me.balance_cents || 0) / 100,
-                    currency: 'USD'
+                    balance: Number(me.balance || 0),
+                    currency: me.currency || 'USD'
                 };
-                this.transactions = transactions.slice(0, 5).map(transaction => ({
+                const transactionsSnapshot = await db.collection('transactions')
+                    .where('userId', '==', authUser.uid)
+                    .orderBy('createdAt', 'desc')
+                    .limit(5)
+                    .get();
+                this.transactions = transactionsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).map(transaction => ({
                     ...transaction,
                     type: transaction.kind,
-                    amount: Number(transaction.amountCents || 0) / 100
+                    amount: Number(transaction.amount || transaction.amountCents || 0)
                 }));
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
@@ -895,7 +901,7 @@
         },
         async signOutUser() {
             try {
-                await fetch('/api/auth/logout', { method: 'POST', headers: { 'Accept': 'application/json' }, credentials: 'same-origin' });
+                await auth.signOut();
                 window.location.href = 'index.html';
             } catch (err) {
                 console.error('Error signing out:', err);
@@ -1182,12 +1188,17 @@
     balanceVisible: true,
     async fetchRecentTransactions() {
         try {
-            const response = await fetch('/api/transactions', { headers: { 'Accept': 'application/json' } });
-            if (!response.ok) return;
-            this.recentTransactions = (await response.json()).slice(0, 5).map(transaction => ({
+            const authUser = auth.currentUser;
+            if (!authUser) return;
+            const snapshot = await db.collection('transactions')
+                .where('userId', '==', authUser.uid)
+                .orderBy('createdAt', 'desc')
+                .limit(5)
+                .get();
+            this.recentTransactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).map(transaction => ({
                 ...transaction,
                 type: transaction.kind,
-                amount: Number(transaction.amountCents || 0) / 100
+                amount: Number(transaction.amount || transaction.amountCents || 0)
             }));
         } catch (err) {
             console.error('Error fetching recent transactions:', err);
