@@ -312,9 +312,9 @@ app.post('/api/auth/login', requireSameOrigin, async (req, res) => {
       return;
     }
 
-    req.session.userId = null;
-    req.session.pendingUserId = row.id;
-    res.json({ ok: true, next: row.pin_hash ? 'pin' : 'pin_setup' });
+    req.session.userId = row.id;
+    req.session.pendingUserId = null;
+    res.json({ ok: true, next: 'dashboard' });
   } catch (err) {
     console.error('Error in /api/auth/login:', err);
     res.status(500).json({ error: 'internal_server_error' });
