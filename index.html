@@ -1043,6 +1043,34 @@
             </div>
         </section>
 
+        <!-- Latest Updates / Knowledge Hub -->
+        <section class="fade-in-section py-16" x-data="latestKnowledgeUpdates()">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+                    <div>
+                        <p class="text-sm uppercase tracking-[.2em] text-primary-600 font-bold">Latest updates</p>
+                        <h2 class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white mt-2">New in the Knowledge Hub</h2>
+                        <p class="text-gray-600 dark:text-gray-300 mt-3 max-w-2xl">Preview the latest legal and regulatory materials, then open the full document when you are ready to read.</p>
+                    </div>
+                    <a href="knowledge-hub.html" class="inline-flex items-center gap-2 text-primary-700 dark:text-primary-300 font-bold hover:underline">Explore all documents <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="relative bg-slate-900 rounded-3xl overflow-hidden shadow-2xl">
+                    <div class="grid lg:grid-cols-2 items-stretch">
+                        <div class="aspect-[16/10] lg:aspect-auto min-h-[280px] bg-slate-800">
+                            <img :src="updates[active].preview" :alt="updates[active].title + ' preview'" class="w-full h-full object-cover object-top" loading="lazy">
+                        </div>
+                        <div class="p-7 md:p-10 text-white flex flex-col justify-center">
+                            <div class="flex items-center justify-between gap-3 mb-5"><span class="text-xs uppercase tracking-wider font-bold text-emerald-300" x-text="updates[active].category"></span><span class="text-sm text-slate-300" x-text="(active + 1) + ' / ' + updates.length"></span></div>
+                            <h3 class="text-2xl md:text-3xl font-black leading-tight" x-text="updates[active].title"></h3>
+                            <p class="text-slate-300 mt-4 leading-relaxed" x-text="updates[active].summary"></p>
+                            <div class="flex flex-wrap items-center gap-3 mt-7"><a :href="updates[active].file" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold transition-colors">Read document <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a><a href="knowledge-hub.html" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-white/20 hover:bg-white/10 font-bold transition-colors">View hub</a></div>
+                            <div class="flex items-center gap-2 mt-8"><button @click="previous()" class="w-10 h-10 rounded-full border border-white/20 hover:bg-white/10" aria-label="Previous update"><i class="fa-solid fa-chevron-left"></i></button><button @click="next()" class="w-10 h-10 rounded-full border border-white/20 hover:bg-white/10" aria-label="Next update"><i class="fa-solid fa-chevron-right"></i></button><div class="flex gap-1.5 ml-2"><template x-for="(item, index) in updates" :key="item.title"><button @click="active = index" class="h-2 rounded-full transition-all" :class="active === index ? 'w-8 bg-emerald-400' : 'w-2 bg-white/30'" :aria-label="'Show update ' + (index + 1)"></button></template></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- CTA Section -->
         <section class="fade-in-section">
             <div class="bg-gradient-to-r from-primary-600 via-primary-500 to-emerald-500 rounded-3xl p-8 md:p-12 text-center text-white shadow-2xl">
@@ -1072,6 +1100,7 @@
                         <li><a href="index.html" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Home</a></li>
                         <li><a href="#about" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">About</a></li>
                         <li><a href="login.html" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Login</a></li>
+                        <li><a href="knowledge-hub.html" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Knowledge Hub</a></li>
                     </ul>
                 </div>
                 <div>
@@ -1102,6 +1131,21 @@
             </div>
         </div>
     </footer>
+    <script>
+        function latestKnowledgeUpdates() {
+            return {
+                active: 0,
+                updates: [
+                    { category: 'Energy & Petroleum', title: 'Petroleum Industry Act 2021', summary: 'The principal statutory framework for Nigeria’s petroleum industry.', file: 'storage/knowledge-hub/petroleum-industry-act-2021.pdf', preview: 'storage/knowledge-hub/previews/petroleum-industry-act-2021.jpg' },
+                    { category: 'Energy & Petroleum', title: 'Electricity Act 2023', summary: 'Legislation governing electricity generation, transmission, distribution, and markets.', file: 'storage/knowledge-hub/electricity-act-2023.pdf', preview: 'storage/knowledge-hub/previews/electricity-act-2023.jpg' },
+                    { category: 'Maritime & Shipping', title: 'Merchant Shipping Act 2007', summary: 'A broad reference covering merchant shipping and maritime administration.', file: 'storage/knowledge-hub/merchant-shipping-act-2007.pdf', preview: 'storage/knowledge-hub/previews/merchant-shipping-act-2007.jpg' },
+                    { category: 'Mining & Natural Resources', title: 'Nigerian Minerals and Mining Act 2007', summary: 'The statutory framework for mineral ownership, exploration, mining, and related rights.', file: 'storage/knowledge-hub/minerals-and-mining-act-2007.pdf', preview: 'storage/knowledge-hub/previews/minerals-and-mining-act-2007.jpg' }
+                ],
+                next() { this.active = (this.active + 1) % this.updates.length; },
+                previous() { this.active = (this.active - 1 + this.updates.length) % this.updates.length; }
+            };
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="//code.jivosite.com/widget/2eroIqz0yW" async></script>
 </body>
