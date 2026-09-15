@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches), loading: false, step: 'credentials', toggleDarkMode() { this.darkMode = !this.darkMode; localStorage.setItem('darkMode', this.darkMode); document.documentElement.classList.toggle('dark'); } }">
+<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches), loading: false, step: 'credentials', toggleDarkMode() { this.darkMode = !this.darkMode; localStorage.setItem('darkMode', this.darkMode); document.documentElement.classList.toggle('dark'); }, async login() { this.loading = true; try { const email = document.getElementById('email').value.trim(); const password = document.getElementById('password').value; const signIn = auth.signInWithEmailAndPassword(email, password); const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Sign-in timed out. Check your connection and try again.')), 20000)); await Promise.race([signIn, timeout]); showNotification('Login successful! Redirecting...', 'success'); window.setTimeout(() => { window.location.replace('dashboard.html'); }, 350); } catch (error) { console.error('Firebase sign-in error:', error); const messages = { 'auth/invalid-credential': 'Invalid email or password.', 'auth/invalid-login-credentials': 'Invalid email or password.', 'auth/user-not-found': 'Invalid email or password.', 'auth/wrong-password': 'Invalid email or password.', 'auth/invalid-email': 'Please enter a valid email address.', 'auth/user-disabled': 'This account has been disabled. Please contact support.', 'auth/too-many-requests': 'Too many sign-in attempts. Please wait and try again.', 'auth/network-request-failed': 'Network error. Check your connection and try again.' }; showNotification(messages[error.code] || error.message || 'Unable to sign in. Please try again.', 'error'); this.loading = false; } } }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +18,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAPBT1yStJbk4I_6sLvctlmGXu0lBotaiA",
+            authDomain: "grandvisiontrust.firebaseapp.com",
+            projectId: "grandvisiontrust",
+            storageBucket: "grandvisiontrust.firebasestorage.app",
+            messagingSenderId: "796538268477",
+            appId: "1:796538268477:web:78a8bab0eb8d36d6ca7354",
+            measurementId: "G-6XWG7HEG2V"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch((error) => {
+            console.warn('Unable to enable persistent login:', error);
+        });
+    </script>
     <script src="assets/tailwindcss.js"></script>
     <script>
         tailwind.config = {
@@ -192,12 +210,7 @@
                 <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Welcome back! Please enter your details</p>
             </div>
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft p-8 border border-gray-200 dark:border-gray-700">
-                <form class="space-y-6" @submit.prevent="
-                    loading = true;
-                    fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ email: $el.email.value, password: $el.password.value }) })
-                        .then(async (response) => { const data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error === 'invalid_credentials' ? 'Invalid email or password.' : 'Unable to sign in. Please try again.'); showNotification('Login successful! Redirecting...', 'success'); setTimeout(() => window.location.href = 'dashboard.html', 350); })
-                        .catch((error) => { showNotification(error.message, 'error'); loading = false; });
-                ">
+                <form class="space-y-6" @submit.prevent="login()">
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email address</label>
                         <input id="email" name="email" type="email" autocomplete="email" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="Enter your email">
