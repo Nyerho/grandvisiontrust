@@ -922,7 +922,9 @@
                             </div>
                             <div class="md:col-span-2">
                                 <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Country</label>
-                                <input type="text" x-model="formData.country" class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                <select data-country-select x-model="formData.country" class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                    <option value="">Select country</option>
+                                </select>
                             </div>
                             <div class="md:col-span-2 flex justify-end">
                                 <button type="button" @click="saveProfile()" :disabled="loading" class="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white text-xs font-semibold hover:from-primary-600 hover:to-primary-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
@@ -1006,5 +1008,6 @@
 
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'></script>
     <script src="//code.jivosite.com/widget/2eroIqz0yW" async></script>
+    <script src="assets/countries.js"></script>
 </body>
 </html>

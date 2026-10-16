@@ -789,14 +789,8 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Country</label>
-                                        <select x-model="country" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                        <select data-country-select x-model="country" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                                             <option value="">Select country</option>
-                                            <option value="us">United States</option>
-                                            <option value="uk">United Kingdom</option>
-                                            <option value="ca">Canada</option>
-                                            <option value="au">Australia</option>
-                                            <option value="de">Germany</option>
-                                            <option value="fr">France</option>
                                         </select>
                                     </div>
                                     <div>
@@ -896,5 +890,6 @@
 
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'></script>
     <script src="//code.jivosite.com/widget/2eroIqz0yW" async></script>
+    <script src="assets/countries.js"></script>
 </body>
 </html>

@@ -665,6 +665,7 @@
                     recipientName: '',
                     accountNumber: '',
                     bankName: '',
+                    country: '',
                     amount: '',
                     description: '',
                     cotCode: '',
@@ -748,6 +749,7 @@
                                 recipientName: this.recipientName,
                                 accountNumber: this.accountNumber,
                                 bankName: this.bankName,
+                                country: this.country,
                                 amount: Number(this.amount),
                                 description: this.description,
                                 status: 'completed',
@@ -784,6 +786,12 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bank Name (type manually)</label>
                                         <input type="text" autocomplete="organization" placeholder="Enter bank name" x-model="bankName" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Country</label>
+                                        <select data-country-select x-model="country" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                            <option value="">Select country</option>
+                                        </select>
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amount</label>
@@ -886,5 +894,6 @@
 
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'></script>
     <script src="//code.jivosite.com/widget/2eroIqz0yW" async></script>
+    <script src="assets/countries.js"></script>
 </body>
 </html>
