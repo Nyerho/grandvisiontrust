@@ -36,7 +36,7 @@ async function initDb() {
       SQL = await initSqlJs({ locateFile: () => wasmPath });
       console.log('sql.js initialized');
       console.log('Initializing database...');
-      const dataDir = process.env.VERCEL ? '/tmp' : path.join(__dirname, 'data');
+      const dataDir = (process.env.VERCEL || process.env.NETLIFY) ? '/tmp' : path.join(__dirname, 'data');
       console.log('Data directory:', dataDir);
       fs.mkdirSync(dataDir, { recursive: true });
       const dbPath = path.join(dataDir, 'app.db');
@@ -188,7 +188,7 @@ async function initDb() {
 }
 
 function saveDb() {
-  const dataDir = process.env.VERCEL ? '/tmp' : path.join(__dirname, 'data');
+  const dataDir = (process.env.VERCEL || process.env.NETLIFY) ? '/tmp' : path.join(__dirname, 'data');
   const dbPath = path.join(dataDir, 'app.db');
   const data = db.export();
   const buffer = Buffer.from(data);
