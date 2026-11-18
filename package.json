@@ -6,7 +6,10 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "seed": "node seed.js"
+    "seed": "node seed.js",
+    "cf:dev": "npm run cf:build && wrangler dev",
+    "cf:deploy": "npm run cf:build && wrangler deploy",
+    "cf:build": "node scripts/prepare-cloudflare-assets.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -15,7 +18,9 @@
     "express-rate-limit": "^7.5.0",
     "helmet": "^7.2.0",
     "nanoid": "^3.3.15",
-    "serverless-http": "^3.2.0",
     "sql.js": "^1.14.1"
+  },
+  "devDependencies": {
+    "wrangler": "^4.164.0"
   }
 }

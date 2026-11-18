@@ -14,3 +14,7 @@ data/
 *.db
 *.db-shm
 *.db-wal
+
+# Generated Cloudflare Workers static assets
+cloudflare-public/
+.wrangler/
