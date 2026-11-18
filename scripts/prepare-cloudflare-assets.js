@@ -23,6 +23,7 @@ for (const name of allowedDirectories) {
         return source === path.join(root, name) || ['alpine.min.js', 'countries.js', 'tailwindcss.js'].includes(relative);
       }
       return source === path.join(root, name)
+        || relative === 'home'
         || ['logo.jpg', 'home/feature.jpg', 'home/metro.jpg'].includes(relative);
     }
   });
